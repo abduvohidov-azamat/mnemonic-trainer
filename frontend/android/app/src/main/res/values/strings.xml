@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Mnemonic Trainer</string>
+    <string name="title_activity_main">Mnemonic Trainer</string>
+    <string name="package_name">com.mnemonictrainer.app</string>
+    <string name="custom_url_scheme">com.mnemonictrainer.app</string>
+</resources>
