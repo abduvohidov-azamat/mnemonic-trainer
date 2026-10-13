@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameStore } from '../../core/store/game.store';
 import { ApiService } from '../../core/services/api.service';
@@ -47,7 +47,7 @@ import { NumbersConfig, EvaluationResult } from '../../core/models/game.models';
     }
   `],
 })
-export class SpeedNumbersComponent implements OnInit {
+export class SpeedNumbersComponent implements OnInit, OnDestroy {
   readonly store = inject(GameStore);
   private readonly api = inject(ApiService);
 
@@ -60,6 +60,11 @@ export class SpeedNumbersComponent implements OnInit {
 
   ngOnInit() {
     this.store.setDiscipline('numbers');
+  }
+
+  ngOnDestroy() {
+    // Stop the timer and auto-pacer when leaving mid-session
+    this.store.resetToConfig();
   }
 
   onStartMemorize(config: NumbersConfig) {
@@ -104,6 +109,7 @@ export class SpeedNumbersComponent implements OnInit {
       },
       error: (err) => {
         console.error('Failed to evaluate numbers from backend', err);
+        alert('Could not evaluate this session. Please make sure the backend is running and try again.');
       },
     });
   }

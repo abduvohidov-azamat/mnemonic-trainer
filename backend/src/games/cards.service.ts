@@ -50,7 +50,7 @@ export class CardsService {
   }
 
   generate(deckSize = 52, chunkSize = 1): GeneratedCardsResponse {
-    if (deckSize < 4 || deckSize > 52) {
+    if (!Number.isInteger(deckSize) || deckSize < 4 || deckSize > 52) {
       throw new BadRequestException('Deck size must be between 4 and 52 cards');
     }
     if (![1, 2, 3].includes(chunkSize)) {

@@ -1,5 +1,6 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, signal, computed, inject, effect } from '@angular/core';
 import { ApiService } from './api.service';
+import { AuthService } from './auth.service';
 import { PaoEntry, PaoMatrixResponse } from '../models/pao.models';
 import { tap, catchError, of } from 'rxjs';
 
@@ -8,6 +9,8 @@ import { tap, catchError, of } from 'rxjs';
 })
 export class PaoService {
   private readonly api = inject(ApiService);
+  private readonly auth = inject(AuthService);
+  private readonly userId = computed(() => this.auth.currentUser()?.id ?? null);
 
   readonly numbersPao = signal<PaoEntry[]>([]);
   readonly cardsPao = signal<PaoEntry[]>([]);
@@ -26,7 +29,14 @@ export class PaoService {
   });
 
   constructor() {
-    this.loadPaoMatrix();
+    // Custom PAO entries are per-user: reload whenever the active user changes
+    effect(
+      () => {
+        this.userId();
+        this.loadPaoMatrix();
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   loadPaoMatrix() {

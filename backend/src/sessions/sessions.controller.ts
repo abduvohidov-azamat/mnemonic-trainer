@@ -18,7 +18,8 @@ export class SessionsController {
   @Get('history')
   async getHistory(@Request() req: any, @Query('limit') limit?: string) {
     const userId = req.user?.id;
-    const parsedLimit = limit ? parseInt(limit, 10) : 20;
+    const parsed = parseInt(limit ?? '', 10);
+    const parsedLimit = Number.isFinite(parsed) ? Math.min(Math.max(parsed, 1), 100) : 20;
     return this.sessionsService.getHistory(userId, parsedLimit);
   }
 

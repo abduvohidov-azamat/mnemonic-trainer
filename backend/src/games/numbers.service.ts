@@ -11,7 +11,7 @@ export interface GeneratedNumbersResponse {
 @Injectable()
 export class NumbersService {
   generate(count = 20, chunkSize = 2): GeneratedNumbersResponse {
-    if (count < 2 || count > 1000) {
+    if (!Number.isInteger(count) || count < 2 || count > 1000) {
       throw new BadRequestException('Count must be between 2 and 1000 digits');
     }
     if (![1, 2, 3].includes(chunkSize)) {

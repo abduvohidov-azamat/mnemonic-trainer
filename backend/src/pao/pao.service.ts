@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PaoEntryEntity } from '../entities/pao-entry.entity';
@@ -69,6 +69,9 @@ export class PaoService {
   async updatePao(userId: string, key: string, dto: UpdatePaoDto): Promise<PaoEntryEntity> {
     const isCard = CARDS_PAO_SEED.some((c) => c.key === key);
     const defaultSeed = ALL_PAO_SEED.find((s) => s.key === key);
+    if (!defaultSeed) {
+      throw new BadRequestException(`Unknown PAO key: ${key}`);
+    }
 
     let entry = await this.paoRepository.findOne({
       where: { user: { id: userId }, key },

@@ -38,6 +38,20 @@ describe('SessionsService', () => {
       expect(res.diffBreakdown[2].status).toBe('incorrect');
       expect(res.diffBreakdown[4].status).toBe('missing');
     });
+
+    it('should keep digit positions when blank slots are sent as spaces', () => {
+      const res = service.evaluate({
+        discipline: 'numbers',
+        config: { chunkSize: 2 },
+        targetSequence: '123456',
+        recallSequence: '12 456',
+        durationMs: 10000,
+      });
+
+      expect(res.totalCorrect).toBe(5);
+      expect(res.diffBreakdown[2].status).toBe('missing');
+      expect(res.diffBreakdown[5].status).toBe('correct');
+    });
   });
 
   describe('evaluate cards', () => {

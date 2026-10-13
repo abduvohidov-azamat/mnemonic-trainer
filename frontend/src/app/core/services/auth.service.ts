@@ -27,6 +27,7 @@ export class AuthService {
         this.currentUser.set(user);
         this.isAuthenticated.set(true);
         this.isGuest.set(user.isGuest);
+        this.validateStoredToken();
         return;
       } catch (e) {
         localStorage.removeItem('mnemonic_token');
@@ -36,6 +37,24 @@ export class AuthService {
 
     // Auto-create guest user
     this.loginAsGuest().subscribe();
+  }
+
+  // The stored token may point to a user that no longer exists (e.g. database reset)
+  private validateStoredToken() {
+    this.api.get<UserProfile>('auth/me').subscribe({
+      next: (user) => {
+        localStorage.setItem('mnemonic_user', JSON.stringify(user));
+        this.currentUser.set(user);
+        this.isGuest.set(user.isGuest);
+      },
+      error: (err) => {
+        if (err?.status === 401) {
+          localStorage.removeItem('mnemonic_token');
+          localStorage.removeItem('mnemonic_user');
+          this.loginAsGuest().subscribe();
+        }
+      },
+    });
   }
 
   loginAsGuest() {

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameStore } from '../../core/store/game.store';
 import { ApiService } from '../../core/services/api.service';
@@ -47,7 +47,7 @@ import { CardsConfig, CardItem, EvaluationResult } from '../../core/models/game.
     }
   `],
 })
-export class SpeedCardsComponent implements OnInit {
+export class SpeedCardsComponent implements OnInit, OnDestroy {
   readonly store = inject(GameStore);
   private readonly api = inject(ApiService);
 
@@ -60,6 +60,11 @@ export class SpeedCardsComponent implements OnInit {
 
   ngOnInit() {
     this.store.setDiscipline('cards');
+  }
+
+  ngOnDestroy() {
+    // Stop the timer and auto-pacer when leaving mid-session
+    this.store.resetToConfig();
   }
 
   onStartMemorize(config: CardsConfig) {
@@ -75,6 +80,7 @@ export class SpeedCardsComponent implements OnInit {
         },
         error: (err) => {
           console.error('Failed to generate cards from backend', err);
+          alert('Could not generate a new drill. Please make sure the backend is running.');
         },
       });
   }
@@ -94,6 +100,7 @@ export class SpeedCardsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Failed to evaluate cards from backend', err);
+        alert('Could not evaluate this session. Please make sure the backend is running and try again.');
       },
     });
   }

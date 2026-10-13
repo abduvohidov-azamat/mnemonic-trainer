@@ -1,8 +1,9 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsDefined, IsIn, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class EvaluateSessionDto {
   @IsNotEmpty()
   @IsString()
+  @IsIn(['numbers', 'cards', 'words'])
   discipline: 'numbers' | 'cards' | 'words';
 
   @IsNotEmpty()
@@ -11,7 +12,7 @@ export class EvaluateSessionDto {
   @IsNotEmpty()
   targetSequence: any;
 
-  @IsNotEmpty()
+  @IsDefined()
   recallSequence: any;
 
   @IsNotEmpty()

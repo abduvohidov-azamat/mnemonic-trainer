@@ -70,7 +70,7 @@ export class SessionsService {
 
       for (let i = 0; i < totalItems; i++) {
         const expected = targetStr[i];
-        const actual = recallStr[i] || '';
+        const actual = /\d/.test(recallStr[i] || '') ? recallStr[i] : '';
         if (actual === expected) {
           totalCorrect++;
           diffBreakdown.push({ index: i, expected, actual, status: 'correct' });

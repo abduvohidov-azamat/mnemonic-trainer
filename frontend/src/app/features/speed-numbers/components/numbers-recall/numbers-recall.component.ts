@@ -177,6 +177,8 @@ export class NumbersRecallComponent implements OnInit {
     const val = event.target.value;
     const cleanDigit = val.replace(/\D/g, '').slice(-1);
     this.enteredDigits[index] = cleanDigit;
+    // Reset the DOM value too, otherwise rejected non-digit characters stay visible
+    event.target.value = cleanDigit;
 
     if (cleanDigit && index < this.locusArray.length - 1) {
       this.focusInput(index + 1);
@@ -214,7 +216,8 @@ export class NumbersRecallComponent implements OnInit {
   }
 
   onSubmit() {
-    const recallStr = this.enteredDigits.join('');
+    // Keep blank slots as spaces so later digits stay aligned with their positions
+    const recallStr = this.enteredDigits.map((d) => d || ' ').join('');
     this.submitRecall.emit(recallStr);
   }
 }

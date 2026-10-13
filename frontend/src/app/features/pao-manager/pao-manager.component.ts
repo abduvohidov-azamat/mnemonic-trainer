@@ -51,7 +51,8 @@ import { PaoEditModalComponent } from './components/pao-edit-modal/pao-edit-moda
           <span class="search-icon">🔍</span>
           <input
             type="text"
-            [(ngModel)]="searchQuery"
+            [ngModel]="searchQuery()"
+            (ngModelChange)="searchQuery.set($event)"
             placeholder="Search by key, character, action, or object..."
             class="search-input"
           />
@@ -298,14 +299,14 @@ export class PaoManagerComponent {
   private readonly paoService = inject(PaoService);
 
   readonly activeTab = signal<'numbers' | 'cards'>('numbers');
-  searchQuery = '';
+  readonly searchQuery = signal<string>('');
 
   readonly editingEntry = signal<PaoEntry | null>(null);
 
   readonly filteredEntries = computed(() => {
     const tab = this.activeTab();
     const list = tab === 'numbers' ? this.paoService.numbersPao() : this.paoService.cardsPao();
-    const query = this.searchQuery.toLowerCase().trim();
+    const query = this.searchQuery().toLowerCase().trim();
 
     if (!query) return list;
 
@@ -329,6 +330,10 @@ export class PaoManagerComponent {
     this.paoService.updateEntry(entry.key, data).subscribe({
       next: () => {
         this.editingEntry.set(null);
+      },
+      error: (err) => {
+        console.error('Failed to save PAO entry', err);
+        alert(err.error?.message || 'Could not save this PAO entry. Is the backend running?');
       },
     });
   }

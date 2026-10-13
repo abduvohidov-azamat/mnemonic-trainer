@@ -27,7 +27,7 @@ export class SessionEntity {
   @Column('float')
   score: number;
 
-  @Column('int')
+  @Column('float')
   totalCorrect: number;
 
   @Column('int')

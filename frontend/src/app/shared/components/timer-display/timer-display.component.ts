@@ -1,4 +1,4 @@
-import { Component, Input, computed } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,8 +9,8 @@ import { CommonModule } from '@angular/common';
     <div class="timer-container" [class.running]="isRunning">
       <div class="timer-pulse-dot"></div>
       <div class="timer-values">
-        <span class="timer-main">{{ formattedTime().main }}</span>
-        <span class="timer-ms">.{{ formattedTime().ms }}</span>
+        <span class="timer-main">{{ formattedTime.main }}</span>
+        <span class="timer-ms">.{{ formattedTime.ms }}</span>
       </div>
       @if (label) {
         <span class="timer-label">{{ label }}</span>
@@ -94,7 +94,8 @@ export class TimerDisplayComponent {
   @Input() isRunning = false;
   @Input() label = 'TIME';
 
-  formattedTime = computed(() => {
+  // Plain getter: @Input fields aren't signals, so computed() would never re-run
+  get formattedTime() {
     const ms = this.milliseconds;
     const minutes = Math.floor(ms / 60000);
     const seconds = Math.floor((ms % 60000) / 1000);
@@ -103,5 +104,5 @@ export class TimerDisplayComponent {
       main: `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`,
       ms: centiseconds.toString().padStart(2, '0'),
     };
-  });
+  }
 }

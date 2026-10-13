@@ -10,7 +10,7 @@ export interface GeneratedWordsResponse {
 @Injectable()
 export class WordsService {
   generate(count = 20): GeneratedWordsResponse {
-    if (count < 5 || count > 100) {
+    if (!Number.isInteger(count) || count < 5 || count > 100) {
       throw new BadRequestException('Word count must be between 5 and 100');
     }
 

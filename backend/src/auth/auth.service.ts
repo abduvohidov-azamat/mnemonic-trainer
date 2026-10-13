@@ -112,14 +112,16 @@ export class AuthService {
     };
   }
 
-  async getProfile(userId: string): Promise<UserEntity> {
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-      relations: ['sessions'],
-    });
+  async getProfile(userId: string): Promise<Partial<UserEntity>> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    return user;
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      isGuest: user.isGuest,
+    };
   }
 }
