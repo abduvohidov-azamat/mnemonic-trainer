@@ -12,48 +12,47 @@ import { PaoEditModalComponent } from './components/pao-edit-modal/pao-edit-moda
   template: `
     <div class="pao-page">
       <!-- Header -->
-      <div class="pao-header glass-panel">
+      <div class="pao-header">
         <div class="header-main">
-          <div class="badge badge-cyan">DICTIONARY ENGINE</div>
-          <h1 class="title">PAO (Person-Action-Object) Matrix</h1>
+          <h1 class="page-title">Your PAO list</h1>
           <p class="subtitle">
-            Configure your standard 2-digit Major System (00-99) and 52 Playing Card mnemonic mappings.
+            Each number 00–99 and each playing card has a Person, an Action and an Object. Click any entry to change it to something you'll picture easily.
           </p>
         </div>
 
         <div class="header-actions">
           <button class="btn-secondary btn-sm" (click)="resetDefaults()">
-            ↺ Reset Major System Seed
+            Reset to defaults
           </button>
         </div>
       </div>
 
       <!-- Controls & Search Bar -->
-      <div class="toolbar-bar glass-panel">
+      <div class="toolbar-bar">
         <div class="tab-group">
           <button
             class="tab-btn"
             [class.active]="activeTab() === 'numbers'"
             (click)="activeTab.set('numbers')"
           >
-            🔢 Numbers (00 - 99)
+            Numbers (00–99)
           </button>
           <button
             class="tab-btn"
             [class.active]="activeTab() === 'cards'"
             (click)="activeTab.set('cards')"
           >
-            🃏 Playing Cards (52)
+            Cards (52)
           </button>
         </div>
 
         <div class="search-wrap">
-          <span class="search-icon">🔍</span>
           <input
             type="text"
             [ngModel]="searchQuery()"
             (ngModelChange)="searchQuery.set($event)"
-            placeholder="Search by key, character, action, or object..."
+            placeholder="Search by number, card, person, action or object"
+            aria-label="Search PAO entries"
             class="search-input"
           />
         </div>
@@ -63,28 +62,28 @@ import { PaoEditModalComponent } from './components/pao-edit-modal/pao-edit-moda
       <div class="matrix-grid">
         @for (item of filteredEntries(); track item.key) {
           <div
-            class="pao-card glass-panel glass-panel-interactive"
+            class="pao-card panel panel-interactive"
             [class.custom-pao]="item.isCustom"
             (click)="openEdit(item)"
           >
             <div class="card-head">
               <span class="key-tag font-mono">{{ item.key }}</span>
               @if (item.isCustom) {
-                <span class="custom-badge font-mono">CUSTOM</span>
+                <span class="custom-badge">Edited</span>
               }
             </div>
 
             <div class="pao-props">
               <div class="prop-row person">
-                <span class="prop-label">P</span>
+                <span class="prop-label">Person</span>
                 <span class="prop-text">{{ item.person || '—' }}</span>
               </div>
               <div class="prop-row action">
-                <span class="prop-label">A</span>
+                <span class="prop-label">Action</span>
                 <span class="prop-text">{{ item.action || '—' }}</span>
               </div>
               <div class="prop-row object">
-                <span class="prop-label">O</span>
+                <span class="prop-label">Object</span>
                 <span class="prop-text">{{ item.object || '—' }}</span>
               </div>
             </div>
@@ -93,6 +92,8 @@ import { PaoEditModalComponent } from './components/pao-edit-modal/pao-edit-moda
               <div class="pao-note-sub">{{ item.notes }}</div>
             }
           </div>
+        } @empty {
+          <p class="empty-search">No entries match “{{ searchQuery() }}”.</p>
         }
       </div>
 
@@ -108,30 +109,29 @@ import { PaoEditModalComponent } from './components/pao-edit-modal/pao-edit-moda
   `,
   styles: [`
     .pao-page {
-      padding: 40px 24px;
-      max-width: 1400px;
+      max-width: 1200px;
       margin: 0 auto;
-      min-height: calc(100vh - 80px);
+      padding: 32px 24px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+      @media (max-width: 600px) {
+        padding: 20px 16px 40px;
+      }
     }
 
     .pao-header {
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 20px;
-      padding: 28px;
-      margin-bottom: 24px;
-
-      .title {
-        font-size: 1.8rem;
-        font-weight: 900;
-        margin: 6px 0;
-      }
+      gap: 16px;
 
       .subtitle {
-        color: var(--text-secondary);
-        font-size: 0.95rem;
+        color: var(--text-2);
+        margin-top: 4px;
+        max-width: 640px;
       }
     }
 
@@ -140,78 +140,77 @@ import { PaoEditModalComponent } from './components/pao-edit-modal/pao-edit-moda
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 16px;
-      padding: 16px 24px;
-      margin-bottom: 24px;
+      gap: 12px;
+    }
 
-      .tab-group {
-        display: flex;
-        gap: 6px;
-        background: var(--bg-base);
-        padding: 4px;
-        border-radius: var(--radius-full);
+    .tab-group {
+      display: flex;
+      gap: 4px;
+      background: var(--surface-2);
+      padding: 4px;
+      border-radius: var(--radius-md);
+    }
+
+    .tab-btn {
+      padding: 7px 14px;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      background: none;
+      color: var(--text-2);
+      font-weight: 600;
+      cursor: pointer;
+
+      &.active {
+        background: var(--surface);
+        border-color: var(--border);
+        color: var(--text);
+        box-shadow: var(--shadow-sm);
       }
+    }
 
-      .tab-btn {
-        background: none;
-        border: none;
-        color: var(--text-secondary);
-        font-family: var(--font-sans);
-        font-size: 0.9rem;
-        font-weight: 700;
-        padding: 8px 20px;
-        border-radius: var(--radius-full);
-        cursor: pointer;
-        transition: all var(--transition-fast);
+    .search-wrap {
+      flex: 1;
+      max-width: 380px;
+      min-width: 220px;
 
-        &.active {
-          background: var(--accent-cyan);
-          color: #040914;
+      .search-input {
+        width: 100%;
+        padding: 9px 12px;
+        background: var(--surface);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-md);
+        color: var(--text);
+
+        &::placeholder {
+          color: var(--text-3);
         }
-      }
 
-      .search-wrap {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        background: var(--bg-base);
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-full);
-        padding: 8px 16px;
-        min-width: 320px;
-
-        .search-icon { font-size: 0.9rem; opacity: 0.6; }
-
-        .search-input {
-          flex: 1;
-          background: none;
-          border: none;
-          color: var(--text-primary);
-          font-family: var(--font-sans);
-          font-size: 0.9rem;
-
-          &:focus { outline: none; }
+        &:focus {
+          outline: none;
+          border-color: var(--accent);
+          box-shadow: var(--focus-ring);
         }
       }
     }
 
     .matrix-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 12px;
+    }
+
+    .empty-search {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: var(--text-2);
+      padding: 32px 16px;
     }
 
     .pao-card {
-      padding: 16px;
-      background: var(--bg-surface);
-      border-radius: var(--radius-md);
+      padding: 14px 16px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-
-      &.custom-pao {
-        border-color: rgba(255, 183, 3, 0.4);
-      }
+      gap: 10px;
 
       .card-head {
         display: flex;
@@ -219,78 +218,54 @@ import { PaoEditModalComponent } from './components/pao-edit-modal/pao-edit-moda
         justify-content: space-between;
 
         .key-tag {
-          font-size: 1.2rem;
-          font-weight: 900;
-          color: #ffffff;
-          background: rgba(0, 240, 255, 0.1);
-          border: 1px solid rgba(0, 240, 255, 0.3);
-          padding: 2px 10px;
-          border-radius: var(--radius-sm);
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: var(--text);
         }
 
         .custom-badge {
-          font-size: 0.65rem;
-          font-weight: 800;
-          color: var(--accent-amber);
-          background: rgba(255, 183, 3, 0.12);
-          padding: 2px 6px;
-          border-radius: 4px;
+          font-family: var(--font-sans);
+          font-size: 0.75rem;
+          font-weight: 600;
+          padding: 1px 8px;
+          border-radius: var(--radius-full);
+          background: var(--accent-soft);
+          color: var(--accent-ink);
         }
       }
 
       .pao-props {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 4px;
 
         .prop-row {
           display: flex;
-          align-items: center;
           gap: 8px;
-          font-size: 0.85rem;
+          align-items: baseline;
+          font-size: 0.95rem;
 
           .prop-label {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            font-weight: 800;
-            width: 18px;
-            height: 18px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-3);
+            min-width: 48px;
           }
 
           .prop-text {
-            font-weight: 600;
-            white-space: nowrap;
+            color: var(--text);
             overflow: hidden;
             text-overflow: ellipsis;
-          }
-
-          &.person {
-            .prop-label { background: rgba(0, 240, 255, 0.15); color: var(--accent-cyan); }
-            .prop-text { color: var(--text-primary); }
-          }
-
-          &.action {
-            .prop-label { background: rgba(255, 183, 3, 0.15); color: var(--accent-amber); }
-            .prop-text { color: var(--text-secondary); }
-          }
-
-          &.object {
-            .prop-label { background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); }
-            .prop-text { color: var(--text-secondary); }
+            white-space: nowrap;
           }
         }
       }
 
       .pao-note-sub {
-        font-size: 0.72rem;
-        color: var(--text-muted);
-        font-style: italic;
-        border-top: 1px solid rgba(255, 255, 255, 0.04);
-        padding-top: 6px;
+        font-size: 0.8rem;
+        color: var(--text-3);
+        border-top: 1px solid var(--border);
+        padding-top: 8px;
       }
     }
   `],
@@ -339,7 +314,7 @@ export class PaoManagerComponent {
   }
 
   resetDefaults() {
-    if (confirm('Reset your entire PAO matrix back to the default Major System seed?')) {
+    if (confirm('Reset all your PAO entries to the defaults? Your edits will be lost.')) {
       this.paoService.resetToDefault().subscribe();
     }
   }

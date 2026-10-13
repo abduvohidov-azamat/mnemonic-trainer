@@ -39,7 +39,6 @@ export class AuthService {
     this.loginAsGuest().subscribe();
   }
 
-  // The stored token may point to a user that no longer exists (e.g. database reset)
   private validateStoredToken() {
     this.api.get<UserProfile>('auth/me').subscribe({
       next: (user) => {

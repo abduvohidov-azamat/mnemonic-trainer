@@ -8,19 +8,19 @@ import { NumbersConfig } from '../../../../core/models/game.models';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="config-card glass-panel">
+    <div class="config-card panel">
       <div class="config-header">
         <div class="discipline-badge">
-          <span class="icon">🔢</span> SPEED NUMBERS
+          Numbers
         </div>
-        <h2 class="title">Discipline Configuration</h2>
-        <p class="subtitle">Train digit chunking, phonetic translation, and rapid locus indexing.</p>
+        <h2 class="title">Set up your drill</h2>
+        <p class="subtitle">Choose how many digits to memorise and how they're grouped.</p>
       </div>
 
       <div class="config-grid">
         <!-- Digit Count Preset & Custom -->
         <div class="setting-block">
-          <label class="setting-label">Total Digits</label>
+          <label class="setting-label">How many digits</label>
           <div class="preset-pills">
             @for (preset of [20, 50, 100, 200, 500]; track preset) {
               <button
@@ -36,63 +36,63 @@ import { NumbersConfig } from '../../../../core/models/game.models';
 
         <!-- Chunk Size (Locus grouping) -->
         <div class="setting-block">
-          <label class="setting-label">Digits per Locus (Chunk Size)</label>
+          <label class="setting-label">Digits shown at a time</label>
           <div class="preset-pills">
             <button
               class="pill-btn"
               [class.active]="chunkSize === 1"
               (click)="chunkSize = 1"
             >
-              1 Digit (Single)
+              1 digit
             </button>
             <button
               class="pill-btn"
               [class.active]="chunkSize === 2"
               (click)="chunkSize = 2"
             >
-              2 Digits (Standard PAO)
+              2 digits (recommended for PAO)
             </button>
             <button
               class="pill-btn"
               [class.active]="chunkSize === 3"
               (click)="chunkSize = 3"
             >
-              3 Digits (Advanced)
+              3 digits
             </button>
           </div>
         </div>
 
         <!-- Auto-Pacer Speed -->
         <div class="setting-block">
-          <label class="setting-label">Navigation & Pacing</label>
+          <label class="setting-label">Moving through the digits</label>
           <div class="preset-pills">
             <button
               class="pill-btn"
               [class.active]="autoPacerMs === 0"
               (click)="autoPacerMs = 0"
             >
-              Manual Keyboard (Space/Arrows)
+              At my own pace
             </button>
             <button
               class="pill-btn"
               [class.active]="autoPacerMs === 2000"
               (click)="autoPacerMs = 2000"
             >
-              Pacer 2.0s
+              Every 2 seconds
             </button>
             <button
               class="pill-btn"
               [class.active]="autoPacerMs === 1200"
               (click)="autoPacerMs = 1200"
             >
-              Pacer 1.2s (Fast)
+              Every 1.2 seconds
             </button>
             <button
               class="pill-btn"
               [class.active]="autoPacerMs === 750"
               (click)="autoPacerMs = 750"
             >
-              Pacer 750ms (Athlete)
+              Every 0.75 seconds
             </button>
           </div>
         </div>
@@ -100,8 +100,8 @@ import { NumbersConfig } from '../../../../core/models/game.models';
         <!-- Live PAO Assistant Toggle -->
         <div class="setting-block toggle-block">
           <div class="toggle-info">
-            <span class="toggle-title">Live PAO Matrix Hints</span>
-            <span class="toggle-desc">Display mapped Person, Action, and Object during memorization.</span>
+            <span class="toggle-title">Show PAO hints</span>
+            <span class="toggle-desc">See the person, action and object for each group while you memorise.</span>
           </div>
           <label class="switch">
             <input type="checkbox" [(ngModel)]="enablePaoHints" />
@@ -113,50 +113,49 @@ import { NumbersConfig } from '../../../../core/models/game.models';
       <!-- Start Button -->
       <div class="config-footer">
         <button class="btn-primary start-btn" (click)="onStart()">
-          <span>⚡ Launch Memorization</span>
+          Start memorising
         </button>
       </div>
     </div>
   `,
   styles: [`
     .config-card {
-      max-width: 720px;
+      max-width: 760px;
       margin: 0 auto;
-      padding: 36px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
     }
 
     .config-header {
-      margin-bottom: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
 
       .discipline-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        color: var(--accent-cyan);
-        font-family: var(--font-mono);
+        align-self: flex-start;
+        padding: 2px 10px;
+        border-radius: var(--radius-full);
+        background: var(--accent-soft);
+        color: var(--accent-ink);
         font-size: 0.8rem;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        margin-bottom: 8px;
+        font-weight: 600;
       }
 
       .title {
-        font-size: 1.8rem;
-        font-weight: 900;
-        margin-bottom: 6px;
+        font-size: 1.5rem;
       }
 
       .subtitle {
-        color: var(--text-secondary);
-        font-size: 0.95rem;
+        color: var(--text-2);
       }
     }
 
     .config-grid {
       display: flex;
       flex-direction: column;
-      gap: 24px;
-      margin-bottom: 36px;
+      gap: 22px;
     }
 
     .setting-block {
@@ -165,11 +164,9 @@ import { NumbersConfig } from '../../../../core/models/game.models';
       gap: 10px;
 
       .setting-label {
-        font-size: 0.82rem;
-        font-weight: 700;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--text);
       }
     }
 
@@ -180,28 +177,25 @@ import { NumbersConfig } from '../../../../core/models/game.models';
     }
 
     .pill-btn {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
       border-radius: var(--radius-md);
-      color: var(--text-secondary);
-      font-family: var(--font-sans);
-      font-size: 0.9rem;
-      font-weight: 700;
-      padding: 10px 18px;
+      color: var(--text-2);
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 8px 14px;
       cursor: pointer;
-      transition: all var(--transition-fast);
+      transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
 
       &:hover {
-        background: var(--bg-surface-elevated);
-        color: var(--text-primary);
-        border-color: rgba(255, 255, 255, 0.2);
+        background: var(--surface-2);
+        color: var(--text);
       }
 
       &.active {
-        background: rgba(0, 240, 255, 0.15);
-        color: var(--accent-cyan);
-        border-color: var(--accent-cyan);
-        box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        background: var(--accent-soft);
+        border-color: var(--accent);
+        color: var(--accent-ink);
       }
     }
 
@@ -209,23 +203,23 @@ import { NumbersConfig } from '../../../../core/models/game.models';
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
-      background: var(--bg-surface);
-      padding: 16px 20px;
+      gap: 16px;
+      padding: 14px 16px;
+      background: var(--surface-2);
       border-radius: var(--radius-md);
-      border: 1px solid var(--border-subtle);
 
       .toggle-info {
         display: flex;
         flex-direction: column;
+        gap: 2px;
 
         .toggle-title {
-          font-weight: 700;
-          font-size: 0.95rem;
+          font-weight: 600;
         }
 
         .toggle-desc {
-          font-size: 0.8rem;
-          color: var(--text-muted);
+          color: var(--text-2);
+          font-size: 0.9rem;
         }
       }
     }
@@ -233,48 +227,61 @@ import { NumbersConfig } from '../../../../core/models/game.models';
     .switch {
       position: relative;
       display: inline-block;
-      width: 50px;
-      height: 26px;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
 
-      input { opacity: 0; width: 0; height: 0; }
+      input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
 
       .slider {
         position: absolute;
+        inset: 0;
         cursor: pointer;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background-color: var(--bg-surface-elevated);
-        border: 1px solid var(--border-subtle);
-        transition: .3s;
-        border-radius: 34px;
+        background: var(--surface-3);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-full);
+        transition: background-color var(--transition-fast);
 
         &::before {
+          content: '';
           position: absolute;
-          content: "";
-          height: 18px;
           width: 18px;
-          left: 3px;
-          bottom: 3px;
-          background-color: white;
-          transition: .3s;
+          height: 18px;
+          left: 2px;
+          top: 2px;
+          background: var(--surface);
           border-radius: 50%;
+          box-shadow: var(--shadow-sm);
+          transition: transform var(--transition-fast);
         }
       }
 
       input:checked + .slider {
-        background-color: var(--accent-cyan);
-        border-color: var(--accent-cyan);
+        background: var(--accent);
+        border-color: var(--accent);
       }
 
-      input:checked + .slider:before {
-        transform: translateX(24px);
-        background-color: #040914;
+      input:checked + .slider::before {
+        transform: translateX(20px);
       }
+
+      input:focus-visible + .slider {
+        box-shadow: var(--focus-ring);
+      }
+    }
+
+    .config-footer {
+      padding-top: 4px;
     }
 
     .start-btn {
       width: 100%;
-      padding: 16px;
-      font-size: 1.1rem;
+      padding: 12px;
+      font-size: 1rem;
     }
   `],
 })

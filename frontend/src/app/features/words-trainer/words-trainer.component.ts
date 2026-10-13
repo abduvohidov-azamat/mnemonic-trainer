@@ -42,8 +42,11 @@ import { WordsConfig, EvaluationResult } from '../../core/models/game.models';
   `,
   styles: [`
     .discipline-page {
-      padding: 40px 24px;
-      min-height: calc(100vh - 80px);
+      padding: 32px 24px 48px;
+
+      @media (max-width: 600px) {
+        padding: 20px 16px 40px;
+      }
     }
   `],
 })
@@ -61,7 +64,6 @@ export class WordsTrainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Stop the timer and auto-pacer when leaving mid-session
     this.store.resetToConfig();
   }
 

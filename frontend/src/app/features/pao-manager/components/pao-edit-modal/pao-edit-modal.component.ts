@@ -9,23 +9,23 @@ import { PaoEntry } from '../../../../core/models/pao.models';
   imports: [CommonModule, FormsModule],
   template: `
     <div class="modal-backdrop" (click)="close.emit()">
-      <div class="modal-card glass-panel" (click)="$event.stopPropagation()">
+      <div class="modal-card panel" (click)="$event.stopPropagation()">
         <!-- Header -->
         <div class="modal-header">
           <div class="header-left">
             <span class="key-badge font-mono">{{ entry.key }}</span>
             <div class="title-wrap">
-              <h3 class="modal-title">Edit PAO Definition</h3>
-              <span class="modal-sub">{{ entry.type === 'card' ? 'Playing Card' : 'Major System Number' }}</span>
+              <h3 class="modal-title">Edit PAO entry</h3>
+              <span class="modal-sub">{{ entry.type === 'card' ? 'Playing card' : 'Number' }}</span>
             </div>
           </div>
-          <button class="close-btn" (click)="close.emit()">✕</button>
+          <button class="close-btn" aria-label="Close" (click)="close.emit()">✕</button>
         </div>
 
         <!-- Edit Form -->
         <div class="modal-form">
           <div class="form-group person-group">
-            <label>PERSON (WHO)</label>
+            <label>Person</label>
             <input
               type="text"
               [(ngModel)]="person"
@@ -35,17 +35,17 @@ import { PaoEntry } from '../../../../core/models/pao.models';
           </div>
 
           <div class="form-group action-group">
-            <label>ACTION (DOING WHAT)</label>
+            <label>Action</label>
             <input
               type="text"
               [(ngModel)]="action"
-              placeholder="e.g. splitting with laser"
+              placeholder="e.g. splitting"
               class="form-control"
             />
           </div>
 
           <div class="form-group object-group">
-            <label>OBJECT (WITH WHAT)</label>
+            <label>Object</label>
             <input
               type="text"
               [(ngModel)]="object"
@@ -55,7 +55,7 @@ import { PaoEntry } from '../../../../core/models/pao.models';
           </div>
 
           <div class="form-group">
-            <label>Mnemonic Notes / Phonetics</label>
+            <label>Notes <span class="optional">(optional)</span></label>
             <input
               type="text"
               [(ngModel)]="notes"
@@ -68,7 +68,7 @@ import { PaoEntry } from '../../../../core/models/pao.models';
         <!-- Footer -->
         <div class="modal-footer">
           <button class="btn-secondary" (click)="close.emit()">Cancel</button>
-          <button class="btn-primary" (click)="onSave()">Save Changes</button>
+          <button class="btn-primary" (click)="onSave()">Save</button>
         </div>
       </div>
     </div>
@@ -76,121 +76,128 @@ import { PaoEntry } from '../../../../core/models/pao.models';
   styles: [`
     .modal-backdrop {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(8px);
+      inset: 0;
+      z-index: 1000;
+      background: rgba(15, 18, 24, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
       padding: 16px;
+      animation: fadeIn 0.15s ease-out;
     }
 
     .modal-card {
       width: 100%;
-      max-width: 520px;
-      padding: 28px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-accent);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-      animation: modalSlide 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+      max-width: 440px;
+      padding: 24px;
+      box-shadow: var(--shadow-md);
     }
 
     .modal-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 24px;
-      border-bottom: 1px solid var(--border-subtle);
-      padding-bottom: 14px;
-
-      .header-left {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .key-badge {
-        font-size: 1.4rem;
-        font-weight: 900;
-        background: rgba(0, 240, 255, 0.15);
-        color: var(--accent-cyan);
-        border: 1px solid var(--accent-cyan);
-        padding: 4px 12px;
-        border-radius: var(--radius-sm);
-        box-shadow: 0 0 15px var(--accent-cyan-glow);
-      }
-
-      .modal-title {
-        font-size: 1.2rem;
-        font-weight: 800;
-      }
-
-      .modal-sub {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-
-      .close-btn {
-        background: none;
-        border: none;
-        color: var(--text-muted);
-        font-size: 1.2rem;
-        cursor: pointer;
-        &:hover { color: var(--text-primary); }
-      }
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
-    .modal-form {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-bottom: 24px;
+    .close-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: none;
+      color: var(--text-3);
+      font-size: 1rem;
+      cursor: pointer;
+
+      &:hover {
+        background: var(--surface-2);
+        color: var(--text);
+      }
     }
 
     .form-group {
       display: flex;
       flex-direction: column;
       gap: 6px;
+      margin-bottom: 14px;
 
       label {
-        font-size: 0.75rem;
-        font-weight: 800;
-        letter-spacing: 0.08em;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text);
       }
 
-      &.person-group label { color: var(--accent-cyan); }
-      &.action-group label { color: var(--accent-amber); }
-      &.object-group label { color: var(--accent-purple); }
-
       .form-control {
-        background: var(--bg-base);
-        border: 1px solid var(--border-subtle);
+        width: 100%;
+        padding: 10px 12px;
+        background: var(--surface);
+        border: 1px solid var(--border-strong);
         border-radius: var(--radius-md);
-        padding: 10px 14px;
-        color: var(--text-primary);
-        font-family: var(--font-sans);
-        font-size: 0.95rem;
+        color: var(--text);
+        font-size: 1rem;
+        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+
+        &::placeholder {
+          color: var(--text-3);
+        }
 
         &:focus {
           outline: none;
-          border-color: var(--accent-cyan);
-          box-shadow: 0 0 10px var(--accent-cyan-glow);
+          border-color: var(--accent);
+          box-shadow: var(--focus-ring);
         }
       }
+    }
+
+    .modal-card {
+      max-width: 480px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .key-badge {
+      min-width: 48px;
+      height: 48px;
+      padding: 0 8px;
+      border-radius: var(--radius-md);
+      background: var(--accent-soft);
+      color: var(--accent-ink);
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .title-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-title {
+      font-size: 1.15rem;
+    }
+
+    .modal-sub {
+      font-size: 0.9rem;
+      color: var(--text-3);
     }
 
     .modal-footer {
       display: flex;
       justify-content: flex-end;
-      gap: 12px;
+      gap: 8px;
+      margin-top: 8px;
     }
 
-    @keyframes modalSlide {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    .optional {
+      color: var(--text-3);
+      font-weight: 400;
     }
   `],
 })

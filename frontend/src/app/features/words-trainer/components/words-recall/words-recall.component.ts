@@ -9,29 +9,28 @@ import { GameStore } from '../../../../core/store/game.store';
   imports: [CommonModule, FormsModule],
   template: `
     <div class="recall-container">
-      <div class="recall-header glass-panel">
+      <div class="recall-header panel">
         <div class="header-info">
-          <span class="badge badge-cyan">WORDS RECALL PHASE</span>
-          <h2 class="title">Type Recalled Words</h2>
-          <p class="desc">Enter the word associated with each locus. Press Enter to jump to the next input.</p>
+          <h2 class="title">Type the words you remember</h2>
+          <p class="desc">Write each word in its position. Press Enter to move to the next box.</p>
         </div>
         <button class="btn-primary submit-btn" (click)="onSubmit()">
-          ✓ Submit Evaluation
+          Check my answers
         </button>
       </div>
 
       <!-- Words Recall Form List -->
-      <div class="words-recall-grid glass-panel">
+      <div class="words-recall-grid panel">
         @for (item of wordsArray; track $index) {
           <div class="word-input-row" [class.focused]="$index === focusedIndex">
-            <span class="locus-badge font-mono">#{{ $index + 1 }}</span>
+            <span class="locus-badge font-mono">{{ $index + 1 }}</span>
             <input
               #wordInput
               type="text"
               [(ngModel)]="recalledWords[$index]"
               (focus)="focusedIndex = $index"
               (keydown)="onKeyDown($event, $index)"
-              placeholder="Word #{{ $index + 1 }}"
+              placeholder="Word {{ $index + 1 }}"
               class="word-input"
             />
           </div>
@@ -43,73 +42,89 @@ import { GameStore } from '../../../../core/store/game.store';
     .recall-container {
       display: flex;
       flex-direction: column;
-      gap: 20px;
-      max-width: 840px;
+      gap: 16px;
+      max-width: 960px;
       margin: 0 auto;
-      animation: fadeIn 0.25s ease-out;
+      animation: fadeIn 0.2s ease-out;
     }
 
     .recall-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 18px 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 18px 22px;
 
-      .title { font-size: 1.3rem; font-weight: 800; }
-      .desc { font-size: 0.85rem; color: var(--text-muted); }
+      .header-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .title {
+        font-size: 1.35rem;
+      }
+
+      .desc {
+        color: var(--text-2);
+        font-size: 0.95rem;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 8px;
+      }
     }
 
     .words-recall-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 12px;
-      padding: 24px;
-      background: var(--bg-base);
-      max-height: 480px;
+      grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+      gap: 10px;
+      padding: 20px;
+      max-height: 520px;
       overflow-y: auto;
     }
 
     .word-input-row {
       display: flex;
       align-items: center;
-      gap: 12px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
+      gap: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
       border-radius: var(--radius-md);
-      padding: 8px 14px;
-      transition: all var(--transition-fast);
+      padding: 8px 12px;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 
       .locus-badge {
-        font-size: 0.8rem;
-        font-weight: 800;
-        color: var(--accent-cyan);
-        min-width: 32px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-3);
+        min-width: 28px;
       }
 
       .word-input {
         flex: 1;
+        min-width: 0;
         background: none;
         border: none;
-        color: var(--text-primary);
-        font-family: var(--font-sans);
+        color: var(--text);
         font-size: 1rem;
-        font-weight: 600;
+
+        &::placeholder {
+          color: var(--text-3);
+        }
 
         &:focus {
           outline: none;
+          box-shadow: none;
         }
       }
 
       &.focused {
-        border-color: var(--accent-cyan);
-        box-shadow: 0 0 15px var(--accent-cyan-glow);
-        background: rgba(0, 240, 255, 0.08);
+        border-color: var(--accent);
+        box-shadow: var(--focus-ring);
       }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
     }
   `],
 })

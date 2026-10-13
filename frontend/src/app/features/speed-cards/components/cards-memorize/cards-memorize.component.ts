@@ -13,9 +13,9 @@ import { CardItem } from '../../../../core/models/game.models';
   template: `
     <div class="memorize-container">
       <!-- HUD -->
-      <div class="hud-bar glass-panel">
+      <div class="hud-bar panel">
         <div class="hud-col">
-          <span class="hud-label">CARDS PROGRESS</span>
+          <span class="hud-label">Card</span>
           <span class="hud-val font-mono">
             {{ store.activeLocusIndex() + 1 }} <span class="total">/ {{ store.totalLoci() }}</span>
           </span>
@@ -24,21 +24,21 @@ import { CardItem } from '../../../../core/models/game.models';
         <app-timer-display
           [milliseconds]="store.timerMs()"
           [isRunning]="store.isTimerRunning()"
-          label="MEMORIZE"
+          label="Memorising"
         ></app-timer-display>
 
         <div class="hud-actions">
           <button class="btn-secondary btn-sm" (click)="store.togglePaoHints()">
-            {{ store.enablePaoHints() ? '🧩 Hide PAO' : '🧩 Show PAO' }}
+            {{ store.enablePaoHints() ? 'Hide hints' : 'Show hints' }}
           </button>
-          <button class="btn-primary btn-sm recall-btn" (click)="store.startRecall()">
-            Recall Phase ➔
+          <button class="btn-primary btn-sm" (click)="store.startRecall()">
+            Done, start recall
           </button>
         </div>
       </div>
 
       <!-- Active Card Stage -->
-      <div class="card-stage glass-panel">
+      <div class="card-stage panel">
         <div class="cards-display-row">
           @if (isChunkArray()) {
             @for (card of activeCardsList(); track card.key) {
@@ -52,7 +52,7 @@ import { CardItem } from '../../../../core/models/game.models';
             </div>
           }
         </div>
-        <div class="stage-sub">Locus #{{ store.activeLocusIndex() + 1 }}</div>
+        <div class="stage-sub">{{ store.activeLocusIndex() + 1 }} of {{ store.totalLoci() }}</div>
       </div>
 
       <!-- PAO Assistant -->
@@ -61,8 +61,8 @@ import { CardItem } from '../../../../core/models/game.models';
       }
 
       <!-- Mini Deck Strip Navigation -->
-      <div class="deck-strip glass-panel">
-        <div class="strip-header">DECK LOCI</div>
+      <div class="strip-wrap panel">
+        <div class="strip-title">All positions — click one to jump to it</div>
         <div class="strip-items">
           @for (locus of store.targetLoci(); track $index) {
             <button
@@ -72,7 +72,7 @@ import { CardItem } from '../../../../core/models/game.models';
               [class.future-locus]="$index > store.activeLocusIndex()"
               (click)="store.setLocus($index)"
             >
-              #{{ $index + 1 }}
+              {{ $index + 1 }}
             </button>
           }
         </div>
@@ -81,18 +81,18 @@ import { CardItem } from '../../../../core/models/game.models';
       <!-- Controls -->
       <div class="controls-legend">
         <div class="legend-keys">
-          <span class="key-pill">Space</span> / <span class="key-pill">➔</span> Next Card
+          <span class="key-pill">Space</span> or <span class="key-pill">→</span> next
           <span class="divider">|</span>
-          <span class="key-pill">⬅</span> Previous
+          <span class="key-pill">←</span> back
           <span class="divider">|</span>
-          <span class="key-pill">Enter</span> Finish
+          <span class="key-pill">Enter</span> finish
         </div>
         <div class="nav-buttons-mobile">
           <button class="btn-secondary" (click)="store.prevLocus()" [disabled]="store.activeLocusIndex() === 0">
-            ⬅ Prev
+            ← Back
           </button>
           <button class="btn-primary" (click)="store.nextLocus()">
-            Next (Space) ➔
+            Next →
           </button>
         </div>
       </div>
@@ -102,17 +102,19 @@ import { CardItem } from '../../../../core/models/game.models';
     .memorize-container {
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 16px;
       max-width: 900px;
       margin: 0 auto;
-      animation: fadeIn 0.25s ease-out;
+      animation: fadeIn 0.2s ease-out;
     }
 
     .hud-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 28px;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 14px 20px;
     }
 
     .hud-col {
@@ -120,74 +122,36 @@ import { CardItem } from '../../../../core/models/game.models';
       flex-direction: column;
 
       .hud-label {
-        font-size: 0.7rem;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        color: var(--text-muted);
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-3);
       }
 
       .hud-val {
-        font-size: 1.4rem;
-        font-weight: 800;
-        color: var(--accent-cyan);
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text);
 
         .total {
           font-size: 1rem;
-          color: var(--text-muted);
+          color: var(--text-3);
         }
       }
     }
 
     .hud-actions {
       display: flex;
-      gap: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
-    .btn-sm {
-      padding: 8px 16px;
-      font-size: 0.85rem;
-    }
+    .strip-wrap {
+      padding: 16px 20px;
 
-    .recall-btn {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-    }
-
-    .card-stage {
-      padding: 48px 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--border-accent);
-      box-shadow: 0 0 35px rgba(0, 240, 255, 0.12);
-    }
-
-    .cards-display-row {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .stage-sub {
-      font-family: var(--font-mono);
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-top: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .deck-strip {
-      padding: 18px;
-      background: var(--bg-base);
-
-      .strip-header {
-        font-size: 0.72rem;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        color: var(--text-muted);
+      .strip-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-3);
         margin-bottom: 10px;
       }
 
@@ -203,31 +167,30 @@ import { CardItem } from '../../../../core/models/game.models';
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 16px;
-      padding: 12px 20px;
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-subtle);
+      gap: 12px;
 
       .legend-keys {
-        font-size: 0.85rem;
-        color: var(--text-secondary);
+        font-size: 0.9rem;
+        color: var(--text-2);
         display: flex;
         align-items: center;
-        gap: 8px;
+        flex-wrap: wrap;
+        gap: 6px;
 
         .key-pill {
-          background: var(--bg-surface-elevated);
-          border: 1px solid var(--border-subtle);
-          padding: 2px 8px;
-          border-radius: 4px;
+          background: var(--surface);
+          border: 1px solid var(--border-strong);
+          border-bottom-width: 2px;
+          padding: 1px 7px;
+          border-radius: var(--radius-sm);
           font-family: var(--font-mono);
-          font-weight: 700;
-          color: var(--accent-cyan);
+          font-size: 0.8rem;
+          color: var(--text);
         }
 
         .divider {
-          color: var(--border-subtle);
+          color: var(--border-strong);
+          margin: 0 4px;
         }
       }
 
@@ -237,9 +200,25 @@ import { CardItem } from '../../../../core/models/game.models';
       }
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+    .card-stage {
+      padding: 36px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .cards-display-row {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      perspective: 1000px;
+    }
+
+    .stage-sub {
+      font-size: 0.95rem;
+      color: var(--text-3);
     }
   `],
 })

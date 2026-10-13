@@ -29,7 +29,6 @@ export class PaoService {
   });
 
   constructor() {
-    // Custom PAO entries are per-user: reload whenever the active user changes
     effect(
       () => {
         this.userId();

@@ -10,26 +10,25 @@ import { KeypadComponent } from '../../../../shared/components/keypad/keypad.com
   imports: [CommonModule, FormsModule, KeypadComponent],
   template: `
     <div class="recall-container">
-      <div class="recall-header glass-panel">
+      <div class="recall-header panel">
         <div class="header-info">
-          <span class="badge badge-cyan">RECALL PHASE</span>
-          <h2 class="title">Enter Recalled Digits</h2>
-          <p class="desc">Type directly with your keyboard or use the on-screen keypad below.</p>
+          <h2 class="title">Type the digits you remember</h2>
+          <p class="desc">Use your keyboard or the keypad below. Leave a box empty if you can't remember it.</p>
         </div>
         <button class="btn-primary submit-btn" (click)="onSubmit()">
-          ✓ Submit Evaluation
+          Check my answers
         </button>
       </div>
 
       <!-- Recall Digits Grid -->
-      <div class="digits-entry-grid glass-panel">
+      <div class="digits-entry-grid panel">
         @for (locus of locusArray; track $index) {
           <div
             class="recall-locus-cell"
             [class.active-cell]="$index === activeIndex"
             (click)="focusInput($index)"
           >
-            <span class="locus-num">#{{ $index + 1 }}</span>
+            <span class="locus-num">{{ $index + 1 }}</span>
             <input
               #digitInput
               type="text"
@@ -58,36 +57,46 @@ import { KeypadComponent } from '../../../../shared/components/keypad/keypad.com
     .recall-container {
       display: flex;
       flex-direction: column;
-      gap: 24px;
-      max-width: 900px;
+      gap: 16px;
+      max-width: 960px;
       margin: 0 auto;
-      animation: fadeIn 0.25s ease-out;
+      animation: fadeIn 0.2s ease-out;
     }
 
     .recall-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 20px 28px;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 18px 22px;
+
+      .header-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
 
       .title {
-        font-size: 1.4rem;
-        font-weight: 800;
-        margin-top: 4px;
+        font-size: 1.35rem;
       }
 
       .desc {
-        font-size: 0.85rem;
-        color: var(--text-muted);
+        color: var(--text-2);
+        font-size: 0.95rem;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 8px;
       }
     }
 
     .digits-entry-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(54px, 1fr));
-      gap: 10px;
-      padding: 24px;
-      background: var(--bg-base);
+      grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+      gap: 8px;
+      padding: 20px;
       max-height: 420px;
       overflow-y: auto;
     }
@@ -96,17 +105,17 @@ import { KeypadComponent } from '../../../../shared/components/keypad/keypad.com
       display: flex;
       flex-direction: column;
       align-items: center;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
       border-radius: var(--radius-sm);
-      padding: 6px 2px;
+      padding: 4px 2px 2px;
       cursor: text;
-      transition: all var(--transition-fast);
+      transition: border-color var(--transition-fast), background-color var(--transition-fast);
 
       .locus-num {
         font-family: var(--font-mono);
-        font-size: 0.6rem;
-        color: var(--text-muted);
+        font-size: 0.65rem;
+        color: var(--text-3);
       }
 
       .cell-input {
@@ -114,31 +123,27 @@ import { KeypadComponent } from '../../../../shared/components/keypad/keypad.com
         text-align: center;
         background: none;
         border: none;
-        color: #ffffff;
-        font-size: 1.4rem;
-        font-weight: 800;
-        caret-color: var(--accent-cyan);
+        color: var(--text);
+        font-family: var(--font-mono);
+        font-size: 1.35rem;
+        font-weight: 700;
+        caret-color: var(--accent);
 
         &:focus {
           outline: none;
+          box-shadow: none;
         }
       }
 
       &.active-cell {
-        border-color: var(--accent-cyan);
-        background: rgba(0, 240, 255, 0.12);
-        box-shadow: 0 0 15px var(--accent-cyan-glow);
-        transform: scale(1.05);
+        border-color: var(--accent);
+        background: var(--accent-soft);
+        box-shadow: var(--focus-ring);
       }
     }
 
     .keypad-wrapper {
-      margin-top: 8px;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+      margin-top: 4px;
     }
   `],
 })
@@ -177,7 +182,6 @@ export class NumbersRecallComponent implements OnInit {
     const val = event.target.value;
     const cleanDigit = val.replace(/\D/g, '').slice(-1);
     this.enteredDigits[index] = cleanDigit;
-    // Reset the DOM value too, otherwise rejected non-digit characters stay visible
     event.target.value = cleanDigit;
 
     if (cleanDigit && index < this.locusArray.length - 1) {
@@ -216,7 +220,6 @@ export class NumbersRecallComponent implements OnInit {
   }
 
   onSubmit() {
-    // Keep blank slots as spaces so later digits stay aligned with their positions
     const recallStr = this.enteredDigits.map((d) => d || ' ').join('');
     this.submitRecall.emit(recallStr);
   }

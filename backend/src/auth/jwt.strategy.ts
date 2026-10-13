@@ -5,7 +5,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
 
-export const JWT_SECRET = 'mnemonic_secret_jwt_key_2026_super_secure';
+export const JWT_SECRET = process.env.JWT_SECRET || 'dev-only-insecure-jwt-secret';
+
+if (!process.env.JWT_SECRET && process.env.NODE_ENV === 'production') {
+  throw new Error('JWT_SECRET must be set in production');
+}
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

@@ -29,6 +29,7 @@ export interface EvaluationResult {
   speedDpm: number;
   diffBreakdown: DiffItem[];
   sessionId?: string;
+  isPersonalBest?: boolean;
 }
 
 export interface NumbersConfig {

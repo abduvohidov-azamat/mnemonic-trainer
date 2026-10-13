@@ -11,9 +11,9 @@ import { PaoHintBarComponent } from '../../../../shared/components/pao-hint-bar/
   template: `
     <div class="memorize-container">
       <!-- Top HUD -->
-      <div class="hud-bar glass-panel">
+      <div class="hud-bar panel">
         <div class="hud-col">
-          <span class="hud-label">LOCUS PROGRESS</span>
+          <span class="hud-label">Group</span>
           <span class="hud-val font-mono">
             {{ store.activeLocusIndex() + 1 }} <span class="total">/ {{ store.totalLoci() }}</span>
           </span>
@@ -22,27 +22,25 @@ import { PaoHintBarComponent } from '../../../../shared/components/pao-hint-bar/
         <app-timer-display
           [milliseconds]="store.timerMs()"
           [isRunning]="store.isTimerRunning()"
-          label="MEMORIZE"
+          label="Memorising"
         ></app-timer-display>
 
         <div class="hud-actions">
           <button class="btn-secondary btn-sm" (click)="store.togglePaoHints()">
-            {{ store.enablePaoHints() ? '🧩 Hide PAO' : '🧩 Show PAO' }}
+            {{ store.enablePaoHints() ? 'Hide hints' : 'Show hints' }}
           </button>
-          <button class="btn-primary btn-sm recall-btn" (click)="store.startRecall()">
-            Finish & Recall ➔
+          <button class="btn-primary btn-sm" (click)="store.startRecall()">
+            Done, start recall
           </button>
         </div>
       </div>
 
       <!-- Main Focus Display Area -->
-      <div class="main-locus-display glass-panel">
+      <div class="main-locus-display panel">
         <div class="active-locus-hero">
-          <span class="locus-bracket">[</span>
           <span class="locus-digits font-mono">{{ store.activeLocusContent() }}</span>
-          <span class="locus-bracket">]</span>
         </div>
-        <div class="locus-sub">Locus #{{ store.activeLocusIndex() + 1 }}</div>
+        <div class="locus-sub">Group {{ store.activeLocusIndex() + 1 }} of {{ store.totalLoci() }}</div>
       </div>
 
       <!-- Live PAO Assistant Overlay -->
@@ -51,9 +49,9 @@ import { PaoHintBarComponent } from '../../../../shared/components/pao-hint-bar/
       }
 
       <!-- Full Sequence Stream Overview -->
-      <div class="sequence-stream-wrap glass-panel">
-        <div class="stream-title">SEQUENCE LOCI TRAIL</div>
-        <div class="stream-grid">
+      <div class="strip-wrap panel">
+        <div class="strip-title">All groups — click one to jump to it</div>
+        <div class="strip-items">
           @for (locus of store.targetLoci(); track $index) {
             <button
               class="locus-chunk"
@@ -71,18 +69,18 @@ import { PaoHintBarComponent } from '../../../../shared/components/pao-hint-bar/
       <!-- Navigation & Hotkeys Legend -->
       <div class="controls-legend">
         <div class="legend-keys">
-          <span class="key-pill">Space</span> / <span class="key-pill">➔</span> Advance
+          <span class="key-pill">Space</span> or <span class="key-pill">→</span> next
           <span class="divider">|</span>
-          <span class="key-pill">⬅</span> Previous
+          <span class="key-pill">←</span> back
           <span class="divider">|</span>
-          <span class="key-pill">Enter</span> Finish
+          <span class="key-pill">Enter</span> finish
         </div>
         <div class="nav-buttons-mobile">
           <button class="btn-secondary" (click)="store.prevLocus()" [disabled]="store.activeLocusIndex() === 0">
-            ⬅ Prev
+            ← Back
           </button>
           <button class="btn-primary" (click)="store.nextLocus()">
-            Next (Space) ➔
+            Next →
           </button>
         </div>
       </div>
@@ -92,17 +90,19 @@ import { PaoHintBarComponent } from '../../../../shared/components/pao-hint-bar/
     .memorize-container {
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 16px;
       max-width: 900px;
       margin: 0 auto;
-      animation: fadeIn 0.25s ease-out;
+      animation: fadeIn 0.2s ease-out;
     }
 
     .hud-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 28px;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 14px 20px;
     }
 
     .hud-col {
@@ -110,98 +110,43 @@ import { PaoHintBarComponent } from '../../../../shared/components/pao-hint-bar/
       flex-direction: column;
 
       .hud-label {
-        font-size: 0.7rem;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        color: var(--text-muted);
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-3);
       }
 
       .hud-val {
-        font-size: 1.4rem;
-        font-weight: 800;
-        color: var(--accent-cyan);
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text);
 
         .total {
           font-size: 1rem;
-          color: var(--text-muted);
+          color: var(--text-3);
         }
       }
     }
 
     .hud-actions {
       display: flex;
-      gap: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
-    .btn-sm {
-      padding: 8px 16px;
-      font-size: 0.85rem;
-    }
+    .strip-wrap {
+      padding: 16px 20px;
 
-    .recall-btn {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-    }
-
-    .main-locus-display {
-      padding: 48px 24px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--border-accent);
-      box-shadow: 0 0 35px rgba(0, 240, 255, 0.12);
-    }
-
-    .active-locus-hero {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-
-      .locus-bracket {
-        font-family: var(--font-mono);
-        font-size: 4.5rem;
-        font-weight: 300;
-        color: var(--accent-cyan);
-        opacity: 0.6;
+      .strip-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-3);
+        margin-bottom: 10px;
       }
 
-      .locus-digits {
-        font-size: 5.5rem;
-        font-weight: 900;
-        letter-spacing: 0.15em;
-        color: #ffffff;
-        text-shadow: 0 0 30px var(--accent-cyan-glow);
-      }
-    }
-
-    .locus-sub {
-      font-family: var(--font-mono);
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-top: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .sequence-stream-wrap {
-      padding: 20px;
-      background: var(--bg-base);
-
-      .stream-title {
-        font-size: 0.72rem;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        color: var(--text-muted);
-        margin-bottom: 12px;
-      }
-
-      .stream-grid {
+      .strip-items {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: 6px;
       }
     }
 
@@ -210,31 +155,30 @@ import { PaoHintBarComponent } from '../../../../shared/components/pao-hint-bar/
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 16px;
-      padding: 12px 20px;
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-subtle);
+      gap: 12px;
 
       .legend-keys {
-        font-size: 0.85rem;
-        color: var(--text-secondary);
+        font-size: 0.9rem;
+        color: var(--text-2);
         display: flex;
         align-items: center;
-        gap: 8px;
+        flex-wrap: wrap;
+        gap: 6px;
 
         .key-pill {
-          background: var(--bg-surface-elevated);
-          border: 1px solid var(--border-subtle);
-          padding: 2px 8px;
-          border-radius: 4px;
+          background: var(--surface);
+          border: 1px solid var(--border-strong);
+          border-bottom-width: 2px;
+          padding: 1px 7px;
+          border-radius: var(--radius-sm);
           font-family: var(--font-mono);
-          font-weight: 700;
-          color: var(--accent-cyan);
+          font-size: 0.8rem;
+          color: var(--text);
         }
 
         .divider {
-          color: var(--border-subtle);
+          color: var(--border-strong);
+          margin: 0 4px;
         }
       }
 
@@ -244,9 +188,26 @@ import { PaoHintBarComponent } from '../../../../shared/components/pao-hint-bar/
       }
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+    .main-locus-display {
+      padding: 48px 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .locus-digits {
+      font-size: clamp(3.5rem, 12vw, 5.5rem);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--text);
+      line-height: 1.1;
+    }
+
+    .locus-sub {
+      font-size: 0.95rem;
+      color: var(--text-3);
     }
   `],
 })

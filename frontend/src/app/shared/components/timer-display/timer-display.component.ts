@@ -21,36 +21,22 @@ import { CommonModule } from '@angular/common';
     .timer-container {
       display: inline-flex;
       align-items: center;
-      gap: 12px;
-      background: rgba(19, 25, 36, 0.9);
-      border: 1px solid var(--border-subtle);
-      padding: 8px 20px;
+      gap: 10px;
+      background: var(--surface-2);
+      padding: 6px 14px;
       border-radius: var(--radius-full);
       font-family: var(--font-mono);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      transition: all var(--transition-fast);
 
-      &.running {
-        border-color: var(--accent-cyan);
-        box-shadow: 0 0 20px var(--accent-cyan-glow);
-
-        .timer-pulse-dot {
-          background: var(--accent-cyan);
-          box-shadow: 0 0 10px var(--accent-cyan);
-          animation: timerPulse 1s infinite alternate;
-        }
-
-        .timer-main {
-          color: #ffffff;
-        }
+      &.running .timer-pulse-dot {
+        background: var(--success);
       }
     }
 
     .timer-pulse-dot {
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      background: var(--text-muted);
+      background: var(--text-3);
     }
 
     .timer-values {
@@ -59,33 +45,22 @@ import { CommonModule } from '@angular/common';
     }
 
     .timer-main {
-      font-size: 1.6rem;
-      font-weight: 800;
-      letter-spacing: 0.05em;
-      color: var(--text-primary);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text);
     }
 
     .timer-ms {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--accent-cyan);
+      font-size: 0.95rem;
+      color: var(--text-3);
       min-width: 28px;
     }
 
     .timer-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      border-left: 1px solid var(--border-subtle);
-      padding-left: 10px;
       font-family: var(--font-sans);
-    }
-
-    @keyframes timerPulse {
-      0% { opacity: 0.4; transform: scale(0.9); }
-      100% { opacity: 1; transform: scale(1.2); }
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-2);
     }
   `],
 })
@@ -94,7 +69,6 @@ export class TimerDisplayComponent {
   @Input() isRunning = false;
   @Input() label = 'TIME';
 
-  // Plain getter: @Input fields aren't signals, so computed() would never re-run
   get formattedTime() {
     const ms = this.milliseconds;
     const minutes = Math.floor(ms / 60000);

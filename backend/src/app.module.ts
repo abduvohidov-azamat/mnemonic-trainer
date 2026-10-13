@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { UserEntity } from './entities/user.entity';
 import { SessionEntity } from './entities/session.entity';
 import { PaoEntryEntity } from './entities/pao-entry.entity';
@@ -12,10 +13,11 @@ import { SessionsModule } from './sessions/sessions.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: 'database.sqlite',
+      database: process.env.DATABASE_PATH || 'database.sqlite',
       entities: [UserEntity, SessionEntity, PaoEntryEntity],
       synchronize: true,
     }),
+    ThrottlerModule.forRoot([{ ttl: 60_000, limit: 10 }]),
     AuthModule,
     PaoModule,
     GamesModule,

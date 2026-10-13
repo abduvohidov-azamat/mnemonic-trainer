@@ -42,30 +42,25 @@ import { CardItem } from '../../../core/models/game.models';
     .playing-card {
       width: 140px;
       height: 200px;
-      background: #ffffff;
+      background: var(--card-face);
+      color: var(--card-ink);
+      border: 1px solid var(--border-strong);
       border-radius: 12px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      box-shadow: var(--shadow-md);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       padding: 12px;
       position: relative;
       user-select: none;
-      transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s;
-      font-family: var(--font-sans);
 
       &.red {
-        color: #dc2626;
-      }
-
-      &.black {
-        color: #0f172a;
+        color: var(--suit-red);
       }
 
       &.selected {
-        outline: 3px solid var(--accent-cyan);
-        box-shadow: 0 0 25px var(--accent-cyan-glow);
-        transform: translateY(-6px);
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
       }
 
       &.compact {
@@ -73,10 +68,16 @@ import { CardItem } from '../../../core/models/game.models';
         height: 100px;
         border-radius: 8px;
         padding: 6px;
+        box-shadow: var(--shadow-sm);
 
         .card-corner {
-          .rank { font-size: 0.85rem; font-weight: 800; }
-          .suit { font-size: 0.75rem; }
+          .rank {
+            font-size: 0.85rem;
+          }
+
+          .suit {
+            font-size: 0.75rem;
+          }
         }
 
         .large-suit {
@@ -93,7 +94,7 @@ import { CardItem } from '../../../core/models/game.models';
 
       .rank {
         font-size: 1.3rem;
-        font-weight: 900;
+        font-weight: 700;
       }
 
       .suit {
@@ -107,31 +108,27 @@ import { CardItem } from '../../../core/models/game.models';
 
     .card-center {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
 
       .large-suit {
         font-size: 3.5rem;
-        opacity: 0.95;
       }
     }
 
     .card-placeholder {
       width: 140px;
       height: 200px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border: 2px dashed var(--border-strong);
       border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--text-muted);
+      color: var(--text-3);
       font-size: 2rem;
-      font-weight: 800;
+      font-weight: 700;
 
       &.compact {
         width: 70px;

@@ -9,7 +9,7 @@ import { AuthService } from '../../../core/services/auth.service';
   imports: [CommonModule, FormsModule],
   template: `
     <div class="modal-backdrop" (click)="close.emit()">
-      <div class="modal-card glass-panel" (click)="$event.stopPropagation()">
+      <div class="modal-card panel" (click)="$event.stopPropagation()">
         <!-- Header -->
         <div class="modal-header">
           <div class="tab-switcher">
@@ -18,21 +18,25 @@ import { AuthService } from '../../../core/services/auth.service';
               [class.active]="tab() === 'login'"
               (click)="tab.set('login')"
             >
-              Sign In
+              Sign in
             </button>
             <button
               class="tab-btn"
               [class.active]="tab() === 'register'"
               (click)="tab.set('register')"
             >
-              Create Account
+              Create account
             </button>
           </div>
-          <button class="close-btn" (click)="close.emit()">✕</button>
+          <button class="close-btn" aria-label="Close" (click)="close.emit()">✕</button>
         </div>
 
         <!-- Form Body -->
         <div class="modal-body">
+          @if (tab() === 'register') {
+            <p class="modal-hint">Create an account to keep your sessions and PAO edits. Everything you did as a guest is kept.</p>
+          }
+
           @if (errorMessage()) {
             <div class="error-banner">
               {{ errorMessage() }}
@@ -41,22 +45,22 @@ import { AuthService } from '../../../core/services/auth.service';
 
           @if (tab() === 'register') {
             <div class="form-group">
-              <label>Athlete Username</label>
+              <label>Username</label>
               <input
                 type="text"
                 [(ngModel)]="username"
-                placeholder="e.g. MemoryChampion"
+                placeholder="e.g. alex"
                 class="form-control"
               />
             </div>
           }
 
           <div class="form-group">
-            <label>{{ tab() === 'login' ? 'Email or Username' : 'Email Address' }}</label>
+            <label>{{ tab() === 'login' ? 'Email or username' : 'Email' }}</label>
             <input
               type="text"
               [(ngModel)]="identifier"
-              placeholder="athlete@example.com"
+              placeholder="you@example.com"
               class="form-control"
             />
           </div>
@@ -66,7 +70,7 @@ import { AuthService } from '../../../core/services/auth.service';
             <input
               type="password"
               [(ngModel)]="password"
-              placeholder="••••••••"
+              placeholder="At least 6 characters"
               class="form-control"
             />
           </div>
@@ -77,9 +81,9 @@ import { AuthService } from '../../../core/services/auth.service';
             (click)="submit()"
           >
             @if (isLoading()) {
-              <span>Authenticating...</span>
+              <span>Please wait…</span>
             } @else {
-              <span>{{ tab() === 'login' ? 'Sign In to Profile' : 'Save & Register Account' }}</span>
+              <span>{{ tab() === 'login' ? 'Sign in' : 'Create account' }}</span>
             }
           </button>
         </div>
@@ -89,70 +93,44 @@ import { AuthService } from '../../../core/services/auth.service';
   styles: [`
     .modal-backdrop {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
+      inset: 0;
+      z-index: 1000;
+      background: rgba(15, 18, 24, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
       padding: 16px;
+      animation: fadeIn 0.15s ease-out;
     }
 
     .modal-card {
       width: 100%;
       max-width: 440px;
-      padding: 28px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-accent);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-      animation: modalSlide 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+      padding: 24px;
+      box-shadow: var(--shadow-md);
     }
 
     .modal-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 24px;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
 
-      .tab-switcher {
-        display: flex;
-        gap: 6px;
-        background: var(--bg-base);
-        padding: 4px;
-        border-radius: var(--radius-full);
-      }
+    .close-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: none;
+      color: var(--text-3);
+      font-size: 1rem;
+      cursor: pointer;
 
-      .tab-btn {
-        background: none;
-        border: none;
-        color: var(--text-secondary);
-        font-family: var(--font-sans);
-        font-size: 0.85rem;
-        font-weight: 700;
-        padding: 6px 16px;
-        border-radius: var(--radius-full);
-        cursor: pointer;
-        transition: all var(--transition-fast);
-
-        &.active {
-          background: var(--accent-cyan);
-          color: #040914;
-        }
-      }
-
-      .close-btn {
-        background: none;
-        border: none;
-        color: var(--text-muted);
-        font-size: 1.2rem;
-        cursor: pointer;
-        padding: 4px;
-
-        &:hover { color: var(--text-primary); }
+      &:hover {
+        background: var(--surface-2);
+        color: var(--text);
       }
     }
 
@@ -160,50 +138,82 @@ import { AuthService } from '../../../core/services/auth.service';
       display: flex;
       flex-direction: column;
       gap: 6px;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
 
       label {
-        font-size: 0.8rem;
-        font-weight: 700;
-        color: var(--text-secondary);
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text);
       }
 
       .form-control {
-        background: var(--bg-base);
-        border: 1px solid var(--border-subtle);
+        width: 100%;
+        padding: 10px 12px;
+        background: var(--surface);
+        border: 1px solid var(--border-strong);
         border-radius: var(--radius-md);
-        padding: 12px 16px;
-        color: var(--text-primary);
-        font-family: var(--font-sans);
-        font-size: 0.95rem;
-        transition: all var(--transition-fast);
+        color: var(--text);
+        font-size: 1rem;
+        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+
+        &::placeholder {
+          color: var(--text-3);
+        }
 
         &:focus {
           outline: none;
-          border-color: var(--accent-cyan);
-          box-shadow: 0 0 10px var(--accent-cyan-glow);
+          border-color: var(--accent);
+          box-shadow: var(--focus-ring);
         }
       }
     }
 
-    .full-width {
-      width: 100%;
-      margin-top: 8px;
+    .tab-switcher {
+      display: flex;
+      gap: 4px;
+      background: var(--surface-2);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      flex: 1;
     }
 
-    .error-banner {
-      background: rgba(244, 63, 94, 0.15);
-      border: 1px solid rgba(244, 63, 94, 0.4);
-      color: var(--accent-rose);
-      padding: 10px 14px;
+    .tab-btn {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid transparent;
       border-radius: var(--radius-sm);
-      font-size: 0.85rem;
+      background: none;
+      color: var(--text-2);
+      font-weight: 600;
+      cursor: pointer;
+
+      &.active {
+        background: var(--surface);
+        border-color: var(--border);
+        color: var(--text);
+        box-shadow: var(--shadow-sm);
+      }
+    }
+
+    .modal-hint {
+      color: var(--text-2);
+      font-size: 0.95rem;
       margin-bottom: 16px;
     }
 
-    @keyframes modalSlide {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    .full-width {
+      width: 100%;
+      margin-top: 6px;
+    }
+
+    .error-banner {
+      background: var(--danger-soft);
+      color: var(--danger);
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 14px;
     }
   `],
 })

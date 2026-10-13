@@ -1,3 +1,4 @@
+import './env';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
@@ -6,8 +7,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
   app.setGlobalPrefix('api');
+  const corsOrigins = (process.env.CORS_ORIGINS || 'http://localhost:4200,capacitor://localhost,http://localhost')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
   app.enableCors({
-    origin: true,
+    origin: corsOrigins,
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   });

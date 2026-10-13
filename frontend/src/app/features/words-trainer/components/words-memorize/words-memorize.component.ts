@@ -9,9 +9,9 @@ import { TimerDisplayComponent } from '../../../../shared/components/timer-displ
   imports: [CommonModule, TimerDisplayComponent],
   template: `
     <div class="memorize-container">
-      <div class="hud-bar glass-panel">
+      <div class="hud-bar panel">
         <div class="hud-col">
-          <span class="hud-label">WORD PROGRESS</span>
+          <span class="hud-label">Word</span>
           <span class="hud-val font-mono">
             {{ store.activeLocusIndex() + 1 }} <span class="total">/ {{ store.totalLoci() }}</span>
           </span>
@@ -20,24 +20,24 @@ import { TimerDisplayComponent } from '../../../../shared/components/timer-displ
         <app-timer-display
           [milliseconds]="store.timerMs()"
           [isRunning]="store.isTimerRunning()"
-          label="MEMORIZE"
+          label="Memorising"
         ></app-timer-display>
 
-        <button class="btn-primary btn-sm recall-btn" (click)="store.startRecall()">
-          Recall Words ➔
+        <button class="btn-primary btn-sm" (click)="store.startRecall()">
+          Done, start recall
         </button>
       </div>
 
       <!-- Active Word Spotlight -->
-      <div class="word-spotlight glass-panel">
-        <div class="spotlight-badge font-mono">LOCUS #{{ store.activeLocusIndex() + 1 }}</div>
-        <div class="word-hero font-mono">{{ activeWord() }}</div>
-        <div class="spotlight-sub">Visualize this object interacting with locus #{{ store.activeLocusIndex() + 1 }}</div>
+      <div class="word-spotlight panel">
+        <div class="spotlight-badge">Word {{ store.activeLocusIndex() + 1 }} of {{ store.totalLoci() }}</div>
+        <div class="word-hero">{{ activeWord() }}</div>
+        <div class="spotlight-sub">Picture it vividly at the next stop on your memory route.</div>
       </div>
 
       <!-- Word Loci Strip -->
-      <div class="word-strip glass-panel">
-        <div class="strip-title">WORDS TRAIL</div>
+      <div class="strip-wrap panel">
+        <div class="strip-title">All words — click one to jump to it</div>
         <div class="strip-items">
           @for (word of store.targetSequence(); track $index) {
             <button
@@ -47,7 +47,7 @@ import { TimerDisplayComponent } from '../../../../shared/components/timer-displ
               [class.future-locus]="$index > store.activeLocusIndex()"
               (click)="store.setLocus($index)"
             >
-              #{{ $index + 1 }}
+              {{ $index + 1 }}
             </button>
           }
         </div>
@@ -56,18 +56,18 @@ import { TimerDisplayComponent } from '../../../../shared/components/timer-displ
       <!-- Controls -->
       <div class="controls-legend">
         <div class="legend-keys">
-          <span class="key-pill">Space</span> / <span class="key-pill">➔</span> Next Word
+          <span class="key-pill">Space</span> or <span class="key-pill">→</span> next
           <span class="divider">|</span>
-          <span class="key-pill">⬅</span> Previous
+          <span class="key-pill">←</span> back
           <span class="divider">|</span>
-          <span class="key-pill">Enter</span> Finish
+          <span class="key-pill">Enter</span> finish
         </div>
         <div class="nav-buttons-mobile">
           <button class="btn-secondary" (click)="store.prevLocus()" [disabled]="store.activeLocusIndex() === 0">
-            ⬅ Prev
+            ← Back
           </button>
           <button class="btn-primary" (click)="store.nextLocus()">
-            Next (Space) ➔
+            Next →
           </button>
         </div>
       </div>
@@ -77,17 +77,19 @@ import { TimerDisplayComponent } from '../../../../shared/components/timer-displ
     .memorize-container {
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 16px;
       max-width: 900px;
       margin: 0 auto;
-      animation: fadeIn 0.25s ease-out;
+      animation: fadeIn 0.2s ease-out;
     }
 
     .hud-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 28px;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 14px 20px;
     }
 
     .hud-col {
@@ -95,72 +97,36 @@ import { TimerDisplayComponent } from '../../../../shared/components/timer-displ
       flex-direction: column;
 
       .hud-label {
-        font-size: 0.7rem;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        color: var(--text-muted);
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-3);
       }
 
       .hud-val {
-        font-size: 1.4rem;
-        font-weight: 800;
-        color: var(--accent-cyan);
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text);
 
         .total {
           font-size: 1rem;
-          color: var(--text-muted);
+          color: var(--text-3);
         }
       }
     }
 
-    .recall-btn {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-    }
-
-    .word-spotlight {
-      padding: 60px 24px;
-      text-align: center;
+    .hud-actions {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--border-accent);
-      box-shadow: 0 0 35px rgba(0, 240, 255, 0.12);
-
-      .spotlight-badge {
-        font-size: 0.85rem;
-        font-weight: 800;
-        color: var(--accent-cyan);
-        letter-spacing: 0.15em;
-        margin-bottom: 12px;
-      }
-
-      .word-hero {
-        font-size: 4rem;
-        font-weight: 900;
-        color: #ffffff;
-        letter-spacing: 0.05em;
-        text-shadow: 0 0 30px var(--accent-cyan-glow);
-        text-transform: capitalize;
-      }
-
-      .spotlight-sub {
-        font-size: 0.9rem;
-        color: var(--text-muted);
-        margin-top: 16px;
-      }
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
-    .word-strip {
-      padding: 18px;
-      background: var(--bg-base);
+    .strip-wrap {
+      padding: 16px 20px;
 
       .strip-title {
-        font-size: 0.72rem;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        color: var(--text-muted);
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-3);
         margin-bottom: 10px;
       }
 
@@ -176,31 +142,30 @@ import { TimerDisplayComponent } from '../../../../shared/components/timer-displ
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 16px;
-      padding: 12px 20px;
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-subtle);
+      gap: 12px;
 
       .legend-keys {
-        font-size: 0.85rem;
-        color: var(--text-secondary);
+        font-size: 0.9rem;
+        color: var(--text-2);
         display: flex;
         align-items: center;
-        gap: 8px;
+        flex-wrap: wrap;
+        gap: 6px;
 
         .key-pill {
-          background: var(--bg-surface-elevated);
-          border: 1px solid var(--border-subtle);
-          padding: 2px 8px;
-          border-radius: 4px;
+          background: var(--surface);
+          border: 1px solid var(--border-strong);
+          border-bottom-width: 2px;
+          padding: 1px 7px;
+          border-radius: var(--radius-sm);
           font-family: var(--font-mono);
-          font-weight: 700;
-          color: var(--accent-cyan);
+          font-size: 0.8rem;
+          color: var(--text);
         }
 
         .divider {
-          color: var(--border-subtle);
+          color: var(--border-strong);
+          margin: 0 4px;
         }
       }
 
@@ -210,9 +175,32 @@ import { TimerDisplayComponent } from '../../../../shared/components/timer-displ
       }
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+    .word-spotlight {
+      padding: 48px 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+
+      .spotlight-badge {
+        font-size: 0.9rem;
+        color: var(--text-3);
+      }
+
+      .word-hero {
+        font-family: var(--font-sans);
+        font-size: clamp(2.5rem, 9vw, 4rem);
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.1;
+        word-break: break-word;
+      }
+
+      .spotlight-sub {
+        color: var(--text-2);
+        font-size: 0.95rem;
+      }
     }
   `],
 })

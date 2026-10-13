@@ -1,4 +1,5 @@
 import { Controller, Post, Get, Body, UseGuards, Request } from '@nestjs/common';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -13,13 +14,14 @@ export class AuthController {
     return this.authService.createGuestUser();
   }
 
-  @UseGuards(OptionalJwtGuard)
+  @UseGuards(ThrottlerGuard, OptionalJwtGuard)
   @Post('register')
   async register(@Body() dto: RegisterDto, @Request() req: any) {
     const currentUserId = req.user?.id;
     return this.authService.register(dto, currentUserId);
   }
 
+  @UseGuards(ThrottlerGuard)
   @Post('login')
   async login(@Body() dto: LoginDto) {
     return this.authService.login(dto);

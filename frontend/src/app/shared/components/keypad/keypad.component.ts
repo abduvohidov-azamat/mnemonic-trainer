@@ -12,13 +12,13 @@ import { CommonModule } from '@angular/common';
           {{ d }}
         </button>
       }
-      <button class="key-btn action-key backspace" (click)="backspacePress.emit()">
+      <button class="key-btn action-key backspace" aria-label="Delete" (click)="backspacePress.emit()">
         ⌫
       </button>
       <button class="key-btn" (click)="digitPress.emit('0')">
         0
       </button>
-      <button class="key-btn action-key submit" (click)="submitPress.emit()">
+      <button class="key-btn action-key submit" aria-label="Check my answers" (click)="submitPress.emit()">
         ✓
       </button>
     </div>
@@ -27,57 +27,46 @@ import { CommonModule } from '@angular/common';
     .keypad-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      gap: 8px;
       max-width: 280px;
       margin: 0 auto;
     }
 
     .key-btn {
-      height: 56px;
-      background: var(--bg-surface-elevated);
-      border: 1px solid var(--border-subtle);
+      height: 54px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
       border-radius: var(--radius-md);
-      color: var(--text-primary);
+      color: var(--text);
       font-family: var(--font-mono);
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all var(--transition-fast);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: background-color var(--transition-fast), border-color var(--transition-fast);
 
       &:hover {
-        background: #232d42;
-        border-color: var(--accent-cyan);
-        transform: translateY(-2px);
+        background: var(--surface-2);
       }
 
       &:active {
-        transform: translateY(1px);
-        background: var(--accent-cyan);
-        color: #040914;
+        background: var(--surface-3);
       }
 
       &.action-key {
         font-family: var(--font-sans);
-        font-size: 1.2rem;
-      }
-
-      &.backspace:hover {
-        border-color: var(--accent-rose);
-        color: var(--accent-rose);
+        font-size: 1.15rem;
       }
 
       &.submit {
-        background: rgba(16, 185, 129, 0.15);
-        border-color: rgba(16, 185, 129, 0.4);
-        color: var(--accent-emerald);
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--on-accent);
 
         &:hover {
-          background: var(--accent-emerald);
-          color: #040914;
+          background: var(--accent-hover);
         }
       }
     }

@@ -10,21 +10,20 @@ import { CardVisualComponent } from '../../../../shared/components/card-visual/c
   imports: [CommonModule, CardVisualComponent],
   template: `
     <div class="recall-container">
-      <div class="recall-header glass-panel">
+      <div class="recall-header panel">
         <div class="header-info">
-          <span class="badge badge-cyan">DECK RECALL PHASE</span>
-          <h2 class="title">Reconstruct the Card Order</h2>
-          <p class="desc">Select cards from the picker below into slot #{{ activeSlot + 1 }}</p>
+          <h2 class="title">Put the cards back in order</h2>
+          <p class="desc">Pick a card below to place it in position {{ activeSlot + 1 }}. Click any position to change it.</p>
         </div>
         <div class="header-actions">
-          <button class="btn-secondary btn-sm" (click)="undoLast()">⌫ Undo</button>
-          <button class="btn-primary submit-btn" (click)="onSubmit()">✓ Evaluate Deck</button>
+          <button class="btn-secondary" (click)="undoLast()">Undo</button>
+          <button class="btn-primary submit-btn" (click)="onSubmit()">Check my answers</button>
         </div>
       </div>
 
       <!-- Placed Cards Tray -->
-      <div class="placed-tray-wrap glass-panel">
-        <div class="tray-title">PLACED SEQUENCE ({{ placedCards.length }} / {{ totalSlots }})</div>
+      <div class="placed-tray-wrap panel">
+        <div class="tray-title">Your order ({{ placedCount() }} of {{ totalSlots }} placed)</div>
         <div class="tray-slots">
           @for (slot of slotsArray; track $index) {
             <div
@@ -32,7 +31,7 @@ import { CardVisualComponent } from '../../../../shared/components/card-visual/c
               [class.active-slot]="$index === activeSlot"
               (click)="selectSlot($index)"
             >
-              <div class="slot-num font-mono">#{{ $index + 1 }}</div>
+              <div class="slot-num font-mono">{{ $index + 1 }}</div>
               @if (placedCards[$index]) {
                 <app-card-visual [card]="placedCards[$index]" [compact]="true"></app-card-visual>
               } @else {
@@ -44,7 +43,7 @@ import { CardVisualComponent } from '../../../../shared/components/card-visual/c
       </div>
 
       <!-- 52-Card Interactive Picker -->
-      <div class="card-picker-panel glass-panel">
+      <div class="card-picker-panel panel">
         <!-- Suit Tabs -->
         <div class="suit-tabs">
           @for (suit of suits; track suit.code) {
@@ -81,39 +80,55 @@ import { CardVisualComponent } from '../../../../shared/components/card-visual/c
     .recall-container {
       display: flex;
       flex-direction: column;
-      gap: 20px;
-      max-width: 1000px;
+      gap: 16px;
+      max-width: 960px;
       margin: 0 auto;
-      animation: fadeIn 0.25s ease-out;
+      animation: fadeIn 0.2s ease-out;
     }
 
     .recall-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 18px 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 18px 22px;
 
-      .title { font-size: 1.3rem; font-weight: 800; }
-      .desc { font-size: 0.85rem; color: var(--text-muted); }
-      .header-actions { display: flex; gap: 10px; }
+      .header-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .title {
+        font-size: 1.35rem;
+      }
+
+      .desc {
+        color: var(--text-2);
+        font-size: 0.95rem;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 8px;
+      }
     }
 
     .placed-tray-wrap {
-      padding: 20px;
-      background: var(--bg-base);
+      padding: 18px 20px;
 
       .tray-title {
-        font-size: 0.72rem;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        color: var(--text-muted);
-        margin-bottom: 12px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-2);
+        margin-bottom: 10px;
       }
 
       .tray-slots {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 8px;
         max-height: 280px;
         overflow-y: auto;
         padding: 4px;
@@ -127,45 +142,47 @@ import { CardVisualComponent } from '../../../../shared/components/card-visual/c
       gap: 4px;
       cursor: pointer;
       padding: 4px;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      transition: all var(--transition-fast);
+      border-radius: var(--radius-md);
+      border: 2px solid transparent;
+      transition: border-color var(--transition-fast), background-color var(--transition-fast);
 
       .slot-num {
-        font-size: 0.65rem;
-        color: var(--text-muted);
+        font-size: 0.7rem;
+        color: var(--text-3);
+      }
+
+      &:hover {
+        background: var(--surface-2);
       }
 
       &.active-slot {
-        border-color: var(--accent-cyan);
-        background: rgba(0, 240, 255, 0.1);
-        box-shadow: 0 0 15px var(--accent-cyan-glow);
-        transform: translateY(-2px);
+        border-color: var(--accent);
+        background: var(--accent-soft);
       }
     }
 
     .empty-slot-card {
       width: 70px;
       height: 100px;
-      border: 2px dashed rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
+      border: 2px dashed var(--border-strong);
+      border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--text-muted);
+      color: var(--text-3);
       font-size: 1.2rem;
-      font-weight: 800;
+      font-weight: 700;
     }
 
     .card-picker-panel {
-      padding: 24px;
+      padding: 20px;
     }
 
     .suit-tabs {
       display: flex;
-      gap: 8px;
+      gap: 4px;
       margin-bottom: 16px;
-      background: var(--bg-base);
+      background: var(--surface-2);
       padding: 4px;
       border-radius: var(--radius-md);
     }
@@ -175,59 +192,60 @@ import { CardVisualComponent } from '../../../../shared/components/card-visual/c
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 10px;
+      gap: 6px;
+      padding: 8px;
       background: none;
-      border: none;
-      color: var(--text-secondary);
-      font-family: var(--font-sans);
+      border: 1px solid transparent;
+      color: var(--text-2);
       font-size: 0.95rem;
-      font-weight: 700;
+      font-weight: 600;
       border-radius: var(--radius-sm);
       cursor: pointer;
-      transition: all var(--transition-fast);
+      transition: background-color var(--transition-fast), color var(--transition-fast);
 
-      .suit-icon { font-size: 1.1rem; }
+      .suit-icon {
+        font-size: 1.1rem;
+      }
 
-      &.red { color: #f87171; }
+      &.red .suit-icon {
+        color: var(--suit-red);
+      }
 
       &.active {
-        background: var(--bg-surface-elevated);
-        border: 1px solid var(--border-accent);
-        color: var(--text-primary);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-
-        &.red { color: #ef4444; }
+        background: var(--surface);
+        border-color: var(--border);
+        color: var(--text);
+        box-shadow: var(--shadow-sm);
       }
     }
 
     .ranks-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+      gap: 8px;
     }
 
     .rank-pick-btn {
-      height: 70px;
-      background: #ffffff;
-      color: #0f172a;
-      border: none;
-      border-radius: 8px;
+      height: 68px;
+      background: var(--card-face);
+      color: var(--card-ink);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 2px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 
       &.red {
-        color: #dc2626;
+        color: var(--suit-red);
       }
 
       .rank-char {
         font-size: 1.2rem;
-        font-weight: 900;
+        font-weight: 700;
         line-height: 1;
       }
 
@@ -237,18 +255,9 @@ import { CardVisualComponent } from '../../../../shared/components/card-visual/c
       }
 
       &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 20px rgba(0, 240, 255, 0.4);
+        border-color: var(--accent);
+        box-shadow: var(--shadow-md);
       }
-
-      &:active {
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
     }
   `],
 })
@@ -277,6 +286,10 @@ export class CardsRecallComponent implements OnInit {
     this.totalSlots = Array.isArray(rawTarget) ? rawTarget.length : 52;
     this.slotsArray = Array.from({ length: this.totalSlots }, (_, i) => i);
     this.placedCards = Array(this.totalSlots).fill(null);
+  }
+
+  placedCount(): number {
+    return this.placedCards.filter(Boolean).length;
   }
 
   selectSlot(index: number) {

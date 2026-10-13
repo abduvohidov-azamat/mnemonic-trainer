@@ -1,6 +1,32 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {
+  CategoryScale,
+  Chart,
+  LinearScale,
+  LineController,
+  LineElement,
+  PointElement,
+  Tooltip,
+} from 'chart.js';
 import { ApiService } from '../../core/services/api.service';
+
+Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip);
+
+type Discipline = 'numbers' | 'cards' | 'words';
+
+interface ProgressPoint {
+  date: string;
+  accuracy: number;
+  speedDpm: number | null;
+  score: number;
+}
+
+const SPEED_UNITS: Record<Discipline, string> = {
+  numbers: 'digits / min',
+  cards: 'cards / min',
+  words: 'words / min',
+};
 
 @Component({
   selector: 'app-stats',
@@ -8,121 +34,91 @@ import { ApiService } from '../../core/services/api.service';
   imports: [CommonModule],
   template: `
     <div class="stats-page">
-      <!-- Header -->
-      <div class="stats-header glass-panel">
-        <div>
-          <div class="badge badge-cyan">TELEMETRY & ANALYTICS</div>
-          <h1 class="title">Athlete Performance History</h1>
-          <p class="subtitle">Detailed breakdown of speed progression, error rates, and personal championship benchmarks.</p>
+      <div class="stats-header">
+        <h1 class="page-title">Your progress</h1>
+        <p class="page-subtitle">How your accuracy and speed change over time, plus your best results in each mode.</p>
+      </div>
+
+      <div class="progress-card panel">
+        <div class="progress-head">
+          <h2 class="section-title">Progress over time</h2>
+          <div class="progress-tabs" role="tablist">
+            @for (tab of disciplineTabs; track tab.id) {
+              <button
+                class="progress-tab"
+                role="tab"
+                [class.active]="progressDiscipline() === tab.id"
+                [attr.aria-selected]="progressDiscipline() === tab.id"
+                (click)="selectProgressDiscipline(tab.id)"
+              >
+                {{ tab.label }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="charts-grid" [class.is-empty]="!hasProgress()">
+          <figure class="chart-box">
+            <figcaption class="chart-title">Accuracy <span class="chart-unit">%</span></figcaption>
+            <div class="chart-canvas-wrap">
+              <canvas #accuracyCanvas aria-label="Accuracy per session" role="img"></canvas>
+            </div>
+          </figure>
+          <figure class="chart-box">
+            <figcaption class="chart-title">Speed <span class="chart-unit">{{ speedUnit() }}</span></figcaption>
+            <div class="chart-canvas-wrap">
+              <canvas #speedCanvas aria-label="Speed per session" role="img"></canvas>
+            </div>
+          </figure>
+          @if (!hasProgress()) {
+            <div class="charts-empty">No sessions in this mode yet. Finish a drill to see your progress here.</div>
+          }
         </div>
       </div>
 
-      <!-- Top Summary Metrics -->
-      <div class="metrics-row">
-        <div class="metric-card glass-panel">
-          <span class="metric-label">TOTAL SESSIONS</span>
-          <span class="metric-val font-mono text-cyan">{{ stats()?.totalSessions || 0 }}</span>
-          <span class="metric-sub">Completed drills</span>
-        </div>
-
-        <div class="metric-card glass-panel">
-          <span class="metric-label">NUMBERS SPEED</span>
-          <span class="metric-val font-mono text-amber">{{ stats()?.numbers?.bestDpm || 0 }}</span>
-          <span class="metric-sub">Peak Digits / Min (DPM)</span>
-        </div>
-
-        <div class="metric-card glass-panel">
-          <span class="metric-label">NUMBERS ACCURACY</span>
-          <span class="metric-val font-mono text-emerald">{{ stats()?.numbers?.avgAccuracy || 0 }}%</span>
-          <span class="metric-sub">Average accuracy</span>
-        </div>
-
-        <div class="metric-card glass-panel">
-          <span class="metric-label">CARDS ACCURACY</span>
-          <span class="metric-val font-mono text-cyan">{{ stats()?.cards?.avgAccuracy || 0 }}%</span>
-          <span class="metric-sub">Average accuracy</span>
-        </div>
-      </div>
-
-      <!-- Discipline Cards Comparison -->
       <div class="disciplines-stats-grid">
-        <!-- Numbers Stat Box -->
-        <div class="discipline-stat-box glass-panel">
-          <div class="box-head">
-            <span class="box-icon">🔢</span>
-            <h3>Speed Numbers</h3>
+        @for (tab of disciplineTabs; track tab.id) {
+          <div class="discipline-stat-box panel">
+            <h3 class="box-title">{{ tab.label }}</h3>
+            <dl class="box-stats">
+              <div class="row"><dt>Sessions</dt><dd>{{ stats()?.[tab.id]?.sessions || 0 }}</dd></div>
+              <div class="row"><dt>Best score</dt><dd>{{ stats()?.[tab.id]?.bestScore || 0 }}</dd></div>
+              <div class="row"><dt>Best speed</dt><dd>{{ stats()?.[tab.id]?.bestDpm || 0 }} {{ unitFor(tab.id) }}</dd></div>
+              <div class="row"><dt>Average accuracy</dt><dd>{{ stats()?.[tab.id]?.avgAccuracy || 0 }}%</dd></div>
+            </dl>
           </div>
-          <div class="box-stats">
-            <div class="row"><span>Total Runs:</span><strong>{{ stats()?.numbers?.sessions || 0 }}</strong></div>
-            <div class="row"><span>Best Score:</span><strong class="text-emerald">{{ stats()?.numbers?.bestScore || 0 }} pts</strong></div>
-            <div class="row"><span>Best Speed:</span><strong class="text-amber">{{ stats()?.numbers?.bestDpm || 0 }} DPM</strong></div>
-            <div class="row"><span>Avg Accuracy:</span><strong>{{ stats()?.numbers?.avgAccuracy || 0 }}%</strong></div>
-          </div>
-        </div>
-
-        <!-- Cards Stat Box -->
-        <div class="discipline-stat-box glass-panel">
-          <div class="box-head">
-            <span class="box-icon">🃏</span>
-            <h3>Speed Cards</h3>
-          </div>
-          <div class="box-stats">
-            <div class="row"><span>Total Runs:</span><strong>{{ stats()?.cards?.sessions || 0 }}</strong></div>
-            <div class="row"><span>Best Score:</span><strong class="text-emerald">{{ stats()?.cards?.bestScore || 0 }} pts</strong></div>
-            <div class="row"><span>Best Speed:</span><strong class="text-amber">{{ stats()?.cards?.bestDpm || 0 }} CPM</strong></div>
-            <div class="row"><span>Avg Accuracy:</span><strong>{{ stats()?.cards?.avgAccuracy || 0 }}%</strong></div>
-          </div>
-        </div>
-
-        <!-- Words Stat Box -->
-        <div class="discipline-stat-box glass-panel">
-          <div class="box-head">
-            <span class="box-icon">📖</span>
-            <h3>Random Words</h3>
-          </div>
-          <div class="box-stats">
-            <div class="row"><span>Total Runs:</span><strong>{{ stats()?.words?.sessions || 0 }}</strong></div>
-            <div class="row"><span>Best Score:</span><strong class="text-emerald">{{ stats()?.words?.bestScore || 0 }} pts</strong></div>
-            <div class="row"><span>Best Speed:</span><strong class="text-amber">{{ stats()?.words?.bestDpm || 0 }} WPM</strong></div>
-            <div class="row"><span>Avg Accuracy:</span><strong>{{ stats()?.words?.avgAccuracy || 0 }}%</strong></div>
-          </div>
-        </div>
+        }
       </div>
 
-      <!-- Recent Sessions Log Table -->
-      <div class="history-table-card glass-panel">
-        <h3 class="table-title">Recent Training Logs</h3>
+      <div class="history-table-card panel">
+        <h2 class="section-title">Recent sessions</h2>
         <div class="table-responsive">
           <table class="history-table">
             <thead>
               <tr>
-                <th>Date / Time</th>
-                <th>Discipline</th>
-                <th>Accuracy</th>
-                <th>Score</th>
-                <th>Duration</th>
-                <th>Speed</th>
+                <th>Date</th>
+                <th>Mode</th>
+                <th class="num">Accuracy</th>
+                <th class="num">Score</th>
+                <th class="num">Time</th>
+                <th class="num">Speed</th>
               </tr>
             </thead>
             <tbody>
               @for (session of history(); track session.id) {
                 <tr>
-                  <td class="font-mono text-muted">{{ session.createdAt | date:'MMM d, HH:mm' }}</td>
-                  <td>
-                    <span class="disc-pill" [class]="session.discipline">
-                      {{ session.discipline | uppercase }}
-                    </span>
-                  </td>
-                  <td class="font-mono" [class.text-emerald]="session.accuracy >= 90" [class.text-rose]="session.accuracy < 60">
+                  <td class="text-muted">{{ session.createdAt | date:'MMM d, HH:mm' }}</td>
+                  <td>{{ disciplineLabel(session.discipline) }}</td>
+                  <td class="num font-mono" [class.text-success]="session.accuracy >= 90" [class.text-danger]="session.accuracy < 60">
                     {{ session.accuracy }}%
                   </td>
-                  <td class="font-mono font-bold">{{ session.score }}</td>
-                  <td class="font-mono">{{ (session.durationMs / 1000).toFixed(1) }}s</td>
-                  <td class="font-mono text-amber">{{ session.speedDpm }} /min</td>
+                  <td class="num font-mono">{{ session.score }}</td>
+                  <td class="num font-mono">{{ (session.durationMs / 1000).toFixed(1) }}s</td>
+                  <td class="num font-mono">{{ session.speedDpm }}/min</td>
                 </tr>
               } @empty {
                 <tr>
-                  <td colspan="6" class="empty-state">No training sessions recorded yet. Start a drill!</td>
+                  <td colspan="6" class="empty-state">No sessions yet. Start a drill from the home page.</td>
                 </tr>
               }
             </tbody>
@@ -133,154 +129,371 @@ import { ApiService } from '../../core/services/api.service';
   `,
   styles: [`
     .stats-page {
-      padding: 40px 24px;
-      max-width: 1400px;
+      padding: 32px 24px 48px;
+      max-width: 1200px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 32px;
-      min-height: calc(100vh - 80px);
+      gap: 20px;
+
+      @media (max-width: 600px) {
+        padding: 20px 16px 40px;
+      }
     }
 
-    .stats-header {
-      padding: 28px;
-      .title { font-size: 1.8rem; font-weight: 900; margin: 6px 0; }
-      .subtitle { color: var(--text-secondary); font-size: 0.95rem; }
+    .section-title {
+      font-size: 1.15rem;
     }
 
-    .metrics-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    .progress-card {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
       gap: 16px;
     }
 
-    .metric-card {
-      padding: 24px;
+    .progress-head {
       display: flex;
-      flex-direction: column;
-      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
 
-      .metric-label {
-        font-size: 0.72rem;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        color: var(--text-muted);
-      }
+    .progress-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--surface-2);
+      padding: 4px;
+      border-radius: var(--radius-md);
+    }
 
-      .metric-val {
-        font-size: 2.2rem;
-        font-weight: 900;
-      }
+    .progress-tab {
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-2);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
 
-      .metric-sub {
-        font-size: 0.8rem;
-        color: var(--text-secondary);
+      &.active {
+        background: var(--surface);
+        border-color: var(--border);
+        color: var(--text);
+        box-shadow: var(--shadow-sm);
       }
+    }
+
+    .charts-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+
+      &.is-empty .chart-box {
+        opacity: 0.35;
+      }
+    }
+
+    .chart-box {
+      margin: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .chart-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 10px;
+
+      .chart-unit {
+        color: var(--text-3);
+        font-weight: 400;
+        margin-left: 4px;
+      }
+    }
+
+    .chart-canvas-wrap {
+      position: relative;
+      height: 220px;
+    }
+
+    .charts-empty {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      color: var(--text-2);
+      font-weight: 600;
     }
 
     .disciplines-stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
     }
 
     .discipline-stat-box {
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+      padding: 18px 20px;
 
-      .box-head {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        .box-icon { font-size: 1.6rem; }
-        h3 { font-size: 1.2rem; font-weight: 800; }
+      .box-title {
+        font-size: 1.05rem;
+        margin-bottom: 10px;
       }
 
       .box-stats {
         display: flex;
         flex-direction: column;
-        gap: 10px;
 
         .row {
           display: flex;
           justify-content: space-between;
-          font-size: 0.9rem;
-          color: var(--text-secondary);
-          strong { color: var(--text-primary); }
+          gap: 12px;
+          padding: 7px 0;
+          border-bottom: 1px solid var(--border);
+          font-size: 0.95rem;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          dt {
+            color: var(--text-2);
+          }
+
+          dd {
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+          }
         }
       }
     }
 
     .history-table-card {
-      padding: 28px;
+      padding: 20px;
 
-      .table-title {
-        font-size: 1.2rem;
-        font-weight: 800;
-        margin-bottom: 20px;
+      .section-title {
+        margin-bottom: 12px;
       }
+    }
+
+    .table-responsive {
+      overflow-x: auto;
     }
 
     .history-table {
       width: 100%;
       border-collapse: collapse;
+      font-size: 0.95rem;
 
       th {
         text-align: left;
-        padding: 12px 16px;
-        font-size: 0.75rem;
-        font-weight: 800;
-        color: var(--text-muted);
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        border-bottom: 1px solid var(--border-subtle);
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-3);
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
       }
 
       td {
-        padding: 16px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        font-size: 0.9rem;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
       }
 
-      .disc-pill {
-        display: inline-block;
-        padding: 4px 10px;
-        border-radius: var(--radius-full);
-        font-family: var(--font-mono);
-        font-size: 0.72rem;
-        font-weight: 800;
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
 
-        &.numbers { background: rgba(0, 240, 255, 0.15); color: var(--accent-cyan); }
-        &.cards { background: rgba(244, 63, 94, 0.15); color: var(--accent-rose); }
-        &.words { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); }
+      tbody tr:hover td {
+        background: var(--surface-2);
+      }
+
+      .num {
+        text-align: right;
       }
 
       .empty-state {
         text-align: center;
-        padding: 40px;
-        color: var(--text-muted);
-        font-style: italic;
+        color: var(--text-2);
+        padding: 28px 12px;
+        white-space: normal;
       }
     }
   `],
 })
-export class StatsComponent implements OnInit {
+export class StatsComponent implements OnInit, OnDestroy {
   private readonly api = inject(ApiService);
+
+  @ViewChild('accuracyCanvas') accuracyCanvas?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('speedCanvas') speedCanvas?: ElementRef<HTMLCanvasElement>;
 
   readonly stats = signal<any>(null);
   readonly history = signal<any[]>([]);
+  readonly progressDiscipline = signal<Discipline>('numbers');
+
+  readonly disciplineTabs: { id: Discipline; label: string }[] = [
+    { id: 'numbers', label: 'Numbers' },
+    { id: 'cards', label: 'Cards' },
+    { id: 'words', label: 'Words' },
+  ];
+
+  private accuracyChart?: Chart;
+  private speedChart?: Chart;
 
   ngOnInit() {
     this.api.get<any>('sessions/stats').subscribe({
-      next: (res) => this.stats.set(res),
+      next: (res) => {
+        this.stats.set(res);
+        this.renderCharts();
+      },
       error: (err) => console.warn('Failed to load stats', err),
     });
 
     this.api.get<any[]>('sessions/history?limit=30').subscribe({
       next: (res) => this.history.set(res || []),
       error: (err) => console.warn('Failed to load history', err),
+    });
+  }
+
+  ngOnDestroy() {
+    this.accuracyChart?.destroy();
+    this.speedChart?.destroy();
+  }
+
+  selectProgressDiscipline(discipline: Discipline) {
+    this.progressDiscipline.set(discipline);
+    this.renderCharts();
+  }
+
+  speedUnit(): string {
+    return SPEED_UNITS[this.progressDiscipline()];
+  }
+
+  unitFor(discipline: Discipline): string {
+    return SPEED_UNITS[discipline];
+  }
+
+  disciplineLabel(discipline: string): string {
+    return this.disciplineTabs.find((tab) => tab.id === discipline)?.label ?? discipline;
+  }
+
+  hasProgress(): boolean {
+    return this.progressPoints().length > 0;
+  }
+
+  private progressPoints(): ProgressPoint[] {
+    return this.stats()?.[this.progressDiscipline()]?.progress ?? [];
+  }
+
+  private renderCharts() {
+    if (!this.accuracyCanvas || !this.speedCanvas) return;
+
+    const points = this.progressPoints();
+    const labels = points.map((_, i) => `#${i + 1}`);
+    const dates = points.map((p) =>
+      new Date(p.date).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }),
+    );
+    const css = getComputedStyle(document.documentElement);
+    const token = (name: string, fallback: string) => css.getPropertyValue(name).trim() || fallback;
+
+    this.accuracyChart?.destroy();
+    this.speedChart?.destroy();
+
+    this.accuracyChart = this.buildLineChart(this.accuracyCanvas.nativeElement, {
+      labels,
+      dates,
+      values: points.map((p) => p.accuracy),
+      color: token('--chart-1', '#2f5bd3'),
+      range: { min: 0, max: 100 },
+      format: (v) => `${v}%`,
+      token,
+    });
+    this.speedChart = this.buildLineChart(this.speedCanvas.nativeElement, {
+      labels,
+      dates,
+      values: points.map((p) => p.speedDpm ?? 0),
+      color: token('--chart-2', '#b45309'),
+      range: { min: 0 },
+      format: (v) => `${v} ${this.speedUnit()}`,
+      token,
+    });
+  }
+
+  private buildLineChart(
+    canvas: HTMLCanvasElement,
+    opts: {
+      labels: string[];
+      dates: string[];
+      values: number[];
+      color: string;
+      range: { min: number; max?: number };
+      format: (value: number) => string;
+      token: (name: string, fallback: string) => string;
+    },
+  ): Chart {
+    const muted = opts.token('--text-3', '#6b7480');
+    const surface = opts.token('--surface', '#ffffff');
+    const grid = opts.token('--chart-grid', '#e5e8ed');
+    const axis = opts.token('--border-strong', '#c3c9d2');
+    const tickFont = { family: 'Source Sans 3', size: 12 };
+
+    return new Chart(canvas, {
+      type: 'line',
+      data: {
+        labels: opts.labels,
+        datasets: [
+          {
+            data: opts.values,
+            borderColor: opts.color,
+            backgroundColor: opts.color,
+            borderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointBorderColor: surface,
+            pointBorderWidth: 2,
+            tension: 0.25,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            displayColors: false,
+            callbacks: {
+              title: (items) => `Session ${items[0].label} · ${opts.dates[items[0].dataIndex]}`,
+              label: (item) => opts.format(item.parsed.y ?? 0),
+            },
+          },
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            border: { color: axis },
+            ticks: { color: muted, maxTicksLimit: 8, font: tickFont },
+          },
+          y: {
+            ...opts.range,
+            grid: { color: grid },
+            border: { display: false },
+            ticks: { color: muted, maxTicksLimit: 5, font: tickFont },
+          },
+        },
+      },
     });
   }
 }

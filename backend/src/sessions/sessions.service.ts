@@ -22,6 +22,7 @@ export interface EvaluationResult {
   speedDpm: number;
   diffBreakdown: DiffItem[];
   sessionId?: string;
+  isPersonalBest?: boolean;
 }
 
 @Injectable()
@@ -153,6 +154,9 @@ export class SessionsService {
 
   async saveSession(dto: EvaluateSessionDto, userId?: string): Promise<EvaluationResult> {
     const evaluated = this.evaluate(dto);
+    const previousBest = userId
+      ? await this.sessionRepository.maximum('score', { user: { id: userId }, discipline: dto.discipline })
+      : null;
 
     const session = this.sessionRepository.create({
       user: userId ? ({ id: userId } as any) : null,
@@ -173,6 +177,7 @@ export class SessionsService {
     return {
       ...evaluated,
       sessionId: saved.id,
+      isPersonalBest: previousBest !== null && evaluated.score > previousBest,
     };
   }
 

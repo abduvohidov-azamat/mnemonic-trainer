@@ -10,24 +10,22 @@ import { PaoEntry } from '../../../core/models/pao.models';
     @if (pao) {
       <div class="pao-overlay-bar">
         <div class="pao-header">
-          <span class="pao-tag">PAO HELPER [{{ pao.key }}]</span>
+          <span class="pao-tag">PAO for {{ pao.key }}</span>
           @if (pao.notes) {
             <span class="pao-note">{{ pao.notes }}</span>
           }
         </div>
         <div class="pao-triad">
           <div class="pao-node person">
-            <span class="node-label">PERSON</span>
+            <span class="node-label">Person</span>
             <span class="node-val">{{ pao.person || '—' }}</span>
           </div>
-          <div class="pao-divider">➔</div>
           <div class="pao-node action">
-            <span class="node-label">ACTION</span>
+            <span class="node-label">Action</span>
             <span class="node-val">{{ pao.action || '—' }}</span>
           </div>
-          <div class="pao-divider">➔</div>
           <div class="pao-node object">
-            <span class="node-label">OBJECT</span>
+            <span class="node-label">Object</span>
             <span class="node-val">{{ pao.object || '—' }}</span>
           </div>
         </div>
@@ -36,98 +34,65 @@ import { PaoEntry } from '../../../core/models/pao.models';
   `,
   styles: [`
     .pao-overlay-bar {
-      background: rgba(19, 25, 36, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--border-accent);
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 14px 24px;
-      box-shadow: 0 8px 30px rgba(0, 240, 255, 0.15);
-      animation: fadeIn 0.2s ease-out;
-      max-width: 800px;
-      margin: 0 auto;
+      padding: 14px 18px;
+      box-shadow: var(--shadow-sm);
+      animation: fadeIn 0.15s ease-out;
     }
 
     .pao-header {
       display: flex;
-      align-items: center;
+      align-items: baseline;
       justify-content: space-between;
-      margin-bottom: 8px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      padding-bottom: 6px;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
 
       .pao-tag {
-        font-family: var(--font-mono);
-        font-weight: 800;
-        font-size: 0.75rem;
-        color: var(--accent-cyan);
-        letter-spacing: 0.1em;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--text-2);
       }
 
       .pao-note {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        font-style: italic;
+        font-size: 0.85rem;
+        color: var(--text-3);
       }
     }
 
     .pao-triad {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+
+      @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+      }
     }
 
     .pao-node {
-      flex: 1;
       display: flex;
       flex-direction: column;
-      background: rgba(255, 255, 255, 0.02);
-      padding: 6px 12px;
-      border-radius: var(--radius-sm);
-      border-left: 3px solid transparent;
+      background: var(--surface-2);
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
 
       .node-label {
-        font-size: 0.65rem;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        margin-bottom: 2px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-3);
       }
 
       .node-val {
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        white-space: nowrap;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text);
         overflow: hidden;
         text-overflow: ellipsis;
+        white-space: nowrap;
       }
-
-      &.person {
-        border-left-color: var(--accent-cyan);
-        .node-label { color: var(--accent-cyan); }
-      }
-
-      &.action {
-        border-left-color: var(--accent-amber);
-        .node-label { color: var(--accent-amber); }
-      }
-
-      &.object {
-        border-left-color: var(--accent-purple);
-        .node-label { color: var(--accent-purple); }
-      }
-    }
-
-    .pao-divider {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      opacity: 0.5;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
     }
   `],
 })
