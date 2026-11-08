@@ -83,12 +83,14 @@ import { PaoEntry } from '../../../../core/models/pao.models';
       align-items: center;
       justify-content: center;
       padding: 16px;
+      overflow-y: auto;
       animation: fadeIn 0.15s ease-out;
     }
 
     .modal-card {
       width: 100%;
       max-width: 440px;
+      margin: auto;
       padding: 24px;
       box-shadow: var(--shadow-md);
     }
@@ -198,6 +200,16 @@ import { PaoEntry } from '../../../../core/models/pao.models';
     .optional {
       color: var(--text-3);
       font-weight: 400;
+    }
+
+    @media (max-width: 600px) {
+      .modal-card {
+        padding: 18px;
+      }
+
+      .modal-footer button {
+        flex: 1;
+      }
     }
   `],
 })

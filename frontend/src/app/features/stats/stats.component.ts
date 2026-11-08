@@ -109,12 +109,12 @@ const SPEED_UNITS: Record<Discipline, string> = {
                 <tr>
                   <td class="text-muted">{{ session.createdAt | date:'MMM d, HH:mm' }}</td>
                   <td>{{ disciplineLabel(session.discipline) }}</td>
-                  <td class="num font-mono" [class.text-success]="session.accuracy >= 90" [class.text-danger]="session.accuracy < 60">
+                  <td class="num font-mono" data-label="Accuracy" [class.text-success]="session.accuracy >= 90" [class.text-danger]="session.accuracy < 60">
                     {{ session.accuracy }}%
                   </td>
-                  <td class="num font-mono">{{ session.score }}</td>
-                  <td class="num font-mono">{{ (session.durationMs / 1000).toFixed(1) }}s</td>
-                  <td class="num font-mono">{{ session.speedDpm }}/min</td>
+                  <td class="num font-mono" data-label="Score">{{ session.score }}</td>
+                  <td class="num font-mono" data-label="Time">{{ (session.durationMs / 1000).toFixed(1) }}s</td>
+                  <td class="num font-mono" data-label="Speed">{{ session.speedDpm }}/min</td>
                 </tr>
               } @empty {
                 <tr>
@@ -327,6 +327,94 @@ const SPEED_UNITS: Record<Discipline, string> = {
         color: var(--text-2);
         padding: 28px 12px;
         white-space: normal;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .progress-card,
+      .history-table-card {
+        padding: 16px;
+      }
+
+      .progress-tabs {
+        width: 100%;
+      }
+
+      .progress-tab {
+        flex: 1;
+      }
+
+      .chart-box {
+        padding: 10px;
+      }
+
+      .chart-canvas-wrap {
+        height: 190px;
+      }
+
+      .discipline-stat-box {
+        padding: 14px 16px;
+      }
+
+      /* Turn each table row into a compact card instead of scrolling sideways. */
+      .history-table {
+        thead {
+          display: none;
+        }
+
+        tbody,
+        tr,
+        td {
+          display: block;
+        }
+
+        tr {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 6px 8px;
+          padding: 12px 0;
+          border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:last-child {
+          border-bottom: none;
+        }
+
+        td {
+          padding: 0;
+          border-bottom: none;
+        }
+
+        tbody tr:hover td {
+          background: none;
+        }
+
+        td:nth-child(1) {
+          grid-column: 1 / 3;
+        }
+
+        td:nth-child(2) {
+          grid-column: 3 / 5;
+          text-align: right;
+          font-weight: 600;
+        }
+
+        .num {
+          text-align: left;
+        }
+
+        .num::before {
+          content: attr(data-label);
+          display: block;
+          font-family: var(--font-sans);
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: var(--text-3);
+        }
+
+        .empty-state {
+          grid-column: 1 / -1;
+        }
       }
     }
   `],

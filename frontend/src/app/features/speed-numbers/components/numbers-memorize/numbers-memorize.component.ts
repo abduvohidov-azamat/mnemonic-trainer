@@ -209,6 +209,59 @@ import { PaoHintBarComponent } from '../../../../shared/components/pao-hint-bar/
       font-size: 0.95rem;
       color: var(--text-3);
     }
+
+    @media (max-width: 600px) {
+      .hud-bar {
+        padding: 12px 14px;
+        gap: 10px 12px;
+      }
+
+      .hud-actions {
+        width: 100%;
+
+        button {
+          flex: 1;
+        }
+      }
+
+      .strip-wrap {
+        padding: 12px 14px;
+
+        .strip-items {
+          max-height: 132px;
+          overflow-y: auto;
+        }
+      }
+
+      /* Keep Back / Next within thumb reach while the page scrolls. */
+      .controls-legend {
+        position: sticky;
+        bottom: 0;
+        z-index: 5;
+        margin: 0 -16px;
+        padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+
+        .nav-buttons-mobile {
+          width: 100%;
+
+          button {
+            flex: 1;
+          }
+        }
+      }
+
+      .main-locus-display {
+        padding: 32px 16px;
+      }
+    }
+
+    @media (max-width: 600px), (pointer: coarse) {
+      .controls-legend .legend-keys {
+        display: none;
+      }
+    }
   `],
 })
 export class NumbersMemorizeComponent {

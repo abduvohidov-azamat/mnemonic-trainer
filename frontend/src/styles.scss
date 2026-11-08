@@ -106,6 +106,11 @@
   padding: 0;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   background-color: var(--bg);
   color: var(--text);
@@ -113,6 +118,7 @@ body {
   font-size: 16px;
   line-height: 1.5;
   min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -132,6 +138,11 @@ h1, h2, h3, h4 {
 input, button, select, textarea {
   font: inherit;
   color: inherit;
+}
+
+button, a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .font-mono {
@@ -244,6 +255,21 @@ input, button, select, textarea {
 .page-subtitle {
   color: var(--text-2);
   margin-top: 4px;
+}
+
+@media (max-width: 600px) {
+  .page-title {
+    font-size: 1.45rem;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    min-height: 44px;
+  }
+
+  .btn-sm {
+    min-height: 38px;
+  }
 }
 
 .locus-chunk {

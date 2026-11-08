@@ -137,6 +137,19 @@ import { CardItem } from '../../../core/models/game.models';
         font-size: 1.2rem;
       }
     }
+
+    /* Two full-size cards side by side must still fit on small phones. */
+    @media (max-width: 380px) {
+      .playing-card:not(.compact),
+      .card-placeholder:not(.compact) {
+        width: 120px;
+        height: 172px;
+      }
+
+      .playing-card:not(.compact) .large-suit {
+        font-size: 3rem;
+      }
+    }
   `],
 })
 export class CardVisualComponent {

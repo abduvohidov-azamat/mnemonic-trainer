@@ -48,7 +48,7 @@ import { PaoEditModalComponent } from './components/pao-edit-modal/pao-edit-moda
 
         <div class="search-wrap">
           <input
-            type="text"
+            type="search"
             [ngModel]="searchQuery()"
             (ngModelChange)="searchQuery.set($event)"
             placeholder="Search by number, card, person, action or object"
@@ -266,6 +266,33 @@ import { PaoEditModalComponent } from './components/pao-edit-modal/pao-edit-moda
         color: var(--text-3);
         border-top: 1px solid var(--border);
         padding-top: 8px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .pao-header {
+        align-items: stretch;
+        gap: 12px;
+      }
+
+      .tab-group {
+        width: 100%;
+      }
+
+      .tab-btn {
+        flex: 1;
+        padding: 8px 6px;
+        white-space: nowrap;
+      }
+
+      .search-wrap {
+        flex-basis: 100%;
+        max-width: none;
+        min-width: 0;
+      }
+
+      .matrix-grid {
+        gap: 8px;
       }
     }
   `],

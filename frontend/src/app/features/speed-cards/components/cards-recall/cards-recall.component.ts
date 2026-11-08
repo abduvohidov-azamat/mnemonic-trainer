@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, inject, signal } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, inject, signal, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameStore } from '../../../../core/store/game.store';
 import { CardItem } from '../../../../core/models/game.models';
@@ -27,6 +27,7 @@ import { CardVisualComponent } from '../../../../shared/components/card-visual/c
         <div class="tray-slots">
           @for (slot of slotsArray; track $index) {
             <div
+              #slotEl
               class="tray-slot"
               [class.active-slot]="$index === activeSlot"
               (click)="selectSlot($index)"
@@ -49,12 +50,13 @@ import { CardVisualComponent } from '../../../../shared/components/card-visual/c
           @for (suit of suits; track suit.code) {
             <button
               class="suit-tab-btn"
+              [attr.aria-label]="suit.name"
               [class.active]="selectedSuit === suit.code"
               [class.red]="suit.color === 'red'"
               (click)="selectedSuit = suit.code"
             >
               <span class="suit-icon">{{ suit.symbol }}</span>
-              <span>{{ suit.name }}</span>
+              <span class="suit-name">{{ suit.name }}</span>
             </button>
           }
         </div>
@@ -126,6 +128,7 @@ import { CardVisualComponent } from '../../../../shared/components/card-visual/c
       }
 
       .tray-slots {
+        position: relative;
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
@@ -259,11 +262,88 @@ import { CardVisualComponent } from '../../../../shared/components/card-visual/c
         box-shadow: var(--shadow-md);
       }
     }
+
+    @media (max-width: 600px) {
+      .recall-header {
+        padding: 16px;
+        gap: 12px;
+
+        .title {
+          font-size: 1.15rem;
+        }
+
+        .desc {
+          font-size: 0.9rem;
+        }
+
+        .submit-btn {
+          width: 100%;
+        }
+      }
+
+      .recall-header .header-actions {
+        width: 100%;
+
+        button {
+          flex: 1;
+        }
+      }
+
+      /* One horizontally scrolling row keeps the picker close to the tray. */
+      .placed-tray-wrap {
+        padding: 14px;
+
+        .tray-slots {
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          overflow-y: hidden;
+          max-height: none;
+          scroll-snap-type: x proximity;
+        }
+      }
+
+      .tray-slot {
+        flex-shrink: 0;
+        scroll-snap-align: center;
+      }
+
+      .card-picker-panel {
+        padding: 12px;
+      }
+
+      .suit-tabs {
+        margin-bottom: 12px;
+      }
+
+      .ranks-grid {
+        grid-template-columns: repeat(auto-fill, minmax(54px, 1fr));
+        gap: 6px;
+      }
+
+      .rank-pick-btn {
+        height: 60px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .suit-tab-btn {
+        padding: 8px 4px;
+
+        .suit-name {
+          display: none;
+        }
+
+        .suit-icon {
+          font-size: 1.35rem;
+        }
+      }
+    }
   `],
 })
 export class CardsRecallComponent implements OnInit {
   readonly store = inject(GameStore);
   @Output() submitRecall = new EventEmitter<CardItem[]>();
+  @ViewChildren('slotEl') slotEls!: QueryList<ElementRef<HTMLElement>>;
 
   placedCards: (CardItem | null)[] = [];
   activeSlot = 0;
@@ -316,6 +396,7 @@ export class CardsRecallComponent implements OnInit {
     if (this.activeSlot < this.totalSlots - 1) {
       this.activeSlot++;
     }
+    this.revealActiveSlot();
   }
 
   undoLast() {
@@ -325,6 +406,19 @@ export class CardsRecallComponent implements OnInit {
       this.activeSlot--;
       this.placedCards[this.activeSlot] = null;
     }
+    this.revealActiveSlot();
+  }
+
+  // Scroll only the tray (never the page) so the active slot stays in view.
+  private revealActiveSlot() {
+    const slot = this.slotEls?.get(this.activeSlot)?.nativeElement;
+    const tray = slot?.parentElement;
+    if (!slot || !tray) return;
+    tray.scrollTo({
+      left: slot.offsetLeft - (tray.clientWidth - slot.offsetWidth) / 2,
+      top: slot.offsetTop - (tray.clientHeight - slot.offsetHeight) / 2,
+      behavior: 'smooth',
+    });
   }
 
   onSubmit() {

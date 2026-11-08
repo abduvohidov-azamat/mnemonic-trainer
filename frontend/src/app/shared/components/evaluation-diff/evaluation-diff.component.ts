@@ -435,6 +435,51 @@ import confetti from 'canvas-confetti';
       justify-content: center;
       padding-top: 8px;
     }
+
+    @media (max-width: 600px) {
+      .eval-container {
+        padding: 16px;
+      }
+
+      .score-hero {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-bottom: 24px;
+      }
+
+      .metric-card {
+        padding: 12px;
+
+        .metric-value {
+          font-size: 1.4rem;
+        }
+      }
+
+      .numbers-diff-grid {
+        grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+      }
+
+      /* Lay each card result out in a row so a full deck isn't a mile long. */
+      .cards-diff-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .card-diff-item {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 10px 12px;
+
+        .diff-index-badge {
+          align-self: center;
+          min-width: 22px;
+        }
+      }
+
+      .eval-actions button {
+        flex: 1;
+      }
+    }
   `],
 })
 export class EvaluationDiffComponent implements OnChanges {

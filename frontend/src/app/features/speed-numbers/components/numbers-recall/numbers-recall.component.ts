@@ -32,7 +32,8 @@ import { KeypadComponent } from '../../../../shared/components/keypad/keypad.com
             <input
               #digitInput
               type="text"
-              inputmode="numeric"
+              inputmode="none"
+              autocomplete="off"
               maxlength="1"
               [value]="enteredDigits[$index] || ''"
               (input)="onDigitInput($event, $index)"
@@ -144,6 +145,44 @@ import { KeypadComponent } from '../../../../shared/components/keypad/keypad.com
 
     .keypad-wrapper {
       margin-top: 4px;
+    }
+
+    @media (max-width: 600px) {
+      .recall-header {
+        padding: 16px;
+        gap: 12px;
+
+        .title {
+          font-size: 1.15rem;
+        }
+
+        .desc {
+          font-size: 0.9rem;
+        }
+
+        .submit-btn {
+          width: 100%;
+        }
+      }
+
+      .digits-entry-grid {
+        grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+        gap: 6px;
+        padding: 12px;
+        max-height: 38vh;
+        max-height: 38dvh;
+      }
+
+      /* The on-screen keypad stays pinned to the bottom while the digits scroll. */
+      .keypad-wrapper {
+        position: sticky;
+        bottom: 0;
+        z-index: 5;
+        margin: 0 -16px;
+        padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+      }
     }
   `],
 })

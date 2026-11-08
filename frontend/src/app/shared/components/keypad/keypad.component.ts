@@ -70,6 +70,24 @@ import { CommonModule } from '@angular/common';
         }
       }
     }
+
+    @media (max-width: 600px) {
+      .keypad-grid {
+        max-width: 320px;
+        gap: 6px;
+      }
+
+      .key-btn {
+        height: 48px;
+      }
+    }
+
+    /* Short phones: keep the pinned keypad from covering the digit boxes. */
+    @media (max-width: 600px) and (max-height: 700px) {
+      .key-btn {
+        height: 42px;
+      }
+    }
   `],
 })
 export class KeypadComponent {

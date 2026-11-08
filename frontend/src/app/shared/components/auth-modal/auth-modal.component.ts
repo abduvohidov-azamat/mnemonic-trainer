@@ -50,6 +50,9 @@ import { AuthService } from '../../../core/services/auth.service';
                 type="text"
                 [(ngModel)]="username"
                 placeholder="e.g. alex"
+                autocomplete="username"
+                autocapitalize="none"
+                spellcheck="false"
                 class="form-control"
               />
             </div>
@@ -61,6 +64,10 @@ import { AuthService } from '../../../core/services/auth.service';
               type="text"
               [(ngModel)]="identifier"
               placeholder="you@example.com"
+              [attr.autocomplete]="tab() === 'login' ? 'username' : 'email'"
+              [attr.inputmode]="tab() === 'login' ? 'text' : 'email'"
+              autocapitalize="none"
+              spellcheck="false"
               class="form-control"
             />
           </div>
@@ -71,6 +78,7 @@ import { AuthService } from '../../../core/services/auth.service';
               type="password"
               [(ngModel)]="password"
               placeholder="At least 6 characters"
+              [attr.autocomplete]="tab() === 'login' ? 'current-password' : 'new-password'"
               class="form-control"
             />
           </div>
@@ -100,12 +108,14 @@ import { AuthService } from '../../../core/services/auth.service';
       align-items: center;
       justify-content: center;
       padding: 16px;
+      overflow-y: auto;
       animation: fadeIn 0.15s ease-out;
     }
 
     .modal-card {
       width: 100%;
       max-width: 440px;
+      margin: auto;
       padding: 24px;
       box-shadow: var(--shadow-md);
     }
@@ -214,6 +224,12 @@ import { AuthService } from '../../../core/services/auth.service';
       font-size: 0.9rem;
       font-weight: 600;
       margin-bottom: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .modal-card {
+        padding: 18px;
+      }
     }
   `],
 })

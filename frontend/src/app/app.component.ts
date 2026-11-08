@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
+import { GameStore } from './core/store/game.store';
 
 @Component({
   selector: 'app-root',
@@ -28,4 +29,15 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
     }
   `],
 })
-export class AppComponent {}
+export class AppComponent {
+  private readonly store = inject(GameStore);
+
+  constructor() {
+    // Each drill phase swaps the whole screen without a route change, so start it from the top.
+    // Otherwise tapping Start at the bottom of a long settings screen opens the next screen mid-page on phones.
+    effect(() => {
+      this.store.phase();
+      window.scrollTo({ top: 0 });
+    });
+  }
+}

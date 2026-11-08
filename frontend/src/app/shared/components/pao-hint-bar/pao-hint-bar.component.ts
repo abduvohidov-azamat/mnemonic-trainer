@@ -94,6 +94,32 @@ import { PaoEntry } from '../../../core/models/pao.models';
         white-space: nowrap;
       }
     }
+
+    @media (max-width: 600px) {
+      .pao-overlay-bar {
+        padding: 12px 14px;
+      }
+
+      .pao-triad {
+        gap: 6px;
+      }
+
+      .pao-node {
+        flex-direction: row;
+        align-items: baseline;
+        gap: 10px;
+        padding: 6px 10px;
+
+        .node-label {
+          flex-shrink: 0;
+          min-width: 52px;
+        }
+
+        .node-val {
+          min-width: 0;
+        }
+      }
+    }
   `],
 })
 export class PaoHintBarComponent {

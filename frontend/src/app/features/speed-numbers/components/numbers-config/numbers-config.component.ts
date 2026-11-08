@@ -283,6 +283,29 @@ import { NumbersConfig } from '../../../../core/models/game.models';
       padding: 12px;
       font-size: 1rem;
     }
+
+    @media (max-width: 600px) {
+      .config-card {
+        padding: 18px 16px;
+        gap: 20px;
+      }
+
+      .config-header .title {
+        font-size: 1.3rem;
+      }
+
+      .config-grid {
+        gap: 18px;
+      }
+
+      .pill-btn {
+        padding: 10px 14px;
+      }
+
+      .toggle-block {
+        padding: 12px 14px;
+      }
+    }
   `],
 })
 export class NumbersConfigComponent {

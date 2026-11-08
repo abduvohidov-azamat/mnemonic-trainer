@@ -31,6 +31,11 @@ import { GameStore } from '../../../../core/store/game.store';
               (focus)="focusedIndex = $index"
               (keydown)="onKeyDown($event, $index)"
               placeholder="Word {{ $index + 1 }}"
+              autocomplete="off"
+              autocapitalize="none"
+              autocorrect="off"
+              spellcheck="false"
+              [attr.enterkeyhint]="$last ? 'done' : 'next'"
               class="word-input"
             />
           </div>
@@ -124,6 +129,32 @@ import { GameStore } from '../../../../core/store/game.store';
       &.focused {
         border-color: var(--accent);
         box-shadow: var(--focus-ring);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .recall-header {
+        padding: 16px;
+        gap: 12px;
+
+        .title {
+          font-size: 1.15rem;
+        }
+
+        .desc {
+          font-size: 0.9rem;
+        }
+
+        .submit-btn {
+          width: 100%;
+        }
+      }
+
+      .words-recall-grid {
+        padding: 12px;
+        gap: 8px;
+        max-height: none;
+        overflow-y: visible;
       }
     }
   `],

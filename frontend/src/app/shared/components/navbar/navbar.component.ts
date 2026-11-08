@@ -17,12 +17,15 @@ import { AuthModalComponent } from '../auth-modal/auth-modal.component';
         </a>
 
         <nav class="nav-links" aria-label="Main">
-          <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">Home</a>
-          <a routerLink="/numbers" routerLinkActive="active" class="nav-link">Numbers</a>
-          <a routerLink="/cards" routerLinkActive="active" class="nav-link">Cards</a>
-          <a routerLink="/words" routerLinkActive="active" class="nav-link">Words</a>
-          <a routerLink="/pao" routerLinkActive="active" class="nav-link">PAO list</a>
-          <a routerLink="/stats" routerLinkActive="active" class="nav-link">Progress</a>
+          @for (link of links; track link.path) {
+            <a
+              #navLink
+              [routerLink]="link.path"
+              routerLinkActive="active"
+              (isActiveChange)="onLinkActive($event, navLink)"
+              class="nav-link"
+            >{{ link.label }}</a>
+          }
         </nav>
 
         <div class="user-area">
@@ -96,10 +99,17 @@ import { AuthModalComponent } from '../auth-modal/auth-modal.component';
     }
 
     .nav-links {
+      position: relative;
       display: flex;
       gap: 4px;
       flex: 1;
       overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
 
     .nav-link {
@@ -156,6 +166,9 @@ import { AuthModalComponent } from '../auth-modal/auth-modal.component';
       .nav-links {
         order: 3;
         flex-basis: 100%;
+        margin: 0 -16px;
+        padding: 0 16px 2px;
+        scroll-padding: 0 16px;
       }
 
       .user-area {
@@ -164,6 +177,22 @@ import { AuthModalComponent } from '../auth-modal/auth-modal.component';
 
       .user-name {
         display: none;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .header-container {
+        padding: 8px 16px;
+        gap: 8px 12px;
+      }
+
+      .nav-link {
+        padding: 7px 10px;
+        font-size: 0.9rem;
+      }
+
+      .user-area {
+        gap: 6px;
       }
     }
 
@@ -177,8 +206,24 @@ import { AuthModalComponent } from '../auth-modal/auth-modal.component';
 export class NavbarComponent {
   readonly authService = inject(AuthService);
 
+  readonly links = [
+    { path: '/dashboard', label: 'Home' },
+    { path: '/numbers', label: 'Numbers' },
+    { path: '/cards', label: 'Cards' },
+    { path: '/words', label: 'Words' },
+    { path: '/pao', label: 'PAO list' },
+    { path: '/stats', label: 'Progress' },
+  ];
+
   readonly showAuthModal = signal<boolean>(false);
   readonly authModalTab = signal<'login' | 'register'>('login');
+
+  // On narrow screens the links scroll sideways; keep the current page's link visible.
+  onLinkActive(active: boolean, link: HTMLElement) {
+    const nav = link.parentElement;
+    if (!active || !nav || nav.scrollWidth <= nav.clientWidth) return;
+    nav.scrollTo({ left: link.offsetLeft - (nav.clientWidth - link.offsetWidth) / 2 });
+  }
 
   openAuthModal(tab: 'login' | 'register') {
     this.authModalTab.set(tab);

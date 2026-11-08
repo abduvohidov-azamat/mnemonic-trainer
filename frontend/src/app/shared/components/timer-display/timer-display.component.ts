@@ -62,6 +62,17 @@ import { CommonModule } from '@angular/common';
       font-weight: 600;
       color: var(--text-2);
     }
+
+    @media (max-width: 400px) {
+      .timer-container {
+        gap: 8px;
+        padding: 5px 12px;
+      }
+
+      .timer-label {
+        display: none;
+      }
+    }
   `],
 })
 export class TimerDisplayComponent {

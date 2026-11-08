@@ -236,6 +236,64 @@ interface TrainingMode {
         color: var(--text-3);
       }
     }
+
+    @media (max-width: 600px) {
+      .dashboard {
+        padding: 20px 16px 40px;
+        gap: 24px;
+      }
+
+      .quick-stats {
+        gap: 8px;
+      }
+
+      .quick-stat {
+        padding: 10px 12px;
+
+        dt {
+          font-size: 0.75rem;
+          line-height: 1.3;
+        }
+
+        dd {
+          font-size: 1.25rem;
+        }
+      }
+
+      .modes-grid {
+        gap: 10px;
+      }
+
+      .mode-card {
+        flex-direction: row;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 16px;
+      }
+
+      .mode-tile {
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+      }
+
+      .mode-desc {
+        font-size: 0.9rem;
+      }
+
+      .mode-action {
+        display: none;
+      }
+
+      .cheatsheet {
+        padding: 16px;
+      }
+
+      .cheatsheet-grid {
+        grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+        gap: 8px;
+      }
+    }
   `],
 })
 export class DashboardComponent implements OnInit {
