@@ -1,10 +1,11 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-keypad',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   template: `
     <div class="keypad-grid">
       @for (d of digits; track d) {
@@ -12,13 +13,13 @@ import { CommonModule } from '@angular/common';
           {{ d }}
         </button>
       }
-      <button class="key-btn action-key backspace" aria-label="Delete" (click)="backspacePress.emit()">
+      <button class="key-btn action-key backspace" [attr.aria-label]="'recall.delete' | t" (click)="backspacePress.emit()">
         ⌫
       </button>
       <button class="key-btn" (click)="digitPress.emit('0')">
         0
       </button>
-      <button class="key-btn action-key submit" aria-label="Check my answers" (click)="submitPress.emit()">
+      <button class="key-btn action-key submit" [attr.aria-label]="'recall.check' | t" (click)="submitPress.emit()">
         ✓
       </button>
     </div>

@@ -1,31 +1,32 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaoEntry } from '../../../core/models/pao.models';
+import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-pao-hint-bar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   template: `
     @if (pao) {
       <div class="pao-overlay-bar">
         <div class="pao-header">
-          <span class="pao-tag">PAO for {{ pao.key }}</span>
+          <span class="pao-tag">{{ 'pao.hintFor' | t: { key: pao.key } }}</span>
           @if (pao.notes) {
             <span class="pao-note">{{ pao.notes }}</span>
           }
         </div>
         <div class="pao-triad">
           <div class="pao-node person">
-            <span class="node-label">Person</span>
+            <span class="node-label">{{ 'pao.person' | t }}</span>
             <span class="node-val">{{ pao.person || '—' }}</span>
           </div>
           <div class="pao-node action">
-            <span class="node-label">Action</span>
+            <span class="node-label">{{ 'pao.action' | t }}</span>
             <span class="node-val">{{ pao.action || '—' }}</span>
           </div>
           <div class="pao-node object">
-            <span class="node-label">Object</span>
+            <span class="node-label">{{ 'pao.object' | t }}</span>
             <span class="node-val">{{ pao.object || '—' }}</span>
           </div>
         </div>

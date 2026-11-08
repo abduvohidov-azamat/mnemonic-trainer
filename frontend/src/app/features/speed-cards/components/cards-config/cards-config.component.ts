@@ -2,102 +2,101 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CardsConfig } from '../../../../core/models/game.models';
+import { TranslatePipe } from '../../../../core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-cards-config',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   template: `
     <div class="config-card panel">
       <div class="config-header">
-        <div class="discipline-badge">
-          Cards
-        </div>
-        <h2 class="title">Set up your drill</h2>
-        <p class="subtitle">Choose how many cards to memorise and how many you see at once.</p>
+        <div class="discipline-badge">{{ 'common.cards' | t }}</div>
+        <h2 class="title">{{ 'config.title' | t }}</h2>
+        <p class="subtitle">{{ 'config.cardsSubtitle' | t }}</p>
       </div>
 
       <div class="config-grid">
         <!-- How many cards -->
         <div class="setting-block">
-          <label class="setting-label">How many cards</label>
+          <label class="setting-label">{{ 'config.cardsHowMany' | t }}</label>
           <div class="preset-pills">
             <button
               class="pill-btn"
               [class.active]="deckSize === 10"
               (click)="deckSize = 10"
             >
-              10 cards
+              {{ 'config.deck10' | t }}
             </button>
             <button
               class="pill-btn"
               [class.active]="deckSize === 26"
               (click)="deckSize = 26"
             >
-              26 cards (half deck)
+              {{ 'config.deck26' | t }}
             </button>
             <button
               class="pill-btn"
               [class.active]="deckSize === 52"
               (click)="deckSize = 52"
             >
-              52 cards (full deck)
+              {{ 'config.deck52' | t }}
             </button>
           </div>
         </div>
 
         <!-- Cards per Locus -->
         <div class="setting-block">
-          <label class="setting-label">Cards shown at a time</label>
+          <label class="setting-label">{{ 'config.cardsGroup' | t }}</label>
           <div class="preset-pills">
             <button
               class="pill-btn"
               [class.active]="chunkSize === 1"
               (click)="chunkSize = 1"
             >
-              1 card
+              {{ 'config.cards1' | t }}
             </button>
             <button
               class="pill-btn"
               [class.active]="chunkSize === 2"
               (click)="chunkSize = 2"
             >
-              2 cards
+              {{ 'config.cards2' | t }}
             </button>
           </div>
         </div>
 
         <!-- Auto-Pacer Speed -->
         <div class="setting-block">
-          <label class="setting-label">Moving through the cards</label>
+          <label class="setting-label">{{ 'config.cardsPace' | t }}</label>
           <div class="preset-pills">
             <button
               class="pill-btn"
               [class.active]="autoPacerMs === 0"
               (click)="autoPacerMs = 0"
             >
-              At my own pace
+              {{ 'config.ownPace' | t }}
             </button>
             <button
               class="pill-btn"
               [class.active]="autoPacerMs === 3000"
               (click)="autoPacerMs = 3000"
             >
-              Every 3 seconds
+              {{ 'config.every' | t: { s: 3 } }}
             </button>
             <button
               class="pill-btn"
               [class.active]="autoPacerMs === 1500"
               (click)="autoPacerMs = 1500"
             >
-              Every 1.5 seconds
+              {{ 'config.every' | t: { s: 1.5 } }}
             </button>
             <button
               class="pill-btn"
               [class.active]="autoPacerMs === 800"
               (click)="autoPacerMs = 800"
             >
-              Every 0.8 seconds
+              {{ 'config.every' | t: { s: 0.8 } }}
             </button>
           </div>
         </div>
@@ -105,8 +104,8 @@ import { CardsConfig } from '../../../../core/models/game.models';
         <!-- Live PAO Assistant Toggle -->
         <div class="setting-block toggle-block">
           <div class="toggle-info">
-            <span class="toggle-title">Show PAO hints</span>
-            <span class="toggle-desc">See the person, action and object for each card while you memorise.</span>
+            <span class="toggle-title">{{ 'config.hintsTitle' | t }}</span>
+            <span class="toggle-desc">{{ 'config.cardsHintsDesc' | t }}</span>
           </div>
           <label class="switch">
             <input type="checkbox" [(ngModel)]="enablePaoHints" />
@@ -118,7 +117,7 @@ import { CardsConfig } from '../../../../core/models/game.models';
       <!-- Start Button -->
       <div class="config-footer">
         <button class="btn-primary start-btn" (click)="onStart()">
-          Shuffle and start
+          {{ 'config.shuffleStart' | t }}
         </button>
       </div>
     </div>

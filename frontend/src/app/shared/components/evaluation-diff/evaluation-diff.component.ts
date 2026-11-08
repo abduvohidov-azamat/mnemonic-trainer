@@ -1,51 +1,54 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, inject, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DiffItem, EvaluationResult } from '../../../core/models/game.models';
 import { CardVisualComponent } from '../card-visual/card-visual.component';
 import confetti from 'canvas-confetti';
+import { TranslatePipe, TranslatePluralPipe } from '../../../core/i18n/translate.pipe';
+import { I18nService } from '../../../core/i18n/i18n.service';
+import { MessageKey } from '../../../core/i18n/i18n.types';
 
 @Component({
   selector: 'app-evaluation-diff',
   standalone: true,
-  imports: [CommonModule, CardVisualComponent],
+  imports: [CommonModule, CardVisualComponent, TranslatePipe, TranslatePluralPipe],
   template: `
     @if (result) {
       <div class="eval-container panel">
         @if (result.isPersonalBest) {
-          <div class="personal-best-banner">🏆 New personal best — well done!</div>
+          <div class="personal-best-banner">{{ 'results.personalBest' | t }}</div>
         }
 
         <!-- Hero Score Banner -->
         <div class="score-hero">
           <div class="metric-card score-main">
-            <span class="metric-label">Accuracy</span>
+            <span class="metric-label">{{ 'results.accuracy' | t }}</span>
             <div class="metric-value-wrap">
-              <span class="metric-value">{{ result.accuracy }}%</span>
-              <span class="metric-sub">{{ result.totalCorrect }} / {{ result.totalItems }} correct</span>
+              <span class="metric-value">{{ i18n.formatNumber(result.accuracy) }}%</span>
+              <span class="metric-sub">{{ 'results.correctOf' | t: { c: result.totalCorrect, t: result.totalItems } }}</span>
             </div>
           </div>
 
           <div class="metric-card">
-            <span class="metric-label">Time</span>
+            <span class="metric-label">{{ 'results.time' | t }}</span>
             <div class="metric-value-wrap">
               <span class="metric-value">{{ formattedDuration }}</span>
-              <span class="metric-sub">Spent memorising</span>
+              <span class="metric-sub">{{ 'results.timeSub' | t }}</span>
             </div>
           </div>
 
           <div class="metric-card">
-            <span class="metric-label">Speed</span>
+            <span class="metric-label">{{ 'results.speed' | t }}</span>
             <div class="metric-value-wrap">
-              <span class="metric-value">{{ result.speedDpm }}</span>
-              <span class="metric-sub">{{ speedUnit }}</span>
+              <span class="metric-value">{{ i18n.formatNumber(result.speedDpm) }}</span>
+              <span class="metric-sub">{{ speedUnit | t }}</span>
             </div>
           </div>
 
           <div class="metric-card">
-            <span class="metric-label">Score</span>
+            <span class="metric-label">{{ 'results.score' | t }}</span>
             <div class="metric-value-wrap">
-              <span class="metric-value">{{ result.score }}</span>
-              <span class="metric-sub">Accuracy × speed</span>
+              <span class="metric-value">{{ i18n.formatNumber(result.score) }}</span>
+              <span class="metric-sub">{{ 'results.scoreSub' | t }}</span>
             </div>
           </div>
         </div>
@@ -53,13 +56,13 @@ import confetti from 'canvas-confetti';
         <!-- Diff Breakdown Matrix -->
         <div class="diff-section">
           <div class="section-header">
-            <h3 class="section-title">Your answers</h3>
+            <h3 class="section-title">{{ 'results.answers' | t }}</h3>
             <div class="diff-legend">
-              <span class="legend-item"><span class="dot match"></span> Correct</span>
-              <span class="legend-item"><span class="dot error"></span> Wrong</span>
-              <span class="legend-item"><span class="dot missing"></span> Missing</span>
+              <span class="legend-item"><span class="dot match"></span> {{ 'results.correct' | t }}</span>
+              <span class="legend-item"><span class="dot error"></span> {{ 'results.wrong' | t }}</span>
+              <span class="legend-item"><span class="dot missing"></span> {{ 'results.missing' | t }}</span>
               @if (result.discipline === 'words') {
-                <span class="legend-item"><span class="dot fuzzy"></span> Close (small typo)</span>
+                <span class="legend-item"><span class="dot fuzzy"></span> {{ 'results.closeLegend' | t }}</span>
               }
             </div>
           </div>
@@ -92,16 +95,16 @@ import confetti from 'canvas-confetti';
                   <div class="diff-index-badge">{{ item.index + 1 }}</div>
                   <div class="cards-pair">
                     <div class="pair-col">
-                      <span class="pair-tag">Correct</span>
+                      <span class="pair-tag">{{ 'results.correctTag' | t }}</span>
                       <app-card-visual [card]="item.expected" [compact]="true"></app-card-visual>
                     </div>
                     <div class="pair-col">
-                      <span class="pair-tag">Yours</span>
+                      <span class="pair-tag">{{ 'results.yoursTag' | t }}</span>
                       <app-card-visual [card]="item.actual" [compact]="true"></app-card-visual>
                     </div>
                   </div>
                   <div class="status-pill font-mono">
-                    {{ statusLabel(item.status) }}
+                    {{ statusLabel(item.status) | t }}
                   </div>
                 </div>
               }
@@ -119,15 +122,15 @@ import confetti from 'canvas-confetti';
                   <div class="word-idx">{{ item.index + 1 }}</div>
                   <div class="word-content">
                     <div class="word-expected">
-                      <span class="tag">Correct</span>
+                      <span class="tag">{{ 'results.correctTag' | t }}</span>
                       <span class="val">{{ item.expected }}</span>
                     </div>
                     <div class="word-actual">
-                      <span class="tag">Yours</span>
+                      <span class="tag">{{ 'results.yoursTag' | t }}</span>
                       <span class="val">{{ item.actual }}</span>
                     </div>
-                    @if (item.details) {
-                      <div class="word-details">{{ item.details }}</div>
+                    @if (item.status === 'fuzzy' && item.distance) {
+                      <div class="word-details">{{ 'results.lettersOff' | tp: item.distance }}</div>
                     }
                   </div>
                 </div>
@@ -139,10 +142,10 @@ import confetti from 'canvas-confetti';
         <!-- Actions -->
         <div class="eval-actions">
           <button class="btn-primary" (click)="retry.emit()">
-            Try again
+            {{ 'results.tryAgain' | t }}
           </button>
           <button class="btn-secondary" (click)="toConfig.emit()">
-            Change settings
+            {{ 'results.changeSettings' | t }}
           </button>
         </div>
       </div>
@@ -480,9 +483,34 @@ import confetti from 'canvas-confetti';
         flex: 1;
       }
     }
+
+    /* Narrow phones: longer status words (e.g. Неверно) must still fit beside both cards. */
+    @media (max-width: 400px) {
+      .eval-container {
+        padding: 12px;
+      }
+
+      .card-diff-item {
+        gap: 8px;
+        padding: 10px;
+
+        .cards-pair {
+          gap: 8px;
+        }
+
+        .status-pill {
+          min-width: 0;
+          padding: 2px 8px;
+          font-size: 0.75rem;
+          text-align: center;
+        }
+      }
+    }
   `],
 })
 export class EvaluationDiffComponent implements OnChanges {
+  readonly i18n = inject(I18nService);
+
   @Input() result: EvaluationResult | null = null;
   @Output() retry = new EventEmitter<void>();
   @Output() toConfig = new EventEmitter<void>();
@@ -501,22 +529,20 @@ export class EvaluationDiffComponent implements OnChanges {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }
 
-  get speedUnit(): string {
-    if (!this.result) return 'Per minute';
-    switch (this.result.discipline) {
-      case 'numbers': return 'Digits per minute';
-      case 'cards': return 'Cards per minute';
-      case 'words': return 'Words per minute';
-      default: return 'Per minute';
+  get speedUnit(): MessageKey {
+    switch (this.result?.discipline) {
+      case 'cards': return 'results.cardsPerMinute';
+      case 'words': return 'results.wordsPerMinute';
+      default: return 'results.numbersPerMinute';
     }
   }
 
-  statusLabel(status: DiffItem['status']): string {
+  statusLabel(status: DiffItem['status']): MessageKey {
     switch (status) {
-      case 'correct': return 'Correct';
-      case 'incorrect': return 'Wrong';
-      case 'fuzzy': return 'Close';
-      case 'missing': return 'Missing';
+      case 'correct': return 'results.correct';
+      case 'incorrect': return 'results.wrong';
+      case 'fuzzy': return 'results.close';
+      case 'missing': return 'results.missing';
     }
   }
 }

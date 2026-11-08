@@ -63,5 +63,15 @@ describe('Games Services', () => {
       const unique = new Set(res.words);
       expect(unique.size).toBe(15);
     });
+
+    it.each(['uz', 'ru'] as const)('should generate up to 100 unique %s words', (lang) => {
+      const res = service.generate(100, lang);
+      expect(new Set(res.words).size).toBe(100);
+    });
+
+    it('should use the requested language', () => {
+      expect(service.generate(30, 'ru').words.every((w) => /^[А-ЯЁ][а-яё-]*$/.test(w))).toBe(true);
+      expect(service.generate(30, 'uz').words.every((w) => /^[A-Z][a-zʻ]*$/.test(w))).toBe(true);
+    });
   });
 });

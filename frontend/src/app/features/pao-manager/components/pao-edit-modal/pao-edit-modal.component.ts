@@ -2,11 +2,12 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PaoEntry } from '../../../../core/models/pao.models';
+import { TranslatePipe } from '../../../../core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-pao-edit-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   template: `
     <div class="modal-backdrop" (click)="close.emit()">
       <div class="modal-card panel" (click)="$event.stopPropagation()">
@@ -15,51 +16,51 @@ import { PaoEntry } from '../../../../core/models/pao.models';
           <div class="header-left">
             <span class="key-badge font-mono">{{ entry.key }}</span>
             <div class="title-wrap">
-              <h3 class="modal-title">Edit PAO entry</h3>
-              <span class="modal-sub">{{ entry.type === 'card' ? 'Playing card' : 'Number' }}</span>
+              <h3 class="modal-title">{{ 'pao.editTitle' | t }}</h3>
+              <span class="modal-sub">{{ (entry.type === 'card' ? 'pao.playingCard' : 'pao.number') | t }}</span>
             </div>
           </div>
-          <button class="close-btn" aria-label="Close" (click)="close.emit()">✕</button>
+          <button class="close-btn" [attr.aria-label]="'common.close' | t" (click)="close.emit()">✕</button>
         </div>
 
         <!-- Edit Form -->
         <div class="modal-form">
           <div class="form-group person-group">
-            <label>Person</label>
+            <label>{{ 'pao.person' | t }}</label>
             <input
               type="text"
               [(ngModel)]="person"
-              placeholder="e.g. Albert Einstein"
+              [placeholder]="'pao.personPlaceholder' | t"
               class="form-control"
             />
           </div>
 
           <div class="form-group action-group">
-            <label>Action</label>
+            <label>{{ 'pao.action' | t }}</label>
             <input
               type="text"
               [(ngModel)]="action"
-              placeholder="e.g. splitting"
+              [placeholder]="'pao.actionPlaceholder' | t"
               class="form-control"
             />
           </div>
 
           <div class="form-group object-group">
-            <label>Object</label>
+            <label>{{ 'pao.object' | t }}</label>
             <input
               type="text"
               [(ngModel)]="object"
-              placeholder="e.g. Atom Core"
+              [placeholder]="'pao.objectPlaceholder' | t"
               class="form-control"
             />
           </div>
 
           <div class="form-group">
-            <label>Notes <span class="optional">(optional)</span></label>
+            <label>{{ 'pao.notes' | t }} <span class="optional">{{ 'pao.optional' | t }}</span></label>
             <input
               type="text"
               [(ngModel)]="notes"
-              placeholder="e.g. 5=L, 2=N (Lane)"
+              [placeholder]="'pao.notesPlaceholder' | t"
               class="form-control"
             />
           </div>
@@ -67,8 +68,8 @@ import { PaoEntry } from '../../../../core/models/pao.models';
 
         <!-- Footer -->
         <div class="modal-footer">
-          <button class="btn-secondary" (click)="close.emit()">Cancel</button>
-          <button class="btn-primary" (click)="onSave()">Save</button>
+          <button class="btn-secondary" (click)="close.emit()">{{ 'common.cancel' | t }}</button>
+          <button class="btn-primary" (click)="onSave()">{{ 'common.save' | t }}</button>
         </div>
       </div>
     </div>

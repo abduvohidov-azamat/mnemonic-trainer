@@ -2,16 +2,17 @@ import { Component, HostListener, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameStore } from '../../../../core/store/game.store';
 import { TimerDisplayComponent } from '../../../../shared/components/timer-display/timer-display.component';
+import { TranslatePipe } from '../../../../core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-words-memorize',
   standalone: true,
-  imports: [CommonModule, TimerDisplayComponent],
+  imports: [CommonModule, TimerDisplayComponent, TranslatePipe],
   template: `
     <div class="memorize-container">
       <div class="hud-bar panel">
         <div class="hud-col">
-          <span class="hud-label">Word</span>
+          <span class="hud-label">{{ 'memorize.word' | t }}</span>
           <span class="hud-val font-mono">
             {{ store.activeLocusIndex() + 1 }} <span class="total">/ {{ store.totalLoci() }}</span>
           </span>
@@ -20,26 +21,26 @@ import { TimerDisplayComponent } from '../../../../shared/components/timer-displ
         <app-timer-display
           [milliseconds]="store.timerMs()"
           [isRunning]="store.isTimerRunning()"
-          label="Memorising"
+          [label]="'memorize.timer' | t"
         ></app-timer-display>
 
         <div class="hud-actions">
           <button class="btn-primary btn-sm" (click)="store.startRecall()">
-            Done, start recall
+            {{ 'memorize.done' | t }}
           </button>
         </div>
       </div>
 
       <!-- Active Word Spotlight -->
       <div class="word-spotlight panel">
-        <div class="spotlight-badge">Word {{ store.activeLocusIndex() + 1 }} of {{ store.totalLoci() }}</div>
+        <div class="spotlight-badge">{{ 'memorize.wordOf' | t: { i: store.activeLocusIndex() + 1, n: store.totalLoci() } }}</div>
         <div class="word-hero">{{ activeWord() }}</div>
-        <div class="spotlight-sub">Picture it vividly at the next stop on your memory route.</div>
+        <div class="spotlight-sub">{{ 'memorize.spotlightSub' | t }}</div>
       </div>
 
       <!-- Word Loci Strip -->
       <div class="strip-wrap panel">
-        <div class="strip-title">All words — click one to jump to it</div>
+        <div class="strip-title">{{ 'memorize.allWords' | t }}</div>
         <div class="strip-items">
           @for (word of store.targetSequence(); track $index) {
             <button
@@ -58,18 +59,18 @@ import { TimerDisplayComponent } from '../../../../shared/components/timer-displ
       <!-- Controls -->
       <div class="controls-legend">
         <div class="legend-keys">
-          <span class="key-pill">Space</span> or <span class="key-pill">→</span> next
+          <span class="key-pill">Space</span> {{ 'memorize.keyOr' | t }} <span class="key-pill">→</span> {{ 'memorize.keyNext' | t }}
           <span class="divider">|</span>
-          <span class="key-pill">←</span> back
+          <span class="key-pill">←</span> {{ 'memorize.keyBack' | t }}
           <span class="divider">|</span>
-          <span class="key-pill">Enter</span> finish
+          <span class="key-pill">Enter</span> {{ 'memorize.keyFinish' | t }}
         </div>
         <div class="nav-buttons-mobile">
           <button class="btn-secondary" (click)="store.prevLocus()" [disabled]="store.activeLocusIndex() === 0">
-            ← Back
+            {{ 'memorize.back' | t }}
           </button>
           <button class="btn-primary" (click)="store.nextLocus()">
-            Next →
+            {{ 'memorize.next' | t }}
           </button>
         </div>
       </div>

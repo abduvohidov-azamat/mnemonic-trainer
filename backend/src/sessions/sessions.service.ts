@@ -9,7 +9,7 @@ export interface DiffItem {
   expected: any;
   actual: any;
   status: 'correct' | 'incorrect' | 'fuzzy' | 'missing';
-  details?: string;
+  distance?: number;
 }
 
 export interface EvaluationResult {
@@ -32,10 +32,21 @@ export class SessionsService {
     private readonly sessionRepository: Repository<SessionEntity>,
   ) {}
 
+  // Treat spellings a keyboard can't tell apart as the same letter:
+  // Uzbek oʻ/gʻ typed with ʻ ’ ‘ ` or ', and Russian ё typed as е.
+  private normalizeWord(word: string): string {
+    return word
+      .normalize('NFC')
+      .toLowerCase()
+      .trim()
+      .replace(/[ʻʼ‘’`']/g, "'")
+      .replace(/ё/g, 'е');
+  }
+
   // Levenshtein distance helper for words fuzzy matching
   private levenshteinDistance(a: string, b: string): number {
-    const s1 = a.toLowerCase().trim();
-    const s2 = b.toLowerCase().trim();
+    const s1 = this.normalizeWord(a);
+    const s2 = this.normalizeWord(b);
     const m = s1.length;
     const n = s2.length;
     const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
@@ -118,7 +129,7 @@ export class SessionsService {
         const dist = this.levenshteinDistance(expected, actual);
         if (dist === 0) {
           totalCorrect += 1;
-          diffBreakdown.push({ index: i, expected, actual, status: 'correct', details: 'Exact Match' });
+          diffBreakdown.push({ index: i, expected, actual, status: 'correct' });
         } else if (dist <= 2 && expected.length > 4) {
           totalCorrect += 0.8;
           diffBreakdown.push({
@@ -126,7 +137,7 @@ export class SessionsService {
             expected,
             actual,
             status: 'fuzzy',
-            details: `Typo tolerance (${dist} char difference)`,
+            distance: dist,
           });
         } else {
           diffBreakdown.push({ index: i, expected, actual, status: 'incorrect' });

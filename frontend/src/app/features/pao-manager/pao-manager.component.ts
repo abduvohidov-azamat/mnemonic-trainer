@@ -4,25 +4,28 @@ import { FormsModule } from '@angular/forms';
 import { PaoService } from '../../core/services/pao.service';
 import { PaoEntry } from '../../core/models/pao.models';
 import { PaoEditModalComponent } from './components/pao-edit-modal/pao-edit-modal.component';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { I18nService } from '../../core/i18n/i18n.service';
 
 @Component({
   selector: 'app-pao-manager',
   standalone: true,
-  imports: [CommonModule, FormsModule, PaoEditModalComponent],
+  imports: [CommonModule, FormsModule, PaoEditModalComponent, TranslatePipe],
   template: `
     <div class="pao-page">
       <!-- Header -->
       <div class="pao-header">
         <div class="header-main">
-          <h1 class="page-title">Your PAO list</h1>
-          <p class="subtitle">
-            Each number 00–99 and each playing card has a Person, an Action and an Object. Click any entry to change it to something you'll picture easily.
-          </p>
+          <h1 class="page-title">{{ 'pao.title' | t }}</h1>
+          <p class="subtitle">{{ 'pao.subtitle' | t }}</p>
+          @if ('pao.englishNote' | t; as note) {
+            <p class="subtitle subtitle-note">{{ note }}</p>
+          }
         </div>
 
         <div class="header-actions">
           <button class="btn-secondary btn-sm" (click)="resetDefaults()">
-            Reset to defaults
+            {{ 'pao.reset' | t }}
           </button>
         </div>
       </div>
@@ -35,14 +38,14 @@ import { PaoEditModalComponent } from './components/pao-edit-modal/pao-edit-moda
             [class.active]="activeTab() === 'numbers'"
             (click)="activeTab.set('numbers')"
           >
-            Numbers (00–99)
+            {{ 'pao.tabNumbers' | t }}
           </button>
           <button
             class="tab-btn"
             [class.active]="activeTab() === 'cards'"
             (click)="activeTab.set('cards')"
           >
-            Cards (52)
+            {{ 'pao.tabCards' | t }}
           </button>
         </div>
 
@@ -51,8 +54,8 @@ import { PaoEditModalComponent } from './components/pao-edit-modal/pao-edit-moda
             type="search"
             [ngModel]="searchQuery()"
             (ngModelChange)="searchQuery.set($event)"
-            placeholder="Search by number, card, person, action or object"
-            aria-label="Search PAO entries"
+            [placeholder]="'pao.searchPlaceholder' | t"
+            [attr.aria-label]="'pao.searchAria' | t"
             class="search-input"
           />
         </div>
@@ -69,21 +72,21 @@ import { PaoEditModalComponent } from './components/pao-edit-modal/pao-edit-moda
             <div class="card-head">
               <span class="key-tag font-mono">{{ item.key }}</span>
               @if (item.isCustom) {
-                <span class="custom-badge">Edited</span>
+                <span class="custom-badge">{{ 'pao.edited' | t }}</span>
               }
             </div>
 
             <div class="pao-props">
               <div class="prop-row person">
-                <span class="prop-label">Person</span>
+                <span class="prop-label">{{ 'pao.person' | t }}</span>
                 <span class="prop-text">{{ item.person || '—' }}</span>
               </div>
               <div class="prop-row action">
-                <span class="prop-label">Action</span>
+                <span class="prop-label">{{ 'pao.action' | t }}</span>
                 <span class="prop-text">{{ item.action || '—' }}</span>
               </div>
               <div class="prop-row object">
-                <span class="prop-label">Object</span>
+                <span class="prop-label">{{ 'pao.object' | t }}</span>
                 <span class="prop-text">{{ item.object || '—' }}</span>
               </div>
             </div>
@@ -93,7 +96,7 @@ import { PaoEditModalComponent } from './components/pao-edit-modal/pao-edit-moda
             }
           </div>
         } @empty {
-          <p class="empty-search">No entries match “{{ searchQuery() }}”.</p>
+          <p class="empty-search">{{ 'pao.noMatch' | t: { q: searchQuery() } }}</p>
         }
       </div>
 
@@ -132,6 +135,11 @@ import { PaoEditModalComponent } from './components/pao-edit-modal/pao-edit-moda
         color: var(--text-2);
         margin-top: 4px;
         max-width: 640px;
+      }
+
+      .subtitle-note {
+        color: var(--text-3);
+        font-size: 0.9rem;
       }
     }
 
@@ -299,6 +307,7 @@ import { PaoEditModalComponent } from './components/pao-edit-modal/pao-edit-moda
 })
 export class PaoManagerComponent {
   private readonly paoService = inject(PaoService);
+  private readonly i18n = inject(I18nService);
 
   readonly activeTab = signal<'numbers' | 'cards'>('numbers');
   readonly searchQuery = signal<string>('');
@@ -335,13 +344,13 @@ export class PaoManagerComponent {
       },
       error: (err) => {
         console.error('Failed to save PAO entry', err);
-        alert(err.error?.message || 'Could not save this PAO entry. Is the backend running?');
+        alert(this.i18n.t('errors.savePao'));
       },
     });
   }
 
   resetDefaults() {
-    if (confirm('Reset all your PAO entries to the defaults? Your edits will be lost.')) {
+    if (confirm(this.i18n.t('errors.resetPaoConfirm'))) {
       this.paoService.resetToDefault().subscribe();
     }
   }

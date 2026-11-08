@@ -2,25 +2,24 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { WordsConfig } from '../../../../core/models/game.models';
+import { TranslatePipe, TranslatePluralPipe } from '../../../../core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-words-config',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe, TranslatePluralPipe],
   template: `
     <div class="config-card panel">
       <div class="config-header">
-        <div class="discipline-badge">
-          Words
-        </div>
-        <h2 class="title">Set up your drill</h2>
-        <p class="subtitle">Choose how many words to memorise. Small spelling mistakes still earn partial credit.</p>
+        <div class="discipline-badge">{{ 'common.words' | t }}</div>
+        <h2 class="title">{{ 'config.title' | t }}</h2>
+        <p class="subtitle">{{ 'config.wordsSubtitle' | t }}</p>
       </div>
 
       <div class="config-grid">
         <!-- Word Count -->
         <div class="setting-block">
-          <label class="setting-label">How many words</label>
+          <label class="setting-label">{{ 'config.wordsHowMany' | t }}</label>
           <div class="preset-pills">
             @for (preset of [10, 20, 30, 50]; track preset) {
               <button
@@ -28,7 +27,7 @@ import { WordsConfig } from '../../../../core/models/game.models';
                 [class.active]="count === preset"
                 (click)="count = preset"
               >
-                {{ preset }} words
+                {{ 'config.wordsCount' | tp: preset }}
               </button>
             }
           </div>
@@ -36,28 +35,28 @@ import { WordsConfig } from '../../../../core/models/game.models';
 
         <!-- Pacer Speed -->
         <div class="setting-block">
-          <label class="setting-label">Moving through the words</label>
+          <label class="setting-label">{{ 'config.wordsPace' | t }}</label>
           <div class="preset-pills">
             <button
               class="pill-btn"
               [class.active]="autoPacerMs === 0"
               (click)="autoPacerMs = 0"
             >
-              At my own pace
+              {{ 'config.ownPace' | t }}
             </button>
             <button
               class="pill-btn"
               [class.active]="autoPacerMs === 2500"
               (click)="autoPacerMs = 2500"
             >
-              Every 2.5 seconds
+              {{ 'config.every' | t: { s: 2.5 } }}
             </button>
             <button
               class="pill-btn"
               [class.active]="autoPacerMs === 1500"
               (click)="autoPacerMs = 1500"
             >
-              Every 1.5 seconds
+              {{ 'config.every' | t: { s: 1.5 } }}
             </button>
           </div>
         </div>
@@ -66,7 +65,7 @@ import { WordsConfig } from '../../../../core/models/game.models';
       <!-- Start Button -->
       <div class="config-footer">
         <button class="btn-primary start-btn" (click)="onStart()">
-          Start memorising
+          {{ 'config.startMemorising' | t }}
         </button>
       </div>
     </div>

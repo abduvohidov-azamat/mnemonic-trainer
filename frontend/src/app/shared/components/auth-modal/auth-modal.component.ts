@@ -2,11 +2,13 @@ import { Component, Input, Output, EventEmitter, inject, signal } from '@angular
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
+import { TranslatePipe } from '../../../core/i18n/translate.pipe';
+import { I18nService } from '../../../core/i18n/i18n.service';
 
 @Component({
   selector: 'app-auth-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   template: `
     <div class="modal-backdrop" (click)="close.emit()">
       <div class="modal-card panel" (click)="$event.stopPropagation()">
@@ -18,23 +20,23 @@ import { AuthService } from '../../../core/services/auth.service';
               [class.active]="tab() === 'login'"
               (click)="tab.set('login')"
             >
-              Sign in
+              {{ 'auth.signIn' | t }}
             </button>
             <button
               class="tab-btn"
               [class.active]="tab() === 'register'"
               (click)="tab.set('register')"
             >
-              Create account
+              {{ 'auth.createAccount' | t }}
             </button>
           </div>
-          <button class="close-btn" aria-label="Close" (click)="close.emit()">✕</button>
+          <button class="close-btn" [attr.aria-label]="'common.close' | t" (click)="close.emit()">✕</button>
         </div>
 
         <!-- Form Body -->
         <div class="modal-body">
           @if (tab() === 'register') {
-            <p class="modal-hint">Create an account to keep your sessions and PAO edits. Everything you did as a guest is kept.</p>
+            <p class="modal-hint">{{ 'auth.registerHint' | t }}</p>
           }
 
           @if (errorMessage()) {
@@ -45,11 +47,11 @@ import { AuthService } from '../../../core/services/auth.service';
 
           @if (tab() === 'register') {
             <div class="form-group">
-              <label>Username</label>
+              <label>{{ 'auth.username' | t }}</label>
               <input
                 type="text"
                 [(ngModel)]="username"
-                placeholder="e.g. alex"
+                [placeholder]="'auth.usernamePlaceholder' | t"
                 autocomplete="username"
                 autocapitalize="none"
                 spellcheck="false"
@@ -59,7 +61,7 @@ import { AuthService } from '../../../core/services/auth.service';
           }
 
           <div class="form-group">
-            <label>{{ tab() === 'login' ? 'Email or username' : 'Email' }}</label>
+            <label>{{ (tab() === 'login' ? 'auth.emailOrUsername' : 'auth.email') | t }}</label>
             <input
               type="text"
               [(ngModel)]="identifier"
@@ -73,11 +75,11 @@ import { AuthService } from '../../../core/services/auth.service';
           </div>
 
           <div class="form-group">
-            <label>Password</label>
+            <label>{{ 'auth.password' | t }}</label>
             <input
               type="password"
               [(ngModel)]="password"
-              placeholder="At least 6 characters"
+              [placeholder]="'auth.passwordPlaceholder' | t"
               [attr.autocomplete]="tab() === 'login' ? 'current-password' : 'new-password'"
               class="form-control"
             />
@@ -89,9 +91,9 @@ import { AuthService } from '../../../core/services/auth.service';
             (click)="submit()"
           >
             @if (isLoading()) {
-              <span>Please wait…</span>
+              <span>{{ 'auth.wait' | t }}</span>
             } @else {
-              <span>{{ tab() === 'login' ? 'Sign in' : 'Create account' }}</span>
+              <span>{{ (tab() === 'login' ? 'auth.signIn' : 'auth.createAccount') | t }}</span>
             }
           </button>
         </div>
@@ -235,6 +237,7 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class AuthModalComponent {
   private readonly authService = inject(AuthService);
+  private readonly i18n = inject(I18nService);
 
   @Input() set initialTab(t: 'login' | 'register') {
     this.tab.set(t);
@@ -249,6 +252,17 @@ export class AuthModalComponent {
   identifier = '';
   password = '';
 
+  // Server messages are English-only, so map the status code to a translated message.
+  private errorText(err: { status?: number }): string {
+    switch (err.status) {
+      case 400: return this.i18n.t('auth.errorInput');
+      case 401: return this.i18n.t('auth.errorInvalid');
+      case 409: return this.i18n.t('auth.errorTaken');
+      case 429: return this.i18n.t('auth.errorTooMany');
+      default: return this.i18n.t('auth.errorGeneric');
+    }
+  }
+
   submit() {
     this.errorMessage.set('');
     this.isLoading.set(true);
@@ -261,7 +275,7 @@ export class AuthModalComponent {
         },
         error: (err) => {
           this.isLoading.set(false);
-          this.errorMessage.set(err.error?.message || 'Registration failed');
+          this.errorMessage.set(this.errorText(err));
         },
       });
     } else {
@@ -272,7 +286,7 @@ export class AuthModalComponent {
         },
         error: (err) => {
           this.isLoading.set(false);
-          this.errorMessage.set(err.error?.message || 'Invalid credentials');
+          this.errorMessage.set(this.errorText(err));
         },
       });
     }

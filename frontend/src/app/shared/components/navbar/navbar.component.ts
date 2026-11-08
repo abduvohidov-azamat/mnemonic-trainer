@@ -3,11 +3,14 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
 import { AuthModalComponent } from '../auth-modal/auth-modal.component';
+import { TranslatePipe } from '../../../core/i18n/translate.pipe';
+import { I18nService, LANGUAGES } from '../../../core/i18n/i18n.service';
+import { Lang } from '../../../core/i18n/i18n.types';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, AuthModalComponent],
+  imports: [CommonModule, RouterLink, RouterLinkActive, AuthModalComponent, TranslatePipe],
   template: `
     <header class="app-header">
       <div class="header-container">
@@ -16,7 +19,7 @@ import { AuthModalComponent } from '../auth-modal/auth-modal.component';
           <span class="brand-name">Mnemonic Trainer</span>
         </a>
 
-        <nav class="nav-links" aria-label="Main">
+        <nav class="nav-links" [attr.aria-label]="'nav.main' | t">
           @for (link of links; track link.path) {
             <a
               #navLink
@@ -24,25 +27,36 @@ import { AuthModalComponent } from '../auth-modal/auth-modal.component';
               routerLinkActive="active"
               (isActiveChange)="onLinkActive($event, navLink)"
               class="nav-link"
-            >{{ link.label }}</a>
+            >{{ link.key | t }}</a>
           }
         </nav>
 
         <div class="user-area">
+          <select
+            class="lang-select"
+            [attr.aria-label]="'nav.language' | t"
+            (change)="onLangChange($event)"
+          >
+            @for (lang of languages; track lang.code) {
+              <option [value]="lang.code" [selected]="lang.code === i18n.lang()" [attr.title]="lang.label">
+                {{ lang.code.toUpperCase() }}
+              </option>
+            }
+          </select>
           @if (authService.isAuthenticated()) {
             @if (authService.isGuest()) {
               <span class="user-name">{{ authService.currentUser()?.username }}</span>
-              <button class="btn-primary btn-sm" (click)="openAuthModal('register')">Save progress</button>
-              <button class="btn-secondary btn-sm" (click)="openAuthModal('login')">Sign in</button>
+              <button class="btn-primary btn-sm save-progress" (click)="openAuthModal('register')">{{ 'nav.saveProgress' | t }}</button>
+              <button class="btn-secondary btn-sm" (click)="openAuthModal('login')">{{ 'nav.signIn' | t }}</button>
             } @else {
               <span class="avatar" aria-hidden="true">
                 {{ authService.currentUser()?.username?.charAt(0)?.toUpperCase() }}
               </span>
               <span class="user-name">{{ authService.currentUser()?.username }}</span>
-              <button class="btn-secondary btn-sm" (click)="authService.logout()">Sign out</button>
+              <button class="btn-secondary btn-sm" (click)="authService.logout()">{{ 'nav.signOut' | t }}</button>
             }
           } @else {
-            <button class="btn-primary btn-sm" (click)="openAuthModal('login')">Sign in</button>
+            <button class="btn-primary btn-sm" (click)="openAuthModal('login')">{{ 'nav.signIn' | t }}</button>
           }
         </div>
       </div>
@@ -145,6 +159,22 @@ import { AuthModalComponent } from '../auth-modal/auth-modal.component';
       font-weight: 600;
     }
 
+    .lang-select {
+      height: 34px;
+      padding: 0 6px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+
+      &:hover {
+        background: var(--surface-2);
+      }
+    }
+
     .avatar {
       width: 30px;
       height: 30px;
@@ -201,19 +231,29 @@ import { AuthModalComponent } from '../auth-modal/auth-modal.component';
         display: none;
       }
     }
+
+    /* Guests can still create an account from the Sign in dialog. */
+    @media (max-width: 400px) {
+      .save-progress {
+        display: none;
+      }
+    }
   `],
 })
 export class NavbarComponent {
   readonly authService = inject(AuthService);
 
   readonly links = [
-    { path: '/dashboard', label: 'Home' },
-    { path: '/numbers', label: 'Numbers' },
-    { path: '/cards', label: 'Cards' },
-    { path: '/words', label: 'Words' },
-    { path: '/pao', label: 'PAO list' },
-    { path: '/stats', label: 'Progress' },
-  ];
+    { path: '/dashboard', key: 'nav.home' },
+    { path: '/numbers', key: 'nav.numbers' },
+    { path: '/cards', key: 'nav.cards' },
+    { path: '/words', key: 'nav.words' },
+    { path: '/pao', key: 'nav.pao' },
+    { path: '/stats', key: 'nav.progress' },
+  ] as const;
+
+  readonly i18n = inject(I18nService);
+  readonly languages = LANGUAGES;
 
   readonly showAuthModal = signal<boolean>(false);
   readonly authModalTab = signal<'login' | 'register'>('login');
@@ -223,6 +263,10 @@ export class NavbarComponent {
     const nav = link.parentElement;
     if (!active || !nav || nav.scrollWidth <= nav.clientWidth) return;
     nav.scrollTo({ left: link.offsetLeft - (nav.clientWidth - link.offsetWidth) / 2 });
+  }
+
+  onLangChange(event: Event) {
+    this.i18n.setLang((event.target as HTMLSelectElement).value as Lang);
   }
 
   openAuthModal(tab: 'login' | 'register') {

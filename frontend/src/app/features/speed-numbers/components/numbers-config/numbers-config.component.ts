@@ -2,25 +2,24 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NumbersConfig } from '../../../../core/models/game.models';
+import { TranslatePipe } from '../../../../core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-numbers-config',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   template: `
     <div class="config-card panel">
       <div class="config-header">
-        <div class="discipline-badge">
-          Numbers
-        </div>
-        <h2 class="title">Set up your drill</h2>
-        <p class="subtitle">Choose how many digits to memorise and how they're grouped.</p>
+        <div class="discipline-badge">{{ 'common.numbers' | t }}</div>
+        <h2 class="title">{{ 'config.title' | t }}</h2>
+        <p class="subtitle">{{ 'config.numbersSubtitle' | t }}</p>
       </div>
 
       <div class="config-grid">
         <!-- Digit Count Preset & Custom -->
         <div class="setting-block">
-          <label class="setting-label">How many digits</label>
+          <label class="setting-label">{{ 'config.numbersHowMany' | t }}</label>
           <div class="preset-pills">
             @for (preset of [20, 50, 100, 200, 500]; track preset) {
               <button
@@ -36,63 +35,63 @@ import { NumbersConfig } from '../../../../core/models/game.models';
 
         <!-- Chunk Size (Locus grouping) -->
         <div class="setting-block">
-          <label class="setting-label">Digits shown at a time</label>
+          <label class="setting-label">{{ 'config.numbersGroup' | t }}</label>
           <div class="preset-pills">
             <button
               class="pill-btn"
               [class.active]="chunkSize === 1"
               (click)="chunkSize = 1"
             >
-              1 digit
+              {{ 'config.digits1' | t }}
             </button>
             <button
               class="pill-btn"
               [class.active]="chunkSize === 2"
               (click)="chunkSize = 2"
             >
-              2 digits (recommended for PAO)
+              {{ 'config.digits2' | t }}
             </button>
             <button
               class="pill-btn"
               [class.active]="chunkSize === 3"
               (click)="chunkSize = 3"
             >
-              3 digits
+              {{ 'config.digits3' | t }}
             </button>
           </div>
         </div>
 
         <!-- Auto-Pacer Speed -->
         <div class="setting-block">
-          <label class="setting-label">Moving through the digits</label>
+          <label class="setting-label">{{ 'config.numbersPace' | t }}</label>
           <div class="preset-pills">
             <button
               class="pill-btn"
               [class.active]="autoPacerMs === 0"
               (click)="autoPacerMs = 0"
             >
-              At my own pace
+              {{ 'config.ownPace' | t }}
             </button>
             <button
               class="pill-btn"
               [class.active]="autoPacerMs === 2000"
               (click)="autoPacerMs = 2000"
             >
-              Every 2 seconds
+              {{ 'config.every' | t: { s: 2 } }}
             </button>
             <button
               class="pill-btn"
               [class.active]="autoPacerMs === 1200"
               (click)="autoPacerMs = 1200"
             >
-              Every 1.2 seconds
+              {{ 'config.every' | t: { s: 1.2 } }}
             </button>
             <button
               class="pill-btn"
               [class.active]="autoPacerMs === 750"
               (click)="autoPacerMs = 750"
             >
-              Every 0.75 seconds
+              {{ 'config.every' | t: { s: 0.75 } }}
             </button>
           </div>
         </div>
@@ -100,8 +99,8 @@ import { NumbersConfig } from '../../../../core/models/game.models';
         <!-- Live PAO Assistant Toggle -->
         <div class="setting-block toggle-block">
           <div class="toggle-info">
-            <span class="toggle-title">Show PAO hints</span>
-            <span class="toggle-desc">See the person, action and object for each group while you memorise.</span>
+            <span class="toggle-title">{{ 'config.hintsTitle' | t }}</span>
+            <span class="toggle-desc">{{ 'config.numbersHintsDesc' | t }}</span>
           </div>
           <label class="switch">
             <input type="checkbox" [(ngModel)]="enablePaoHints" />
@@ -113,7 +112,7 @@ import { NumbersConfig } from '../../../../core/models/game.models';
       <!-- Start Button -->
       <div class="config-footer">
         <button class="btn-primary start-btn" (click)="onStart()">
-          Start memorising
+          {{ 'config.startMemorising' | t }}
         </button>
       </div>
     </div>

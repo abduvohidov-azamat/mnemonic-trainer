@@ -3,17 +3,18 @@ import { CommonModule } from '@angular/common';
 import { GameStore } from '../../../../core/store/game.store';
 import { TimerDisplayComponent } from '../../../../shared/components/timer-display/timer-display.component';
 import { PaoHintBarComponent } from '../../../../shared/components/pao-hint-bar/pao-hint-bar.component';
+import { TranslatePipe } from '../../../../core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-numbers-memorize',
   standalone: true,
-  imports: [CommonModule, TimerDisplayComponent, PaoHintBarComponent],
+  imports: [CommonModule, TimerDisplayComponent, PaoHintBarComponent, TranslatePipe],
   template: `
     <div class="memorize-container">
       <!-- Top HUD -->
       <div class="hud-bar panel">
         <div class="hud-col">
-          <span class="hud-label">Group</span>
+          <span class="hud-label">{{ 'memorize.group' | t }}</span>
           <span class="hud-val font-mono">
             {{ store.activeLocusIndex() + 1 }} <span class="total">/ {{ store.totalLoci() }}</span>
           </span>
@@ -22,15 +23,15 @@ import { PaoHintBarComponent } from '../../../../shared/components/pao-hint-bar/
         <app-timer-display
           [milliseconds]="store.timerMs()"
           [isRunning]="store.isTimerRunning()"
-          label="Memorising"
+          [label]="'memorize.timer' | t"
         ></app-timer-display>
 
         <div class="hud-actions">
           <button class="btn-secondary btn-sm" (click)="store.togglePaoHints()">
-            {{ store.enablePaoHints() ? 'Hide hints' : 'Show hints' }}
+            {{ (store.enablePaoHints() ? 'memorize.hideHints' : 'memorize.showHints') | t }}
           </button>
           <button class="btn-primary btn-sm" (click)="store.startRecall()">
-            Done, start recall
+            {{ 'memorize.done' | t }}
           </button>
         </div>
       </div>
@@ -40,7 +41,7 @@ import { PaoHintBarComponent } from '../../../../shared/components/pao-hint-bar/
         <div class="active-locus-hero">
           <span class="locus-digits font-mono">{{ store.activeLocusContent() }}</span>
         </div>
-        <div class="locus-sub">Group {{ store.activeLocusIndex() + 1 }} of {{ store.totalLoci() }}</div>
+        <div class="locus-sub">{{ 'memorize.groupOf' | t: { i: store.activeLocusIndex() + 1, n: store.totalLoci() } }}</div>
       </div>
 
       <!-- Live PAO Assistant Overlay -->
@@ -50,7 +51,7 @@ import { PaoHintBarComponent } from '../../../../shared/components/pao-hint-bar/
 
       <!-- Full Sequence Stream Overview -->
       <div class="strip-wrap panel">
-        <div class="strip-title">All groups — click one to jump to it</div>
+        <div class="strip-title">{{ 'memorize.allGroups' | t }}</div>
         <div class="strip-items">
           @for (locus of store.targetLoci(); track $index) {
             <button
@@ -69,18 +70,18 @@ import { PaoHintBarComponent } from '../../../../shared/components/pao-hint-bar/
       <!-- Navigation & Hotkeys Legend -->
       <div class="controls-legend">
         <div class="legend-keys">
-          <span class="key-pill">Space</span> or <span class="key-pill">→</span> next
+          <span class="key-pill">Space</span> {{ 'memorize.keyOr' | t }} <span class="key-pill">→</span> {{ 'memorize.keyNext' | t }}
           <span class="divider">|</span>
-          <span class="key-pill">←</span> back
+          <span class="key-pill">←</span> {{ 'memorize.keyBack' | t }}
           <span class="divider">|</span>
-          <span class="key-pill">Enter</span> finish
+          <span class="key-pill">Enter</span> {{ 'memorize.keyFinish' | t }}
         </div>
         <div class="nav-buttons-mobile">
           <button class="btn-secondary" (click)="store.prevLocus()" [disabled]="store.activeLocusIndex() === 0">
-            ← Back
+            {{ 'memorize.back' | t }}
           </button>
           <button class="btn-primary" (click)="store.nextLocus()">
-            Next →
+            {{ 'memorize.next' | t }}
           </button>
         </div>
       </div>

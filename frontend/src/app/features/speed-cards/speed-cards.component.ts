@@ -7,6 +7,7 @@ import { CardsMemorizeComponent } from './components/cards-memorize/cards-memori
 import { CardsRecallComponent } from './components/cards-recall/cards-recall.component';
 import { EvaluationDiffComponent } from '../../shared/components/evaluation-diff/evaluation-diff.component';
 import { CardsConfig, CardItem, EvaluationResult } from '../../core/models/game.models';
+import { I18nService } from '../../core/i18n/i18n.service';
 
 @Component({
   selector: 'app-speed-cards',
@@ -53,6 +54,7 @@ import { CardsConfig, CardItem, EvaluationResult } from '../../core/models/game.
 export class SpeedCardsComponent implements OnInit, OnDestroy {
   readonly store = inject(GameStore);
   private readonly api = inject(ApiService);
+  private readonly i18n = inject(I18nService);
 
   private lastConfig: CardsConfig = {
     deckSize: 52,
@@ -82,7 +84,7 @@ export class SpeedCardsComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           console.error('Failed to generate cards from backend', err);
-          alert('Could not generate a new drill. Please make sure the backend is running.');
+          alert(this.i18n.t('errors.generate'));
         },
       });
   }
@@ -102,7 +104,7 @@ export class SpeedCardsComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Failed to evaluate cards from backend', err);
-        alert('Could not evaluate this session. Please make sure the backend is running and try again.');
+        alert(this.i18n.t('errors.evaluate'));
       },
     });
   }

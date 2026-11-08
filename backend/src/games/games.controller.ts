@@ -1,7 +1,7 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { NumbersService } from './numbers.service';
 import { CardsService } from './cards.service';
-import { WordsService } from './words.service';
+import { WORD_LANGUAGES, WordLanguage, WordsService } from './words.service';
 
 @Controller('games')
 export class GamesController {
@@ -26,8 +26,9 @@ export class GamesController {
   }
 
   @Post('words/generate')
-  generateWords(@Body() body: { count?: number }) {
+  generateWords(@Body() body: { count?: number; lang?: string }) {
     const count = body.count ? Number(body.count) : 20;
-    return this.wordsService.generate(count);
+    const lang = WORD_LANGUAGES.includes(body.lang as WordLanguage) ? (body.lang as WordLanguage) : 'en';
+    return this.wordsService.generate(count, lang);
   }
 }

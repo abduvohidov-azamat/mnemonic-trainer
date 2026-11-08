@@ -16,7 +16,7 @@ export interface DiffItem {
   expected: any;
   actual: any;
   status: 'correct' | 'incorrect' | 'fuzzy' | 'missing';
-  details?: string;
+  distance?: number;
 }
 
 export interface EvaluationResult {

@@ -5,17 +5,18 @@ import { TimerDisplayComponent } from '../../../../shared/components/timer-displ
 import { CardVisualComponent } from '../../../../shared/components/card-visual/card-visual.component';
 import { PaoHintBarComponent } from '../../../../shared/components/pao-hint-bar/pao-hint-bar.component';
 import { CardItem } from '../../../../core/models/game.models';
+import { TranslatePipe } from '../../../../core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-cards-memorize',
   standalone: true,
-  imports: [CommonModule, TimerDisplayComponent, CardVisualComponent, PaoHintBarComponent],
+  imports: [CommonModule, TimerDisplayComponent, CardVisualComponent, PaoHintBarComponent, TranslatePipe],
   template: `
     <div class="memorize-container">
       <!-- HUD -->
       <div class="hud-bar panel">
         <div class="hud-col">
-          <span class="hud-label">Card</span>
+          <span class="hud-label">{{ 'memorize.card' | t }}</span>
           <span class="hud-val font-mono">
             {{ store.activeLocusIndex() + 1 }} <span class="total">/ {{ store.totalLoci() }}</span>
           </span>
@@ -24,15 +25,15 @@ import { CardItem } from '../../../../core/models/game.models';
         <app-timer-display
           [milliseconds]="store.timerMs()"
           [isRunning]="store.isTimerRunning()"
-          label="Memorising"
+          [label]="'memorize.timer' | t"
         ></app-timer-display>
 
         <div class="hud-actions">
           <button class="btn-secondary btn-sm" (click)="store.togglePaoHints()">
-            {{ store.enablePaoHints() ? 'Hide hints' : 'Show hints' }}
+            {{ (store.enablePaoHints() ? 'memorize.hideHints' : 'memorize.showHints') | t }}
           </button>
           <button class="btn-primary btn-sm" (click)="store.startRecall()">
-            Done, start recall
+            {{ 'memorize.done' | t }}
           </button>
         </div>
       </div>
@@ -52,7 +53,7 @@ import { CardItem } from '../../../../core/models/game.models';
             </div>
           }
         </div>
-        <div class="stage-sub">{{ store.activeLocusIndex() + 1 }} of {{ store.totalLoci() }}</div>
+        <div class="stage-sub">{{ 'memorize.positionOf' | t: { i: store.activeLocusIndex() + 1, n: store.totalLoci() } }}</div>
       </div>
 
       <!-- PAO Assistant -->
@@ -62,7 +63,7 @@ import { CardItem } from '../../../../core/models/game.models';
 
       <!-- Mini Deck Strip Navigation -->
       <div class="strip-wrap panel">
-        <div class="strip-title">All positions — click one to jump to it</div>
+        <div class="strip-title">{{ 'memorize.allPositions' | t }}</div>
         <div class="strip-items">
           @for (locus of store.targetLoci(); track $index) {
             <button
@@ -81,18 +82,18 @@ import { CardItem } from '../../../../core/models/game.models';
       <!-- Controls -->
       <div class="controls-legend">
         <div class="legend-keys">
-          <span class="key-pill">Space</span> or <span class="key-pill">→</span> next
+          <span class="key-pill">Space</span> {{ 'memorize.keyOr' | t }} <span class="key-pill">→</span> {{ 'memorize.keyNext' | t }}
           <span class="divider">|</span>
-          <span class="key-pill">←</span> back
+          <span class="key-pill">←</span> {{ 'memorize.keyBack' | t }}
           <span class="divider">|</span>
-          <span class="key-pill">Enter</span> finish
+          <span class="key-pill">Enter</span> {{ 'memorize.keyFinish' | t }}
         </div>
         <div class="nav-buttons-mobile">
           <button class="btn-secondary" (click)="store.prevLocus()" [disabled]="store.activeLocusIndex() === 0">
-            ← Back
+            {{ 'memorize.back' | t }}
           </button>
           <button class="btn-primary" (click)="store.nextLocus()">
-            Next →
+            {{ 'memorize.next' | t }}
           </button>
         </div>
       </div>

@@ -7,6 +7,7 @@ import { WordsMemorizeComponent } from './components/words-memorize/words-memori
 import { WordsRecallComponent } from './components/words-recall/words-recall.component';
 import { EvaluationDiffComponent } from '../../shared/components/evaluation-diff/evaluation-diff.component';
 import { WordsConfig, EvaluationResult } from '../../core/models/game.models';
+import { I18nService } from '../../core/i18n/i18n.service';
 
 @Component({
   selector: 'app-words-trainer',
@@ -53,6 +54,7 @@ import { WordsConfig, EvaluationResult } from '../../core/models/game.models';
 export class WordsTrainerComponent implements OnInit, OnDestroy {
   readonly store = inject(GameStore);
   private readonly api = inject(ApiService);
+  private readonly i18n = inject(I18nService);
 
   private lastConfig: WordsConfig = {
     count: 20,
@@ -70,14 +72,14 @@ export class WordsTrainerComponent implements OnInit, OnDestroy {
   onStartMemorize(config: WordsConfig) {
     this.lastConfig = config;
     this.api
-      .post<any>('games/words/generate', { count: config.count })
+      .post<any>('games/words/generate', { count: config.count, lang: this.i18n.lang() })
       .subscribe({
         next: (generated) => {
           this.store.startMemorization(generated, config);
         },
         error: (err) => {
           console.error('Failed to generate words from backend', err);
-          alert('Could not generate a new drill. Please make sure the backend is running.');
+          alert(this.i18n.t('errors.generate'));
         },
       });
   }
@@ -97,7 +99,7 @@ export class WordsTrainerComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Failed to evaluate words from backend', err);
-        alert('Could not evaluate this session. Please make sure the backend is running and try again.');
+        alert(this.i18n.t('errors.evaluate'));
       },
     });
   }

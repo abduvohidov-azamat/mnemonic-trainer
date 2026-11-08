@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, OnDestroy, OnInit, signal, untracked, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   CategoryScale,
@@ -10,6 +10,9 @@ import {
   Tooltip,
 } from 'chart.js';
 import { ApiService } from '../../core/services/api.service';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { I18nService } from '../../core/i18n/i18n.service';
+import { MessageKey } from '../../core/i18n/i18n.types';
 
 Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip);
 
@@ -22,26 +25,26 @@ interface ProgressPoint {
   score: number;
 }
 
-const SPEED_UNITS: Record<Discipline, string> = {
-  numbers: 'digits / min',
-  cards: 'cards / min',
-  words: 'words / min',
+const SPEED_UNITS: Record<Discipline, MessageKey> = {
+  numbers: 'stats.numbersUnit',
+  cards: 'stats.cardsUnit',
+  words: 'stats.wordsUnit',
 };
 
 @Component({
   selector: 'app-stats',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   template: `
     <div class="stats-page">
       <div class="stats-header">
-        <h1 class="page-title">Your progress</h1>
-        <p class="page-subtitle">How your accuracy and speed change over time, plus your best results in each mode.</p>
+        <h1 class="page-title">{{ 'stats.title' | t }}</h1>
+        <p class="page-subtitle">{{ 'stats.subtitle' | t }}</p>
       </div>
 
       <div class="progress-card panel">
         <div class="progress-head">
-          <h2 class="section-title">Progress over time</h2>
+          <h2 class="section-title">{{ 'stats.overTime' | t }}</h2>
           <div class="progress-tabs" role="tablist">
             @for (tab of disciplineTabs; track tab.id) {
               <button
@@ -51,7 +54,7 @@ const SPEED_UNITS: Record<Discipline, string> = {
                 [attr.aria-selected]="progressDiscipline() === tab.id"
                 (click)="selectProgressDiscipline(tab.id)"
               >
-                {{ tab.label }}
+                {{ tab.label | t }}
               </button>
             }
           </div>
@@ -59,19 +62,19 @@ const SPEED_UNITS: Record<Discipline, string> = {
 
         <div class="charts-grid" [class.is-empty]="!hasProgress()">
           <figure class="chart-box">
-            <figcaption class="chart-title">Accuracy <span class="chart-unit">%</span></figcaption>
+            <figcaption class="chart-title">{{ 'stats.accuracy' | t }} <span class="chart-unit">%</span></figcaption>
             <div class="chart-canvas-wrap">
-              <canvas #accuracyCanvas aria-label="Accuracy per session" role="img"></canvas>
+              <canvas #accuracyCanvas [attr.aria-label]="'stats.accuracyAria' | t" role="img"></canvas>
             </div>
           </figure>
           <figure class="chart-box">
-            <figcaption class="chart-title">Speed <span class="chart-unit">{{ speedUnit() }}</span></figcaption>
+            <figcaption class="chart-title">{{ 'stats.speed' | t }} <span class="chart-unit">{{ speedUnit() }}</span></figcaption>
             <div class="chart-canvas-wrap">
-              <canvas #speedCanvas aria-label="Speed per session" role="img"></canvas>
+              <canvas #speedCanvas [attr.aria-label]="'stats.speedAria' | t" role="img"></canvas>
             </div>
           </figure>
           @if (!hasProgress()) {
-            <div class="charts-empty">No sessions in this mode yet. Finish a drill to see your progress here.</div>
+            <div class="charts-empty">{{ 'stats.empty' | t }}</div>
           }
         </div>
       </div>
@@ -79,46 +82,46 @@ const SPEED_UNITS: Record<Discipline, string> = {
       <div class="disciplines-stats-grid">
         @for (tab of disciplineTabs; track tab.id) {
           <div class="discipline-stat-box panel">
-            <h3 class="box-title">{{ tab.label }}</h3>
+            <h3 class="box-title">{{ tab.label | t }}</h3>
             <dl class="box-stats">
-              <div class="row"><dt>Sessions</dt><dd>{{ stats()?.[tab.id]?.sessions || 0 }}</dd></div>
-              <div class="row"><dt>Best score</dt><dd>{{ stats()?.[tab.id]?.bestScore || 0 }}</dd></div>
-              <div class="row"><dt>Best speed</dt><dd>{{ stats()?.[tab.id]?.bestDpm || 0 }} {{ unitFor(tab.id) }}</dd></div>
-              <div class="row"><dt>Average accuracy</dt><dd>{{ stats()?.[tab.id]?.avgAccuracy || 0 }}%</dd></div>
+              <div class="row"><dt>{{ 'stats.sessions' | t }}</dt><dd>{{ i18n.formatNumber(stats()?.[tab.id]?.sessions || 0) }}</dd></div>
+              <div class="row"><dt>{{ 'stats.bestScore' | t }}</dt><dd>{{ i18n.formatNumber(stats()?.[tab.id]?.bestScore || 0) }}</dd></div>
+              <div class="row"><dt>{{ 'stats.bestSpeed' | t }}</dt><dd>{{ i18n.formatNumber(stats()?.[tab.id]?.bestDpm || 0) }} {{ unitFor(tab.id) }}</dd></div>
+              <div class="row"><dt>{{ 'stats.avgAccuracy' | t }}</dt><dd>{{ i18n.formatNumber(stats()?.[tab.id]?.avgAccuracy || 0) }}%</dd></div>
             </dl>
           </div>
         }
       </div>
 
       <div class="history-table-card panel">
-        <h2 class="section-title">Recent sessions</h2>
+        <h2 class="section-title">{{ 'stats.recent' | t }}</h2>
         <div class="table-responsive">
           <table class="history-table">
             <thead>
               <tr>
-                <th>Date</th>
-                <th>Mode</th>
-                <th class="num">Accuracy</th>
-                <th class="num">Score</th>
-                <th class="num">Time</th>
-                <th class="num">Speed</th>
+                <th>{{ 'stats.date' | t }}</th>
+                <th>{{ 'stats.mode' | t }}</th>
+                <th class="num">{{ 'stats.accuracy' | t }}</th>
+                <th class="num">{{ 'stats.score' | t }}</th>
+                <th class="num">{{ 'stats.time' | t }}</th>
+                <th class="num">{{ 'stats.speed' | t }}</th>
               </tr>
             </thead>
             <tbody>
               @for (session of history(); track session.id) {
                 <tr>
-                  <td class="text-muted">{{ session.createdAt | date:'MMM d, HH:mm' }}</td>
-                  <td>{{ disciplineLabel(session.discipline) }}</td>
-                  <td class="num font-mono" data-label="Accuracy" [class.text-success]="session.accuracy >= 90" [class.text-danger]="session.accuracy < 60">
-                    {{ session.accuracy }}%
+                  <td class="text-muted">{{ formatSessionDate(session.createdAt) }}</td>
+                  <td>{{ disciplineLabel(session.discipline) | t }}</td>
+                  <td class="num font-mono" [attr.data-label]="'stats.accuracy' | t" [class.text-success]="session.accuracy >= 90" [class.text-danger]="session.accuracy < 60">
+                    {{ i18n.formatNumber(session.accuracy) }}%
                   </td>
-                  <td class="num font-mono" data-label="Score">{{ session.score }}</td>
-                  <td class="num font-mono" data-label="Time">{{ (session.durationMs / 1000).toFixed(1) }}s</td>
-                  <td class="num font-mono" data-label="Speed">{{ session.speedDpm }}/min</td>
+                  <td class="num font-mono" [attr.data-label]="'stats.score' | t">{{ i18n.formatNumber(session.score) }}</td>
+                  <td class="num font-mono" [attr.data-label]="'stats.time' | t">{{ 'stats.seconds' | t: { s: roundTenths(session.durationMs / 1000) } }}</td>
+                  <td class="num font-mono" [attr.data-label]="'stats.speed' | t">{{ i18n.formatNumber(session.speedDpm) }}{{ 'stats.perMin' | t }}</td>
                 </tr>
               } @empty {
                 <tr>
-                  <td colspan="6" class="empty-state">No sessions yet. Start a drill from the home page.</td>
+                  <td colspan="6" class="empty-state">{{ 'stats.noSessions' | t }}</td>
                 </tr>
               }
             </tbody>
@@ -421,6 +424,7 @@ const SPEED_UNITS: Record<Discipline, string> = {
 })
 export class StatsComponent implements OnInit, OnDestroy {
   private readonly api = inject(ApiService);
+  readonly i18n = inject(I18nService);
 
   @ViewChild('accuracyCanvas') accuracyCanvas?: ElementRef<HTMLCanvasElement>;
   @ViewChild('speedCanvas') speedCanvas?: ElementRef<HTMLCanvasElement>;
@@ -429,13 +433,21 @@ export class StatsComponent implements OnInit, OnDestroy {
   readonly history = signal<any[]>([]);
   readonly progressDiscipline = signal<Discipline>('numbers');
 
-  readonly disciplineTabs: { id: Discipline; label: string }[] = [
-    { id: 'numbers', label: 'Numbers' },
-    { id: 'cards', label: 'Cards' },
-    { id: 'words', label: 'Words' },
+  readonly disciplineTabs: { id: Discipline; label: MessageKey }[] = [
+    { id: 'numbers', label: 'common.numbers' },
+    { id: 'cards', label: 'common.cards' },
+    { id: 'words', label: 'common.words' },
   ];
 
   private accuracyChart?: Chart;
+
+  constructor() {
+    // Chart labels and tooltips are drawn on canvas, so redraw them when the language changes.
+    effect(() => {
+      this.i18n.lang();
+      untracked(() => this.renderCharts());
+    });
+  }
   private speedChart?: Chart;
 
   ngOnInit() {
@@ -464,15 +476,23 @@ export class StatsComponent implements OnInit, OnDestroy {
   }
 
   speedUnit(): string {
-    return SPEED_UNITS[this.progressDiscipline()];
+    return this.i18n.t(SPEED_UNITS[this.progressDiscipline()]);
   }
 
   unitFor(discipline: Discipline): string {
-    return SPEED_UNITS[discipline];
+    return this.i18n.t(SPEED_UNITS[discipline]);
   }
 
-  disciplineLabel(discipline: string): string {
-    return this.disciplineTabs.find((tab) => tab.id === discipline)?.label ?? discipline;
+  disciplineLabel(discipline: string): MessageKey {
+    return this.disciplineTabs.find((tab) => tab.id === discipline)?.label ?? 'common.numbers';
+  }
+
+  formatSessionDate(value: string): string {
+    return this.i18n.formatDate(value, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+
+  roundTenths(value: number): number {
+    return Math.round(value * 10) / 10;
   }
 
   hasProgress(): boolean {
@@ -488,9 +508,7 @@ export class StatsComponent implements OnInit, OnDestroy {
 
     const points = this.progressPoints();
     const labels = points.map((_, i) => `#${i + 1}`);
-    const dates = points.map((p) =>
-      new Date(p.date).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }),
-    );
+    const dates = points.map((p) => this.i18n.formatDate(p.date, { dateStyle: 'medium', timeStyle: 'short' }));
     const css = getComputedStyle(document.documentElement);
     const token = (name: string, fallback: string) => css.getPropertyValue(name).trim() || fallback;
 
@@ -503,7 +521,7 @@ export class StatsComponent implements OnInit, OnDestroy {
       values: points.map((p) => p.accuracy),
       color: token('--chart-1', '#2f5bd3'),
       range: { min: 0, max: 100 },
-      format: (v) => `${v}%`,
+      format: (v) => `${this.i18n.formatNumber(v)}%`,
       token,
     });
     this.speedChart = this.buildLineChart(this.speedCanvas.nativeElement, {
@@ -512,7 +530,7 @@ export class StatsComponent implements OnInit, OnDestroy {
       values: points.map((p) => p.speedDpm ?? 0),
       color: token('--chart-2', '#b45309'),
       range: { min: 0 },
-      format: (v) => `${v} ${this.speedUnit()}`,
+      format: (v) => `${this.i18n.formatNumber(v)} ${this.speedUnit()}`,
       token,
     });
   }
@@ -563,7 +581,8 @@ export class StatsComponent implements OnInit, OnDestroy {
           tooltip: {
             displayColors: false,
             callbacks: {
-              title: (items) => `Session ${items[0].label} · ${opts.dates[items[0].dataIndex]}`,
+              title: (items) =>
+                this.i18n.t('stats.sessionTooltip', { n: items[0].dataIndex + 1, date: opts.dates[items[0].dataIndex] }),
               label: (item) => opts.format(item.parsed.y ?? 0),
             },
           },

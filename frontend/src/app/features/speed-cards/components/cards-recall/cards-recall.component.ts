@@ -3,27 +3,28 @@ import { CommonModule } from '@angular/common';
 import { GameStore } from '../../../../core/store/game.store';
 import { CardItem } from '../../../../core/models/game.models';
 import { CardVisualComponent } from '../../../../shared/components/card-visual/card-visual.component';
+import { TranslatePipe } from '../../../../core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-cards-recall',
   standalone: true,
-  imports: [CommonModule, CardVisualComponent],
+  imports: [CommonModule, CardVisualComponent, TranslatePipe],
   template: `
     <div class="recall-container">
       <div class="recall-header panel">
         <div class="header-info">
-          <h2 class="title">Put the cards back in order</h2>
-          <p class="desc">Pick a card below to place it in position {{ activeSlot + 1 }}. Click any position to change it.</p>
+          <h2 class="title">{{ 'recall.cardsTitle' | t }}</h2>
+          <p class="desc">{{ 'recall.cardsDesc' | t: { n: activeSlot + 1 } }}</p>
         </div>
         <div class="header-actions">
-          <button class="btn-secondary" (click)="undoLast()">Undo</button>
-          <button class="btn-primary submit-btn" (click)="onSubmit()">Check my answers</button>
+          <button class="btn-secondary" (click)="undoLast()">{{ 'recall.undo' | t }}</button>
+          <button class="btn-primary submit-btn" (click)="onSubmit()">{{ 'recall.check' | t }}</button>
         </div>
       </div>
 
       <!-- Placed Cards Tray -->
       <div class="placed-tray-wrap panel">
-        <div class="tray-title">Your order ({{ placedCount() }} of {{ totalSlots }} placed)</div>
+        <div class="tray-title">{{ 'recall.cardsOrder' | t: { placed: placedCount(), total: totalSlots } }}</div>
         <div class="tray-slots">
           @for (slot of slotsArray; track $index) {
             <div
@@ -50,13 +51,13 @@ import { CardVisualComponent } from '../../../../shared/components/card-visual/c
           @for (suit of suits; track suit.code) {
             <button
               class="suit-tab-btn"
-              [attr.aria-label]="suit.name"
+              [attr.aria-label]="suit.label | t"
               [class.active]="selectedSuit === suit.code"
               [class.red]="suit.color === 'red'"
               (click)="selectedSuit = suit.code"
             >
               <span class="suit-icon">{{ suit.symbol }}</span>
-              <span class="suit-name">{{ suit.name }}</span>
+              <span class="suit-name">{{ suit.label | t }}</span>
             </button>
           }
         </div>
@@ -353,10 +354,10 @@ export class CardsRecallComponent implements OnInit {
   selectedSuit: 'S' | 'H' | 'D' | 'C' = 'S';
 
   suits = [
-    { code: 'S' as const, name: 'Spades', symbol: '♠', color: 'black' },
-    { code: 'H' as const, name: 'Hearts', symbol: '♥', color: 'red' },
-    { code: 'D' as const, name: 'Diamonds', symbol: '♦', color: 'red' },
-    { code: 'C' as const, name: 'Clubs', symbol: '♣', color: 'black' },
+    { code: 'S' as const, name: 'Spades', label: 'recall.suitS' as const, symbol: '♠', color: 'black' },
+    { code: 'H' as const, name: 'Hearts', label: 'recall.suitH' as const, symbol: '♥', color: 'red' },
+    { code: 'D' as const, name: 'Diamonds', label: 'recall.suitD' as const, symbol: '♦', color: 'red' },
+    { code: 'C' as const, name: 'Clubs', label: 'recall.suitC' as const, symbol: '♣', color: 'black' },
   ];
 
   ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];

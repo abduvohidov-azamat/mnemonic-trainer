@@ -2,20 +2,21 @@ import { Component, OnInit, Output, EventEmitter, inject, ViewChildren, QueryLis
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GameStore } from '../../../../core/store/game.store';
+import { TranslatePipe } from '../../../../core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-words-recall',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   template: `
     <div class="recall-container">
       <div class="recall-header panel">
         <div class="header-info">
-          <h2 class="title">Type the words you remember</h2>
-          <p class="desc">Write each word in its position. Press Enter to move to the next box.</p>
+          <h2 class="title">{{ 'recall.wordsTitle' | t }}</h2>
+          <p class="desc">{{ 'recall.wordsDesc' | t }}</p>
         </div>
         <button class="btn-primary submit-btn" (click)="onSubmit()">
-          Check my answers
+          {{ 'recall.check' | t }}
         </button>
       </div>
 
@@ -30,7 +31,7 @@ import { GameStore } from '../../../../core/store/game.store';
               [(ngModel)]="recalledWords[$index]"
               (focus)="focusedIndex = $index"
               (keydown)="onKeyDown($event, $index)"
-              placeholder="Word {{ $index + 1 }}"
+              [placeholder]="'recall.wordPlaceholder' | t: { n: $index + 1 }"
               autocomplete="off"
               autocapitalize="none"
               autocorrect="off"

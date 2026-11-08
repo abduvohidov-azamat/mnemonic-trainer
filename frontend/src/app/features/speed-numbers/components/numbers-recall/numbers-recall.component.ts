@@ -3,20 +3,21 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GameStore } from '../../../../core/store/game.store';
 import { KeypadComponent } from '../../../../shared/components/keypad/keypad.component';
+import { TranslatePipe } from '../../../../core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-numbers-recall',
   standalone: true,
-  imports: [CommonModule, FormsModule, KeypadComponent],
+  imports: [CommonModule, FormsModule, KeypadComponent, TranslatePipe],
   template: `
     <div class="recall-container">
       <div class="recall-header panel">
         <div class="header-info">
-          <h2 class="title">Type the digits you remember</h2>
-          <p class="desc">Use your keyboard or the keypad below. Leave a box empty if you can't remember it.</p>
+          <h2 class="title">{{ 'recall.numbersTitle' | t }}</h2>
+          <p class="desc">{{ 'recall.numbersDesc' | t }}</p>
         </div>
         <button class="btn-primary submit-btn" (click)="onSubmit()">
-          Check my answers
+          {{ 'recall.check' | t }}
         </button>
       </div>
 

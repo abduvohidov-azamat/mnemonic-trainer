@@ -3,58 +3,62 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { MessageKey } from '../../core/i18n/i18n.types';
 
 interface TrainingMode {
   path: string;
   tile: string;
-  title: string;
-  description: string;
-  action: string;
+  title: MessageKey;
+  description: MessageKey;
+  action: MessageKey;
 }
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslatePipe],
   template: `
     <div class="dashboard">
       <section class="intro">
         <div class="intro-text">
           <h1 class="page-title">
-            Welcome{{ authService.currentUser()?.username ? ', ' + authService.currentUser()?.username : '' }}
+            @if (authService.currentUser()?.username; as name) {
+              {{ 'dashboard.welcomeName' | t: { name } }}
+            } @else {
+              {{ 'dashboard.welcome' | t }}
+            }
           </h1>
-          <p class="page-subtitle">
-            Pick a drill below. You'll memorise a sequence, then type it back from memory and see what you got right.
-          </p>
+          <p class="page-subtitle">{{ 'dashboard.intro' | t }}</p>
         </div>
 
         <dl class="quick-stats">
           <div class="quick-stat">
-            <dt>Sessions</dt>
+            <dt>{{ 'dashboard.sessions' | t }}</dt>
             <dd class="font-mono">{{ stats()?.totalSessions || 0 }}</dd>
           </div>
           <div class="quick-stat">
-            <dt>Best numbers speed</dt>
-            <dd class="font-mono">{{ stats()?.numbers?.bestDpm || 0 }}<small>/min</small></dd>
+            <dt>{{ 'dashboard.bestNumbersSpeed' | t }}</dt>
+            <dd class="font-mono">{{ stats()?.numbers?.bestDpm || 0 }}<small>{{ 'dashboard.perMin' | t }}</small></dd>
           </div>
           <div class="quick-stat">
-            <dt>Best cards score</dt>
+            <dt>{{ 'dashboard.bestCardsScore' | t }}</dt>
             <dd class="font-mono">{{ stats()?.cards?.bestScore || 0 }}</dd>
           </div>
         </dl>
       </section>
 
       <section>
-        <h2 class="section-title">Training</h2>
+        <h2 class="section-title">{{ 'dashboard.training' | t }}</h2>
         <div class="modes-grid">
           @for (mode of modes; track mode.path) {
             <a class="mode-card panel-interactive" [routerLink]="mode.path">
               <span class="mode-tile font-mono" aria-hidden="true">{{ mode.tile }}</span>
               <span class="mode-body">
-                <span class="mode-title">{{ mode.title }}</span>
-                <span class="mode-desc">{{ mode.description }}</span>
+                <span class="mode-title">{{ mode.title | t }}</span>
+                <span class="mode-desc">{{ mode.description | t }}</span>
               </span>
-              <span class="mode-action">{{ mode.action }} →</span>
+              <span class="mode-action">{{ mode.action | t }} →</span>
             </a>
           }
         </div>
@@ -62,8 +66,11 @@ interface TrainingMode {
 
       <section class="cheatsheet panel">
         <div class="cheatsheet-head">
-          <h2 class="section-title">Major System cheat sheet</h2>
-          <p class="cheatsheet-hint">Each digit maps to a consonant sound, so number pairs become words you can picture.</p>
+          <h2 class="section-title">{{ 'dashboard.cheatTitle' | t }}</h2>
+          <p class="cheatsheet-hint">{{ 'dashboard.cheatHint' | t }}</p>
+          @if ('dashboard.cheatNote' | t; as note) {
+            <p class="cheatsheet-hint cheatsheet-note">{{ note }}</p>
+          }
         </div>
         <div class="cheatsheet-grid">
           @for (item of majorSystem; track item.digit) {
@@ -205,6 +212,12 @@ interface TrainingMode {
       font-size: 0.95rem;
     }
 
+    .cheatsheet-note {
+      margin-top: 4px;
+      color: var(--text-3);
+      font-size: 0.875rem;
+    }
+
     .cheatsheet-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -306,30 +319,30 @@ export class DashboardComponent implements OnInit {
     {
       path: '/numbers',
       tile: '123',
-      title: 'Numbers',
-      description: 'Memorise 20 to 500 random digits, shown 1, 2 or 3 at a time.',
-      action: 'Start',
+      title: 'nav.numbers',
+      description: 'dashboard.numbersDesc',
+      action: 'dashboard.start',
     },
     {
       path: '/cards',
       tile: 'A♠',
-      title: 'Cards',
-      description: 'Memorise the order of a shuffled deck — 10, 26 or all 52 cards.',
-      action: 'Start',
+      title: 'nav.cards',
+      description: 'dashboard.cardsDesc',
+      action: 'dashboard.start',
     },
     {
       path: '/words',
       tile: 'Abc',
-      title: 'Words',
-      description: 'Memorise a list of 10 to 50 words. Small typos still earn partial credit.',
-      action: 'Start',
+      title: 'nav.words',
+      description: 'dashboard.wordsDesc',
+      action: 'dashboard.start',
     },
     {
       path: '/pao',
       tile: 'PAO',
-      title: 'PAO list',
-      description: 'Your Person-Action-Object images for 00–99 and every card. Edit them to suit you.',
-      action: 'Open',
+      title: 'nav.pao',
+      description: 'dashboard.paoDesc',
+      action: 'dashboard.open',
     },
   ];
 

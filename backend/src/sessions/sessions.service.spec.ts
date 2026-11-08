@@ -90,6 +90,23 @@ describe('SessionsService', () => {
       expect(res.diffBreakdown[0].status).toBe('correct');
       expect(res.diffBreakdown[1].status).toBe('fuzzy');
       expect(res.diffBreakdown[2].status).toBe('incorrect');
+      expect(res.diffBreakdown[1].distance).toBe(2);
+    });
+
+    it('should accept any apostrophe for Uzbek oʻ/gʻ and е for ё', () => {
+      const target = ['Oʻrik', 'Qargʻa', 'Ёлка', 'Мёд'];
+      const recall = ["o'rik", 'qarg’a', 'елка', 'МЕД'];
+
+      const res = service.evaluate({
+        discipline: 'words',
+        config: {},
+        targetSequence: target,
+        recallSequence: recall,
+        durationMs: 20000,
+      });
+
+      expect(res.diffBreakdown.map((d) => d.status)).toEqual(['correct', 'correct', 'correct', 'correct']);
+      expect(res.accuracy).toBe(100);
     });
   });
 });
