@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 140">
+  <rect width="280" height="140" fill="#F1F6E8"/>
+  <path d="M0 120Q140 110 280 120V140H0Z" fill="#CFE2B4"/>
+  <!-- beech tree -->
+  <path d="M64 120L67 70H79L82 120Z" fill="#A39C90"/>
+  <path d="M70 84q3 6 0 12M75 100q-3 5 0 10" fill="none" stroke="#8A8378" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="50" cy="60" r="22" fill="#6FA84F"/>
+  <circle cx="96" cy="60" r="22" fill="#6FA84F"/>
+  <circle cx="73" cy="44" r="30" fill="#82BC5F"/>
+  <circle cx="64" cy="36" r="8" fill="#9CCE7B"/>
+  <!-- arrow: tree becomes a book -->
+  <path d="M116 64Q142 44 166 60" fill="none" stroke="#9C7A55" stroke-width="2.5" stroke-dasharray="5 5" stroke-linecap="round"/>
+  <path d="M158 52L168 61L155 64" fill="none" stroke="#9C7A55" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- wooden book -->
+  <rect x="190" y="50" width="56" height="66" rx="3" fill="#F7F3EA" stroke="#D9CFBC" stroke-width="1.5"/>
+  <path d="M244 56v54" stroke="#E2D9C8" stroke-width="1.5"/>
+  <rect x="180" y="46" width="60" height="70" rx="4" fill="#C78E57"/>
+  <rect x="180" y="46" width="11" height="70" rx="3" fill="#A8723F"/>
+  <path d="M194 60q11 5 22 0t22 0M194 76q11-5 22 0t22 0M194 100q11 5 22 0t22 0" fill="none" stroke="#A8723F" stroke-width="1.6"/>
+  <ellipse cx="222" cy="88" rx="7" ry="4" fill="none" stroke="#A8723F" stroke-width="1.6"/>
+  <path d="M206 82C206 74 214 70 216 68C218 74 214 82 206 82Z" fill="#6FA84F"/>
+  <path d="M206 82L214 72" stroke="#4F8A36" stroke-width="1"/>
+</svg>

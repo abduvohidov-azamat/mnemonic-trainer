@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 140">
+  <rect width="280" height="140" fill="#E6F2FF"/>
+  <path d="M0 118Q140 106 280 118V140H0Z" fill="#BFE3B4"/>
+  <!-- sun -->
+  <path d="M232 36h8M218.4 17.4l5.7-5.7M200 9V1M181.6 17.4l-5.7-5.7M168 36h-8M181.6 54.6l-5.7 5.7M200 63v8M218.4 54.6l5.7 5.7" stroke="#F4B400" stroke-width="4.5" stroke-linecap="round"/>
+  <circle cx="200" cy="36" r="22" fill="#FFCE3A"/>
+  <path d="M190 33q3-4 6 0M204 33q3-4 6 0" fill="none" stroke="#7A4B12" stroke-width="2" stroke-linecap="round"/>
+  <path d="M192 42Q200 49 208 42" fill="none" stroke="#7A4B12" stroke-width="2" stroke-linecap="round"/>
+  <path d="M170 62L150 74M180 70L166 86" stroke="#FFCE3A" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 6"/>
+  <!-- puddle -->
+  <ellipse cx="104" cy="120" rx="46" ry="8" fill="#9FD3F2"/>
+  <!-- melting snowman -->
+  <path d="M74 118Q70 96 104 94Q138 96 134 118Z" fill="#FFFFFF" stroke="#D5DCE8" stroke-width="2"/>
+  <ellipse cx="104" cy="80" rx="20" ry="17" fill="#FFFFFF" stroke="#D5DCE8" stroke-width="2"/>
+  <circle cx="102" cy="52" r="15" fill="#FFFFFF" stroke="#D5DCE8" stroke-width="2"/>
+  <path d="M88 40H116L112 26H92Z" fill="#3D4654"/>
+  <rect x="84" y="38" width="36" height="5" rx="2" fill="#3D4654"/>
+  <circle cx="97" cy="51" r="1.8" fill="#2F2622"/>
+  <circle cx="107" cy="51" r="1.8" fill="#2F2622"/>
+  <path d="M102 56Q110 60 112 66" fill="none" stroke="#F08A3C" stroke-width="4" stroke-linecap="round"/>
+  <path d="M96 62q6-3 10 0" fill="none" stroke="#2F2622" stroke-width="1.6" stroke-linecap="round"/>
+  <!-- drips and sweat -->
+  <path d="M84 88q-2 6 0 10M124 86q2 6 0 10M86 106q-2 5 0 8" fill="none" stroke="#9FD3F2" stroke-width="3" stroke-linecap="round"/>
+  <path d="M120 44q4 6 0 9q-4-3 0-9Z" fill="#9FD3F2"/>
+</svg>

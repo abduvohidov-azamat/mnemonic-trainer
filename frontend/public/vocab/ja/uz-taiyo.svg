@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 140">
+  <rect width="280" height="140" fill="#FFF3E2"/>
+  <!-- rising sun -->
+  <path d="M248 40h8M234.4 21.4l5.7-5.7M216 13v-8M197.6 21.4l-5.7-5.7M184 40h-8M197.6 58.6l-5.7 5.7M216 67v8M234.4 58.6l5.7 5.7" stroke="#F4B400" stroke-width="4.5" stroke-linecap="round"/>
+  <circle cx="216" cy="40" r="22" fill="#FFCE3A"/>
+  <path d="M206 37q3-4 6 0M220 37q3-4 6 0" fill="none" stroke="#7A4B12" stroke-width="2" stroke-linecap="round"/>
+  <path d="M208 46Q216 53 224 46" fill="none" stroke="#7A4B12" stroke-width="2" stroke-linecap="round"/>
+  <!-- table -->
+  <rect x="34" y="96" width="196" height="9" rx="3" fill="#B07A45"/>
+  <path d="M50 105v24M214 105v24" stroke="#8A5E32" stroke-width="6" stroke-linecap="round"/>
+  <!-- round bread (non) -->
+  <ellipse cx="78" cy="90" rx="30" ry="9" fill="#D99A4E"/>
+  <ellipse cx="78" cy="88" rx="16" ry="4.5" fill="#E8B676"/>
+  <g fill="#B97A35">
+    <circle cx="72" cy="88" r="1.2"/><circle cx="78" cy="87" r="1.2"/><circle cx="84" cy="88" r="1.2"/><circle cx="78" cy="90" r="1.2"/>
+  </g>
+  <!-- teapot -->
+  <path d="M126 92Q118 72 140 68Q162 72 154 92Z" fill="#3A7BC8"/>
+  <path d="M154 80Q166 76 168 66" fill="none" stroke="#3A7BC8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M126 76Q114 78 120 88" fill="none" stroke="#3A7BC8" stroke-width="3.5"/>
+  <ellipse cx="140" cy="67" rx="9" ry="3" fill="#2E66A8"/>
+  <circle cx="140" cy="63" r="2.5" fill="#2E66A8"/>
+  <path d="M134 80h12" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+  <!-- tea bowl (piyola) with steam -->
+  <path d="M180 82H206Q204 96 193 96Q182 96 180 82Z" fill="#FFFFFF" stroke="#3A7BC8" stroke-width="2"/>
+  <path d="M184 88h18" stroke="#3A7BC8" stroke-width="1.5"/>
+  <path d="M188 76q-3-4 0-8M198 76q-3-4 0-8" fill="none" stroke="#C9B89A" stroke-width="2" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 140">
+  <rect width="280" height="140" fill="#E6F2FF"/>
+  <path d="M0 120Q140 102 280 116V140H0Z" fill="#BFE3B4"/>
+  <!-- sun -->
+  <path d="M251 36h7M243.7 18.3l4.9-4.9M226 11V4M208.3 18.3l-4.9-4.9M201 36h-7M208.3 53.7l-4.9 4.9M226 61v7M243.7 53.7l4.9 4.9" stroke="#F4B400" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="226" cy="36" r="20" fill="#FFCE3A"/>
+  <path d="M218 33q3-3 6 0M228 33q3-3 6 0" fill="none" stroke="#7A4B12" stroke-width="2" stroke-linecap="round"/>
+  <path d="M219 41Q226 47 233 41" fill="none" stroke="#7A4B12" stroke-width="2" stroke-linecap="round"/>
+  <!-- line of sight -->
+  <path d="M132 50L196 38" stroke="#8FB3DA" stroke-width="2" stroke-dasharray="4 5" stroke-linecap="round"/>
+  <!-- son -->
+  <path d="M104 114v-8M118 114v-8" stroke="#3E4A63" stroke-width="7" stroke-linecap="round"/>
+  <rect x="96" y="72" width="30" height="38" rx="9" fill="#F08A3C"/>
+  <circle cx="112" cy="56" r="15" fill="#F2C9A0"/>
+  <path d="M97 54C97 38 125 36 127 50C121 45 106 44 97 54Z" fill="#5A3A24"/>
+  <path d="M100 47Q112 34 128 46L134 46" fill="none" stroke="#2F6FB8" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="119" cy="55" r="1.8" fill="#2F2622"/>
+  <path d="M114 63Q119 66 123 62" fill="none" stroke="#B5654A" stroke-width="1.6" stroke-linecap="round"/>
+  <!-- hand shading the eyes -->
+  <path d="M100 78Q108 60 120 48" fill="none" stroke="#F08A3C" stroke-width="7" stroke-linecap="round"/>
+  <ellipse cx="124" cy="46" rx="8" ry="4" fill="#F2C9A0" transform="rotate(-12 124 46)"/>
+</svg>

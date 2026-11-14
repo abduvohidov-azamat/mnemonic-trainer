@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 140">
+  <defs>
+    <g id="manti">
+      <path d="M-11 0Q-12-14 0-17Q12-14 11 0Z" fill="#F7EBD3" stroke="#D9C49C" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M0-17v-3M-5-13l2 5M5-13l-2 5" stroke="#D9C49C" stroke-width="1.5" stroke-linecap="round"/>
+    </g>
+  </defs>
+  <rect width="280" height="140" fill="#E6F2FF"/>
+  <path d="M10 130L80 64L140 130Z" fill="#B8C4DE"/>
+  <path d="M170 130L224 76L280 130Z" fill="#B8C4DE"/>
+  <path d="M64 130L160 62L256 130Z" fill="#8FA3C7"/>
+  <path d="M160 62L143 76L151 74L160 81L169 74L177 76Z" fill="#FFFFFF"/>
+  <path d="M0 124Q140 114 280 124V140H0Z" fill="#BFE3B4"/>
+  <!-- plate of manti on the peak, drawn large so it reads at card size -->
+  <g transform="translate(160 62) scale(1.5)">
+    <ellipse cx="0" cy="0" rx="27" ry="5" fill="#FFFFFF" stroke="#C9D3E0" stroke-width="1"/>
+    <use href="#manti" x="-13" y="-1"/>
+    <use href="#manti" x="13" y="-1"/>
+    <use href="#manti" x="0" y="-6"/>
+    <path d="M-12-22q-3-3 0-6t0-6M0-28q-3-3 0-6M12-22q3-3 0-6t0-6" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

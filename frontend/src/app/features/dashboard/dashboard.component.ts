@@ -338,6 +338,13 @@ export class DashboardComponent implements OnInit {
       action: 'dashboard.start',
     },
     {
+      path: '/vocab',
+      tile: 'EN',
+      title: 'nav.vocab',
+      description: 'dashboard.vocabDesc',
+      action: 'dashboard.open',
+    },
+    {
       path: '/pao',
       tile: 'PAO',
       title: 'nav.pao',

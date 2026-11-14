@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 140">
+  <defs>
+    <path id="heart" d="M0 4C-6-1-8-6-4-8C-2-9 0-7 0-5C0-7 2-9 4-8C8-6 6-1 0 4Z"/>
+  </defs>
+  <rect width="280" height="140" fill="#E8F4FF"/>
+  <path d="M0 122Q140 104 280 122V140H0Z" fill="#BFE3B4"/>
+  <!-- sun -->
+  <path d="M118 66h10M106.9 39.1l7-7M80 28V18M53.1 39.1l-7-7M42 66H32M53.1 92.9l-7 7M80 104v10M106.9 92.9l7 7" stroke="#F4B400" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="80" cy="66" r="30" fill="#FFCE3A"/>
+  <path d="M67 62q4-5 8 0M85 62q4-5 8 0" fill="none" stroke="#7A4B12" stroke-width="2.2" stroke-linecap="round"/>
+  <circle cx="66" cy="72" r="4.5" fill="#F59E8B" fill-opacity="0.7"/>
+  <circle cx="94" cy="72" r="4.5" fill="#F59E8B" fill-opacity="0.7"/>
+  <path d="M71 74Q80 82 89 74" fill="none" stroke="#7A4B12" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- person pointing at the sun -->
+  <path d="M190 68H220L226 120H184Z" fill="#43A06A"/>
+  <path d="M200 120v-4M210 120v-4" stroke="#2F7A4E" stroke-width="2"/>
+  <circle cx="205" cy="52" r="14" fill="#E9B98C"/>
+  <path d="M191 50C191 34 219 34 219 50C214 43 196 43 191 50Z" fill="#3B2A20"/>
+  <circle cx="200" cy="53" r="1.7" fill="#3B2A20"/>
+  <circle cx="210" cy="53" r="1.7" fill="#3B2A20"/>
+  <path d="M199 59Q205 64 211 59" fill="none" stroke="#9A4F3A" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M194 76Q172 70 152 70" fill="none" stroke="#43A06A" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="150" cy="70" r="5" fill="#E9B98C"/>
+  <path d="M146 69h-9" stroke="#E9B98C" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M216 76Q226 90 220 100" fill="none" stroke="#43A06A" stroke-width="7" stroke-linecap="round"/>
+  <!-- hearts -->
+  <use href="#heart" x="132" y="42" fill="#F06A86"/>
+  <use href="#heart" x="150" y="30" fill="#F59AAE"/>
+  <use href="#heart" x="122" y="24" fill="#F59AAE"/>
+</svg>

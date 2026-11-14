@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 140">
+  <rect width="280" height="140" fill="#E6F2FF"/>
+  <path d="M10 130L80 64L140 130Z" fill="#B8C4DE"/>
+  <path d="M170 130L224 76L280 130Z" fill="#B8C4DE"/>
+  <path d="M60 130L150 26L240 130Z" fill="#8FA3C7"/>
+  <path d="M150 26L134 44L142 42L150 49L158 42L166 44Z" fill="#FFFFFF"/>
+  <path d="M0 124Q140 114 280 124V140H0Z" fill="#BFE3B4"/>
+  <!-- big checked patch sewn onto the mountain -->
+  <g transform="rotate(-8 150 88)">
+    <rect x="122" y="64" width="56" height="48" rx="3" fill="#E85D5D"/>
+    <path d="M136 64v48M150 64v48M164 64v48M122 76h56M122 88h56M122 100h56" stroke="#F7B2B2" stroke-width="5"/>
+    <rect x="122" y="64" width="56" height="48" rx="3" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-dasharray="5 4"/>
+  </g>
+  <!-- needle and thread -->
+  <path d="M190 58L212 36" stroke="#9AA6B6" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="210" cy="38" r="1.6" fill="#E6F2FF"/>
+  <path d="M211 37Q236 40 226 62Q218 78 180 70" fill="none" stroke="#E85D5D" stroke-width="1.8"/>
+</svg>

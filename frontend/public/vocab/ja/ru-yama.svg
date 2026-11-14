@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 140">
+  <rect width="280" height="140" fill="#E6F2FF"/>
+  <path d="M10 130L80 64L140 130Z" fill="#B8C4DE"/>
+  <path d="M170 130L224 76L280 130Z" fill="#B8C4DE"/>
+  <!-- mountain with its top dug out -->
+  <path d="M60 130L124 50H176L240 130Z" fill="#8FA3C7"/>
+  <path d="M124 50L114 62L122 60L130 66L170 66L178 60L186 62L176 50Z" fill="#FFFFFF"/>
+  <ellipse cx="150" cy="50" rx="26" ry="8" fill="#3D4654"/>
+  <ellipse cx="150" cy="52" rx="20" ry="5" fill="#252B33"/>
+  <path d="M0 124Q140 114 280 124V140H0Z" fill="#BFE3B4"/>
+  <!-- dirt pile and shovel -->
+  <path d="M176 50Q186 32 200 50Z" fill="#8A6A4F"/>
+  <circle cx="186" cy="30" r="2.5" fill="#8A6A4F"/>
+  <circle cx="196" cy="24" r="2" fill="#8A6A4F"/>
+  <path d="M206 50L220 18" stroke="#9A6A3A" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M214 14h12" stroke="#9A6A3A" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M200 46L212 50L208 60L198 56Z" fill="#9AA6B6"/>
+</svg>

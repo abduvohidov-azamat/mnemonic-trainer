@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 140">
+  <rect width="280" height="140" fill="#EAF4FF"/>
+  <path d="M0 116Q140 108 280 116V140H0Z" fill="#F0DFB8"/>
+  <!-- dust behind the running calf -->
+  <circle cx="58" cy="116" r="5" fill="#E2CC9C"/>
+  <circle cx="46" cy="110" r="3.5" fill="#E8D6AE"/>
+  <circle cx="40" cy="119" r="3" fill="#E2CC9C"/>
+  <!-- baby camel -->
+  <path d="M92 96L82 118M104 98L110 120M122 98L116 120M132 96L144 116" stroke="#C99A62" stroke-width="6" stroke-linecap="round"/>
+  <path d="M78 78q-8 2-8 12" fill="none" stroke="#C99A62" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="110" cy="82" rx="34" ry="19" fill="#D9B07A"/>
+  <path d="M90 70Q106 44 124 66Z" fill="#D9B07A"/>
+  <path d="M132 82L146 78L162 46L150 40Z" fill="#D9B07A"/>
+  <ellipse cx="160" cy="42" rx="14" ry="9" fill="#D9B07A"/>
+  <ellipse cx="172" cy="45" rx="5" ry="4" fill="#C99A62"/>
+  <path d="M152 34l-3-7 7 4Z" fill="#C99A62"/>
+  <circle cx="161" cy="39" r="2" fill="#3B2A20"/>
+  <path d="M166 48q3 2 6 0" fill="none" stroke="#7A5236" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- flight path -->
+  <path d="M184 66q8-12 16-4t18-14" fill="none" stroke="#9DB4CF" stroke-width="2" stroke-dasharray="3 5" stroke-linecap="round"/>
+  <!-- butterfly -->
+  <ellipse cx="231" cy="40" rx="10" ry="13" fill="#F28C3A" transform="rotate(-25 231 40)"/>
+  <ellipse cx="247" cy="40" rx="10" ry="13" fill="#F28C3A" transform="rotate(25 247 40)"/>
+  <ellipse cx="233" cy="56" rx="7" ry="8" fill="#F4B740"/>
+  <ellipse cx="245" cy="56" rx="7" ry="8" fill="#F4B740"/>
+  <circle cx="230" cy="40" r="3" fill="#FFE2B8"/>
+  <circle cx="248" cy="40" r="3" fill="#FFE2B8"/>
+  <path d="M239 36v26" stroke="#3B2A20" stroke-width="3" stroke-linecap="round"/>
+  <path d="M239 36q-4-8-8-9M239 36q4-8 8-9" fill="none" stroke="#3B2A20" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

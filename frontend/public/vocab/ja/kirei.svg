@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 140">
+  <defs>
+    <path id="spark" d="M0-7L1.8-1.8L7 0L1.8 1.8L0 7L-1.8 1.8L-7 0L-1.8-1.8Z"/>
+  </defs>
+  <rect width="280" height="140" fill="#EEF6FA"/>
+  <rect y="118" width="280" height="22" fill="#D5E3EA"/>
+  <!-- basin of dirty water -->
+  <path d="M188 102L194 122H246L252 102Z" fill="#9AA6B6"/>
+  <ellipse cx="220" cy="102" rx="32" ry="7" fill="#8A6A4F"/>
+  <ellipse cx="212" cy="100" rx="8" ry="2" fill="#A88A6C"/>
+  <circle cx="200" cy="92" r="2.5" fill="#8A6A4F"/>
+  <circle cx="240" cy="90" r="2" fill="#8A6A4F"/>
+  <!-- girl -->
+  <path d="M72 126v-10M86 126v-10" stroke="#3E4A63" stroke-width="6" stroke-linecap="round"/>
+  <path d="M68 60H90L100 118H58Z" fill="#F06A86"/>
+  <circle cx="79" cy="44" r="14" fill="#F2C9A0"/>
+  <path d="M65 44C63 26 95 26 93 44C88 36 70 36 65 44Z" fill="#4A3426"/>
+  <circle cx="63" cy="48" r="6" fill="#4A3426"/>
+  <circle cx="95" cy="48" r="6" fill="#4A3426"/>
+  <circle cx="74" cy="45" r="1.7" fill="#2F2622"/>
+  <circle cx="84" cy="45" r="1.7" fill="#2F2622"/>
+  <path d="M74 51q5 4 10 0" fill="none" stroke="#B5654A" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M88 66Q106 56 124 44M86 72Q108 70 128 60" fill="none" stroke="#F06A86" stroke-width="6" stroke-linecap="round"/>
+  <!-- clean shirt held up -->
+  <path d="M140 32L128 38L120 50L130 56L136 50V84H176V50L182 56L192 50L184 38L172 32Q156 42 140 32Z" fill="#FFFFFF" stroke="#C9D3E0" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="125" cy="44" r="5" fill="#F2C9A0"/>
+  <circle cx="129" cy="59" r="5" fill="#F2C9A0"/>
+  <use href="#spark" x="204" y="30" fill="#FFC928"/>
+  <use href="#spark" x="196" y="70" fill="#FFD95C"/>
+  <use href="#spark" x="156" y="18" fill="#FFD95C"/>
+  <use href="#spark" x="148" y="100" fill="#FFC928"/>
+</svg>

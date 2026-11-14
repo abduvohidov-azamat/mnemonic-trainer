@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 140">
+  <rect width="280" height="140" fill="#F3F0EA"/>
+  <rect y="118" width="280" height="22" fill="#E2D9C8"/>
+  <!-- calendar on the wall: today -> tomorrow -->
+  <g transform="translate(206 16) scale(0.66)">
+    <rect width="84" height="88" rx="6" fill="#FFFFFF" stroke="#C9D3E0" stroke-width="2"/>
+    <path d="M0 6a6 6 0 0 1 6-6h72a6 6 0 0 1 6 6v14H0Z" fill="#D64545"/>
+    <g fill="#EEF1F6">
+      <rect x="8" y="28" width="14" height="14" rx="2"/><rect x="26" y="28" width="14" height="14" rx="2"/><rect x="44" y="28" width="14" height="14" rx="2"/><rect x="62" y="28" width="14" height="14" rx="2"/>
+      <rect x="44" y="46" width="14" height="14" rx="2"/><rect x="62" y="46" width="14" height="14" rx="2"/>
+      <rect x="8" y="64" width="14" height="14" rx="2"/><rect x="26" y="64" width="14" height="14" rx="2"/><rect x="44" y="64" width="14" height="14" rx="2"/><rect x="62" y="64" width="14" height="14" rx="2"/>
+    </g>
+    <rect x="8" y="46" width="14" height="14" rx="2" fill="#CFD8E6"/>
+    <rect x="26" y="46" width="14" height="14" rx="2" fill="#FFCE3A"/>
+    <circle cx="33" cy="53" r="11" fill="none" stroke="#D64545" stroke-width="2.5"/>
+  </g>
+  <!-- mannequin with a half-sewn shirt -->
+  <path d="M168 118v-22M156 120h24" stroke="#8A6A4F" stroke-width="4" stroke-linecap="round"/>
+  <path d="M146 40Q168 30 190 40L186 96H150Z" fill="#D9CDB8"/>
+  <path d="M146 40Q168 30 190 40L188 70H148Z" fill="#6FA8DC"/>
+  <path d="M148 70H188" stroke="#3D4654" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <path d="M168 36v34" stroke="#4F88BC" stroke-width="1.5"/>
+  <!-- tailor -->
+  <path d="M82 126v-10M98 126v-10" stroke="#3E4A63" stroke-width="6" stroke-linecap="round"/>
+  <rect x="74" y="62" width="32" height="56" rx="10" fill="#7A6A8C"/>
+  <circle cx="90" cy="46" r="14" fill="#E9B98C"/>
+  <path d="M76 44C76 30 104 30 104 44C99 38 81 38 76 44Z" fill="#9A9A9A"/>
+  <circle cx="85" cy="47" r="4" fill="none" stroke="#3D4654" stroke-width="1.5"/>
+  <circle cx="95" cy="47" r="4" fill="none" stroke="#3D4654" stroke-width="1.5"/>
+  <path d="M89 47h2" stroke="#3D4654" stroke-width="1.5"/>
+  <path d="M85 54q5 3 10 0" fill="none" stroke="#B5654A" stroke-width="1.6" stroke-linecap="round"/>
+  <!-- tape measure around the neck -->
+  <path d="M80 62Q76 84 80 100M100 62Q104 84 100 100" fill="none" stroke="#E0B23C" stroke-width="4"/>
+  <path d="M80 70h3M80 78h3M80 86h3M100 70h-3M100 78h-3M100 86h-3" stroke="#8A6A2A" stroke-width="1"/>
+  <!-- arm with needle -->
+  <path d="M104 70Q124 62 138 56" fill="none" stroke="#7A6A8C" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="140" cy="55" r="5" fill="#E9B98C"/>
+  <path d="M143 52L156 44" stroke="#9AA6B6" stroke-width="2" stroke-linecap="round"/>
+</svg>

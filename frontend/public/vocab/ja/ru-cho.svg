@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 140">
+  <defs>
+    <g id="glass">
+      <path d="M-7-14H7Q7 0 0 2Q-7 0-7-14Z" fill="#FFFFFF" fill-opacity="0.8" stroke="#9AA6B6" stroke-width="1.5"/>
+      <path d="M-6-8H6Q5 0 0 1Q-5 0-6-8Z" fill="#E0567A"/>
+      <path d="M0 2v12M-6 14h12" stroke="#9AA6B6" stroke-width="2" stroke-linecap="round"/>
+    </g>
+  </defs>
+  <rect width="280" height="140" fill="#F6F0F8"/>
+  <g fill="#E8D6EF">
+    <circle cx="30" cy="30" r="3"/><circle cx="250" cy="24" r="3"/><circle cx="60" cy="112" r="2.5"/><circle cx="226" cy="116" r="2.5"/><circle cx="140" cy="122" r="3"/>
+  </g>
+  <!-- left butterfly -->
+  <ellipse cx="76" cy="62" rx="12" ry="16" fill="#F28C3A" transform="rotate(-25 76 62)"/>
+  <ellipse cx="96" cy="62" rx="12" ry="16" fill="#F28C3A" transform="rotate(25 96 62)"/>
+  <ellipse cx="78" cy="82" rx="8" ry="9" fill="#F4B740"/>
+  <ellipse cx="94" cy="82" rx="8" ry="9" fill="#F4B740"/>
+  <path d="M86 56v32" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M86 56q-5-10-10-11M86 56q5-10 10-11" fill="none" stroke="#3B2A20" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M88 70Q108 64 124 56" fill="none" stroke="#3B2A20" stroke-width="2" stroke-linecap="round"/>
+  <use href="#glass" x="128" y="54" transform="rotate(14 128 54)"/>
+  <!-- right butterfly -->
+  <ellipse cx="184" cy="62" rx="12" ry="16" fill="#B05BD6" transform="rotate(-25 184 62)"/>
+  <ellipse cx="204" cy="62" rx="12" ry="16" fill="#B05BD6" transform="rotate(25 204 62)"/>
+  <ellipse cx="186" cy="82" rx="8" ry="9" fill="#E08CF0"/>
+  <ellipse cx="202" cy="82" rx="8" ry="9" fill="#E08CF0"/>
+  <path d="M194 56v32" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M194 56q-5-10-10-11M194 56q5-10 10-11" fill="none" stroke="#3B2A20" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M192 70Q172 64 156 56" fill="none" stroke="#3B2A20" stroke-width="2" stroke-linecap="round"/>
+  <use href="#glass" x="152" y="54" transform="rotate(-14 152 54)"/>
+  <!-- clink -->
+  <path d="M140 30v-10M128 34l-6-7M152 34l6-7" stroke="#E0B23C" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

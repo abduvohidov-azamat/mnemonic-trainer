@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 140">
+  <rect width="280" height="140" fill="#EEF5F3"/>
+  <!-- calendar: today -> tomorrow -->
+  <g transform="translate(22 26)">
+    <rect width="84" height="88" rx="6" fill="#FFFFFF" stroke="#C9D3E0" stroke-width="2"/>
+    <path d="M0 6a6 6 0 0 1 6-6h72a6 6 0 0 1 6 6v14H0Z" fill="#D64545"/>
+    <rect x="18" y="-5" width="5" height="11" rx="2.5" fill="#3D4654"/>
+    <rect x="61" y="-5" width="5" height="11" rx="2.5" fill="#3D4654"/>
+    <g fill="#EEF1F6">
+      <rect x="8" y="28" width="14" height="14" rx="2"/>
+      <rect x="26" y="28" width="14" height="14" rx="2"/>
+      <rect x="44" y="28" width="14" height="14" rx="2"/>
+      <rect x="62" y="28" width="14" height="14" rx="2"/>
+      <rect x="44" y="46" width="14" height="14" rx="2"/>
+      <rect x="62" y="46" width="14" height="14" rx="2"/>
+      <rect x="8" y="64" width="14" height="14" rx="2"/>
+      <rect x="26" y="64" width="14" height="14" rx="2"/>
+      <rect x="44" y="64" width="14" height="14" rx="2"/>
+      <rect x="62" y="64" width="14" height="14" rx="2"/>
+    </g>
+    <rect x="8" y="46" width="14" height="14" rx="2" fill="#CFD8E6"/>
+    <rect x="26" y="46" width="14" height="14" rx="2" fill="#FFCE3A"/>
+    <circle cx="33" cy="53" r="11" fill="none" stroke="#D64545" stroke-width="2"/>
+    <path d="M14 44Q22 34 30 40" fill="none" stroke="#3D4654" stroke-width="2" stroke-linecap="round"/>
+    <path d="M25 39L30 40L29 35" fill="none" stroke="#3D4654" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <!-- patient's arm with a vein -->
+  <path d="M128 92H176" stroke="#E9B98C" stroke-width="16" stroke-linecap="round"/>
+  <path d="M134 92q10 4 20 0t18 0" fill="none" stroke="#4A7BD0" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- pulse -->
+  <path d="M130 72h12l4-8l6 16l5-12l3 4h14" fill="none" stroke="#D64545" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- doctor -->
+  <path d="M190 64H226L234 124H182Z" fill="#FFFFFF" stroke="#D5DCE8" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M208 64v60" stroke="#D5DCE8" stroke-width="1.5"/>
+  <path d="M198 64Q196 84 206 86Q216 84 216 64" fill="none" stroke="#3D4654" stroke-width="2"/>
+  <circle cx="206" cy="88" r="3.5" fill="#9AA6B6"/>
+  <circle cx="208" cy="46" r="14" fill="#F2C9A0"/>
+  <path d="M194 44C194 30 222 30 222 44C217 37 199 37 194 44Z" fill="#7A7A7A"/>
+  <circle cx="208" cy="34" r="5" fill="#D9E1EC" stroke="#9AA6B6" stroke-width="1.5"/>
+  <circle cx="203" cy="47" r="1.7" fill="#2F2622"/>
+  <circle cx="213" cy="47" r="1.7" fill="#2F2622"/>
+  <path d="M203 53q5 3 10 0" fill="none" stroke="#B5654A" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M192 72Q180 80 178 90" fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>
+  <path d="M192 72Q180 80 178 90" fill="none" stroke="#D5DCE8" stroke-width="1" stroke-linecap="round"/>
+  <circle cx="177" cy="92" r="6" fill="#F2C9A0"/>
+</svg>

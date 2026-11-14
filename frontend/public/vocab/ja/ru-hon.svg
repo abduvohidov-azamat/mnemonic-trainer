@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 140">
+  <rect width="280" height="140" fill="#E8F2FA"/>
+  <rect y="116" width="280" height="24" fill="#9AA6B6"/>
+  <path d="M10 128h30M80 128h30M150 128h30M220 128h30" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+  <!-- speed lines -->
+  <path d="M24 84h22M16 96h28M28 108h16" stroke="#9DB4CF" stroke-width="3" stroke-linecap="round"/>
+  <!-- tower of books on the roof -->
+  <rect x="98" y="58" width="74" height="10" rx="2" fill="#D64545"/>
+  <rect x="104" y="48" width="66" height="10" rx="2" fill="#3A8FD6"/>
+  <rect x="96" y="38" width="70" height="10" rx="2" fill="#43A06A"/>
+  <rect x="106" y="28" width="60" height="10" rx="2" fill="#E0B23C"/>
+  <rect x="100" y="18" width="64" height="10" rx="2" fill="#9C4FC0"/>
+  <rect x="110" y="8" width="52" height="10" rx="2" fill="#E08A2E"/>
+  <path d="M100 63h70M106 53h62M98 43h66M108 33h56M102 23h60M112 13h48" stroke="#FFFFFF" stroke-opacity="0.5" stroke-width="1.5"/>
+  <!-- car -->
+  <path d="M60 104V88Q60 80 70 78L96 68H170L198 80Q220 82 222 92V104Z" fill="#E04848"/>
+  <path d="M102 72H134V86H90Z" fill="#CFE3F7"/>
+  <path d="M140 72H168L188 86H140Z" fill="#CFE3F7"/>
+  <rect x="212" y="88" width="10" height="6" rx="2" fill="#FFE07A"/>
+  <circle cx="92" cy="106" r="12" fill="#3D4654"/>
+  <circle cx="92" cy="106" r="5" fill="#C9D3E0"/>
+  <circle cx="190" cy="106" r="12" fill="#3D4654"/>
+  <circle cx="190" cy="106" r="5" fill="#C9D3E0"/>
+</svg>

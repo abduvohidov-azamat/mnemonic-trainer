@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 140">
+  <rect width="280" height="140" fill="#F6F0F8"/>
+  <rect y="118" width="280" height="22" fill="#E3D8E8"/>
+  <!-- Tamara with a suitcase -->
+  <path d="M74 126v-10M90 126v-10" stroke="#3E4A63" stroke-width="6" stroke-linecap="round"/>
+  <path d="M70 64H94L102 118H62Z" fill="#9C4FC0"/>
+  <circle cx="82" cy="46" r="14" fill="#F2C9A0"/>
+  <path d="M68 46C66 28 98 28 96 46C92 38 72 38 68 46Z" fill="#B5542E"/>
+  <circle cx="82" cy="28" r="7" fill="#B5542E"/>
+  <circle cx="77" cy="47" r="1.7" fill="#2F2622"/>
+  <circle cx="87" cy="47" r="1.7" fill="#2F2622"/>
+  <path d="M77 53q5 4 10 0" fill="none" stroke="#B5654A" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M94 72Q104 84 110 92" fill="none" stroke="#9C4FC0" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="111" cy="93" r="5" fill="#F2C9A0"/>
+  <rect x="104" y="96" width="30" height="24" rx="4" fill="#E08A2E"/>
+  <path d="M110 96v-4h12v4" fill="none" stroke="#9A5A1C" stroke-width="2.5"/>
+  <path d="M104 108h30" stroke="#C47320" stroke-width="2"/>
+  <!-- on her way -->
+  <path d="M136 70Q152 58 166 66" fill="none" stroke="#B9A5C6" stroke-width="2.5" stroke-dasharray="5 5" stroke-linecap="round"/>
+  <path d="M159 60L168 67L157 70" fill="none" stroke="#B9A5C6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- calendar: today -> tomorrow -->
+  <g transform="translate(176 26)">
+    <rect width="84" height="88" rx="6" fill="#FFFFFF" stroke="#C9D3E0" stroke-width="2"/>
+    <path d="M0 6a6 6 0 0 1 6-6h72a6 6 0 0 1 6 6v14H0Z" fill="#D64545"/>
+    <rect x="18" y="-5" width="5" height="11" rx="2.5" fill="#3D4654"/>
+    <rect x="61" y="-5" width="5" height="11" rx="2.5" fill="#3D4654"/>
+    <g fill="#EEF1F6">
+      <rect x="8" y="28" width="14" height="14" rx="2"/>
+      <rect x="26" y="28" width="14" height="14" rx="2"/>
+      <rect x="44" y="28" width="14" height="14" rx="2"/>
+      <rect x="62" y="28" width="14" height="14" rx="2"/>
+      <rect x="44" y="46" width="14" height="14" rx="2"/>
+      <rect x="62" y="46" width="14" height="14" rx="2"/>
+      <rect x="8" y="64" width="14" height="14" rx="2"/>
+      <rect x="26" y="64" width="14" height="14" rx="2"/>
+      <rect x="44" y="64" width="14" height="14" rx="2"/>
+      <rect x="62" y="64" width="14" height="14" rx="2"/>
+    </g>
+    <rect x="8" y="46" width="14" height="14" rx="2" fill="#CFD8E6"/>
+    <rect x="26" y="46" width="14" height="14" rx="2" fill="#FFCE3A"/>
+    <circle cx="33" cy="53" r="11" fill="none" stroke="#D64545" stroke-width="2"/>
+    <path d="M14 44Q22 34 30 40" fill="none" stroke="#3D4654" stroke-width="2" stroke-linecap="round"/>
+    <path d="M25 39L30 40L29 35" fill="none" stroke="#3D4654" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

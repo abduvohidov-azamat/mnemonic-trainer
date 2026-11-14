@@ -5,6 +5,7 @@ import { SpeedCardsComponent } from './features/speed-cards/speed-cards.componen
 import { WordsTrainerComponent } from './features/words-trainer/words-trainer.component';
 import { PaoManagerComponent } from './features/pao-manager/pao-manager.component';
 import { StatsComponent } from './features/stats/stats.component';
+import { VocabularyComponent } from './features/vocabulary/vocabulary.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -12,6 +13,7 @@ export const routes: Routes = [
   { path: 'numbers', component: SpeedNumbersComponent },
   { path: 'cards', component: SpeedCardsComponent },
   { path: 'words', component: WordsTrainerComponent },
+  { path: 'vocab', component: VocabularyComponent },
   { path: 'pao', component: PaoManagerComponent },
   { path: 'stats', component: StatsComponent },
   { path: '**', redirectTo: 'dashboard' },

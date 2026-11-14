@@ -248,6 +248,7 @@ export class NavbarComponent {
     { path: '/numbers', key: 'nav.numbers' },
     { path: '/cards', key: 'nav.cards' },
     { path: '/words', key: 'nav.words' },
+    { path: '/vocab', key: 'nav.vocab' },
     { path: '/pao', key: 'nav.pao' },
     { path: '/stats', key: 'nav.progress' },
   ] as const;
